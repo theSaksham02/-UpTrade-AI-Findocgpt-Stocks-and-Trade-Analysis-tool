@@ -1,6 +1,8 @@
 # qa_system.py
 
 import os
+import pickle
+from pathlib import Path
 from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
 from langchain.chains import RetrievalQA
 from langchain_community.vectorstores import FAISS
@@ -13,6 +15,35 @@ from config import get_google_api_key, validate_api_key
 # Import our existing data loading and preprocessing functions from their respective files
 from data_loader import DataLoader
 from analysis import extract_and_clean_evidence
+
+# Global cache for the QA chain to avoid reloading
+_qa_chain_cache = None
+_vectorstore_path = "vectorstore_cache"
+
+def load_cached_vectorstore():
+    """Load cached vectorstore if it exists, otherwise return None."""
+    if Path(_vectorstore_path).exists():
+        try:
+            print("📁 Loading cached vectorstore...")
+            embeddings = GoogleGenerativeAIEmbeddings(
+                model="models/embedding-001",
+                google_api_key=get_google_api_key()
+            )
+            vectorstore = FAISS.load_local(_vectorstore_path, embeddings, allow_dangerous_deserialization=True)
+            print("✅ Cached vectorstore loaded successfully!")
+            return vectorstore
+        except Exception as e:
+            print(f"⚠️ Failed to load cached vectorstore: {e}")
+            return None
+    return None
+
+def save_vectorstore(vectorstore):
+    """Save vectorstore to cache for faster future loading."""
+    try:
+        vectorstore.save_local(_vectorstore_path)
+        print("💾 Vectorstore cached for faster future loading!")
+    except Exception as e:
+        print(f"⚠️ Failed to cache vectorstore: {e}")
 
 def prepare_data_for_qa():
     """Loads and preprocesses data, returning a list of LangChain Document objects."""
@@ -79,37 +110,57 @@ Supporting Evidence:
 
 def create_qa_chain():
     """
-    Creates and returns a LangChain RetrievalQA chain using Gemini Pro.
+    Creates and returns a LangChain RetrievalQA chain using Gemini Pro with caching for speed.
     """
-    # 2. Split text into chunks for the LLM - optimized for financial data
-    text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size=800,  # Smaller chunks for better retrieval of specific numbers
-        chunk_overlap=200,  # More overlap to preserve context
-        separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""]
-    )
-    docs = prepare_data_for_qa()
+    global _qa_chain_cache
     
-    if not docs:
-        print("No documents to process. Exiting.")
-        return None
+    # Return cached chain if available
+    if _qa_chain_cache is not None:
+        print("🚀 Using cached Q&A chain for faster response!")
+        return _qa_chain_cache
+    
+    print("⚡ Initializing Q&A system...")
+    
+    # Try to load cached vectorstore first
+    vectorstore = load_cached_vectorstore()
+    
+    if vectorstore is None:
+        # No cache available, create from scratch
+        print("📄 Processing documents for first-time setup...")
         
-    texts = text_splitter.split_documents(docs)
-    print(f"✅ Created {len(texts)} text chunks for vector search")
+        # Text splitter - optimized for financial data
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size=800,  # Smaller chunks for better retrieval of specific numbers
+            chunk_overlap=200,  # More overlap to preserve context
+            separators=["\n\n", "\n", ".", "!", "?", ",", " ", ""]
+        )
+        
+        docs = prepare_data_for_qa()
+        
+        if not docs:
+            print("❌ No documents to process. Exiting.")
+            return None
+            
+        texts = text_splitter.split_documents(docs)
+        print(f"✅ Created {len(texts)} text chunks for vector search")
 
-    # 3. Create Embeddings and a Vector Store with Gemini's model
-    os.environ['GOOGLE_API_KEY'] = get_google_api_key()
+        # Create Embeddings and Vector Store with Gemini's model
+        os.environ['GOOGLE_API_KEY'] = get_google_api_key()
+        
+        embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+        vectorstore = FAISS.from_documents(texts, embeddings)
+        
+        # Save vectorstore for future use
+        save_vectorstore(vectorstore)
     
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    vectorstore = FAISS.from_documents(texts, embeddings)
-    
-    # 4. Set up the Language Model with better settings for financial data
+    # Set up the Language Model with better settings for financial data
     llm = ChatGoogleGenerativeAI(
         model="gemini-1.5-flash", 
         temperature=0.1,  # Lower temperature for more precise answers
         max_tokens=1024
     )
 
-    # 5. Build the Retrieval Chain with improved retrieval
+    # Build the Retrieval Chain with improved retrieval
     qa_chain = RetrievalQA.from_chain_type(
         llm=llm,
         chain_type="stuff",
@@ -118,8 +169,13 @@ def create_qa_chain():
             search_kwargs={"k": 8}  # Retrieve more chunks to find specific data
         ),
         return_source_documents=True,  # Return sources for transparency
-        verbose=True
+        verbose=False  # Reduce verbose output for speed
     )
+    
+    # Cache the chain for future use
+    _qa_chain_cache = qa_chain
+    print("💾 Q&A chain cached for faster future queries!")
+    
     return qa_chain
 
 def ask_question(question):
