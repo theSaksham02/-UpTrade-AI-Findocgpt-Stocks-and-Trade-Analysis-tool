@@ -591,8 +591,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Support & Contact
 
-- 📧 **Email**: support@findocgpt.ai
-- 💬 **Discord**: [Join our community](https://discord.gg/findocgpt)
+- 📧 **Email**: sakshammishra0205@gmail.com
+- 💬 **Linkedin**: [Join our community](https://www.linkedin.com/in/saksham-mishra-7b1930345/)
 - 📖 **Documentation**: [docs.findocgpt.ai](https://docs.findocgpt.ai)
 - 🐛 **Issues**: [GitHub Issues](https://github.com/theSaksham02/FinDocGPT/issues)
 
