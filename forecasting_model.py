@@ -1,5 +1,11 @@
 # forecasting_model.py
 
+import warnings
+# Suppress specific warnings for cleaner output
+warnings.filterwarnings('ignore', category=UserWarning, module='sklearn')
+warnings.filterwarnings('ignore', category=FutureWarning, module='pandas')
+warnings.filterwarnings('ignore', category=DeprecationWarning, module='numpy')
+
 import yfinance as yf
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -81,13 +87,14 @@ def main():
 
     # Train a Linear Regression model
     model = LinearRegression()
-    model.fit(X_train, y_train)
+    # Use .values to avoid feature name warnings
+    model.fit(X_train.values, y_train.values)
     
     print(f"✅ Model trained with {len(X_train)} training samples")
     print(f"📊 Features used: {', '.join(features)}")
 
     # Evaluate the model
-    y_pred = model.predict(X_test)
+    y_pred = model.predict(X_test.values)
     mse = mean_squared_error(y_test, y_pred)
     print(f"\n✅ Model trained successfully. Mean Squared Error: {mse:.2f}")
 
@@ -97,7 +104,10 @@ def main():
     next_day_date = last_day + timedelta(days=1)
     
     # Create input data for the next day's prediction
-    last_open = stock_df['Open'].iloc[-1]  # Keep as pandas scalar
+    last_open = stock_df['Open'].iloc[-1]
+    if hasattr(last_open, 'item'):
+        last_open = last_open.item()
+    
     next_day_features = pd.DataFrame([{
         'Open': last_open,
         'sentiment_score': average_sentiment,
@@ -109,16 +119,21 @@ def main():
     
     # Ensure the features are in the same order as training
     prediction_input = next_day_features[features]
-    predicted_close = float(model.predict(prediction_input)[0])  # Convert to float immediately
+    predicted_close_array = model.predict(prediction_input.values)
+    predicted_close = predicted_close_array.item()  # Use .item() to extract scalar safely
     
     print(f"\n🔮 Predicted closing price for the next trading day: ${predicted_close:.2f}")
-    print(f"📊 Last actual closing price: ${float(stock_df['Close'].iloc[-1]):.2f}")
+    
+    last_close_val = stock_df['Close'].iloc[-1]
+    if hasattr(last_close_val, 'item'):
+        last_close_val = last_close_val.item()
+    
+    print(f"📊 Last actual closing price: ${last_close_val:.2f}")
     print(f"📈 Current sentiment score: {average_sentiment:.3f}")
     
     # Calculate prediction direction
-    last_close = float(stock_df['Close'].iloc[-1])
-    direction = "📈 UP" if predicted_close > last_close else "📉 DOWN"
-    change_pct = ((predicted_close - last_close) / last_close) * 100
+    direction = "📈 UP" if predicted_close > last_close_val else "📉 DOWN"
+    change_pct = ((predicted_close - last_close_val) / last_close_val) * 100
     print(f"🎯 Prediction direction: {direction} ({change_pct:+.2f}%)")
     
     # Display model feature importance
