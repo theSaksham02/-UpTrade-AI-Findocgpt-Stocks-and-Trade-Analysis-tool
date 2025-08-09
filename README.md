@@ -277,8 +277,6 @@ FinDocGPT Analysis: 15 minutes × $150/hour = $37.50
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-FinDocGPT-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/company/findocgpt)
 [![Twitter](https://img.shields.io/badge/Twitter-@FinDocGPT-blue?style=for-the-badge&logo=twitter)](https://twitter.com/findocgpt)
 
-**📅 Schedule a Demo**: [calendly.com/findocgpt](https://calendly.com/findocgpt)
-**🎯 Request Quote**: [findocgpt.ai/enterprise](https://findocgpt.ai/enterprise)
 
 </div>
 
@@ -298,7 +296,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 *© 2025 FinDocGPT Team. Built with ❤️ for the financial technology community.*
 
-[🚀 **Get Started Today**](http://localhost:8501) | [📖 **Read the Docs**](./DOCUMENTATION.md) | [💬 **Join Community**](https://discord.gg/findocgpt)
+[🚀 **Get Started Today**](http://localhost:8501) | [📖 **Read the Docs**](./DOCUMENTATION.md) |
 
 ---
 
