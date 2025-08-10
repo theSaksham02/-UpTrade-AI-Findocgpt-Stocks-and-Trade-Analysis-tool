@@ -6,8 +6,72 @@ import os
 import json
 
 # Add API endpoint functionality
-def handle_api_request():
-    """Handle API requests from the React frontend"""
+def handle_api_request():    analysis_mode = st.selectbox(
+        "Choose Analysis Mode:",
+        ["💡 Investment Strategy", "🔮 Financial Forecasting", "📊 Stock Analysis", "🧠 AI Q&A System", "📈 Sentiment Analysis"]
+    )
+
+    if analysi# Standard analysis modes
+if analysis_mode == "💡 Investment Strategy" and 'strategy_button' in locals() and strategy_button:
+    if ticker:
+        st.markdown(f"""
+        <div class="feature-card">
+            <h2>💡 Investment Strategy: {ticker}</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.spinner(f"Generating investment strategy for {ticker}..."):
+            try:
+                # 1. Fetch data
+                start_date = "2020-01-01"
+                end_date = date.today().strftime('%Y-%m-%d')
+                stock_data = fetch_stock_data(ticker, start_date, end_date)
+                
+                if stock_data is not None:
+                    # 2. Get forecast
+                    forecast = train_and_forecast(stock_data, 30)
+                    
+                    if forecast is not None:
+                        # 3. Generate recommendation
+                        rec, reason, metrics = generate_recommendation(stock_data, forecast)
+                        
+                        # Display recommendation
+                        st.subheader(f"Recommendation: {rec}")
+                        
+                        # Color-code the recommendation
+                        if "Buy" in rec:
+                            st.success(reason)
+                        elif "Sell" in rec:
+                            st.error(reason)
+                        else:
+                            st.info(reason)
+                        
+                        # Display key metrics
+                        st.subheader("📊 Key Metrics")
+                        cols = st.columns(len(metrics))
+                        for col, (key, value) in zip(cols, metrics.items()):
+                            col.metric(key, value)
+                            
+                        # Display the forecast chart
+                        st.subheader("📈 Forecast Chart")
+                        combined_df = pd.concat([
+                            pd.DataFrame({'history': stock_data}),
+                            pd.DataFrame({'forecast': forecast})
+                        ], axis=1)
+                        st.line_chart(combined_df)
+                        
+                    else:
+                        st.error("❌ Failed to generate forecast for strategy.")
+                else:
+                    st.error(f"❌ Could not fetch data for {ticker}.")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+
+elif analysis_mode == "🔮 Financial Forecasting" and 'forecast_button' in locals() and forecast_button:mode == "💡 Investment Strategy":
+        ticker = st.text_input("Stock Ticker (e.g., AAPL)", value="AAPL").upper()
+        strategy_button = st.button("🚀 Generate Strategy", type="primary")
+    
+    elif analysis_mode == "🔮 Financial Forecasting":""Handle API requests from the React frontend"""
     query_params = st.query_params
     
     if 'api' in query_params:
@@ -190,7 +254,9 @@ from sentiment_analyzer import (
     get_sentiment_pipeline,
     analyze_sentiment
 )
-from forecasting_model import fetch_stock_data
+from forecasting_model import fetch_stock_data, train_and_forecast
+from investment_strategy import generate_recommendation
+from anomaly_detection import detect_volume_anomalies
 
 # Check API key
 if not validate_api_key():
@@ -205,9 +271,14 @@ with st.sidebar:
     
     analysis_mode = st.selectbox(
         "Choose Analysis Mode:",
-        ["📊 Stock Analysis", "🧠 AI Q&A System", "📈 Sentiment Analysis"]
+        ["� Financial Forecasting", "�📊 Stock Analysis", "🧠 AI Q&A System", "📈 Sentiment Analysis"]
     )
     
+    if analysis_mode == "🔮 Financial Forecasting":
+        ticker = st.text_input("Stock Ticker (e.g., AAPL)", value="AAPL").upper()
+        forecast_days = st.slider("Days to Forecast", 7, 90, 30)
+        forecast_button = st.button("🚀 Forecast", type="primary")
+
     if analysis_mode == "📊 Stock Analysis":
         ticker = st.text_input("Stock Ticker (e.g., AAPL)", value="AAPL").upper()
         analyze_button = st.button("🚀 Analyze", type="primary")
@@ -408,7 +479,48 @@ if hasattr(st.session_state, 'premium_tool'):
                     st.error(f"Error: {str(e)}")
 
 # Standard analysis modes
-if analysis_mode == "📊 Stock Analysis" and 'analyze_button' in locals() and analyze_button:
+if analysis_mode == "� Financial Forecasting" and 'forecast_button' in locals() and forecast_button:
+    if ticker:
+        st.markdown(f"""
+        <div class="feature-card">
+            <h2>🔮 Financial Forecast: {ticker}</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        with st.spinner(f"Running forecast for {ticker}..."):
+            try:
+                # Fetch data
+                start_date = "2020-01-01"
+                end_date = date.today().strftime('%Y-%m-%d')
+                stock_data = fetch_stock_data(ticker, start_date, end_date)
+                
+                if stock_data is not None:
+                    # Train and forecast
+                    forecast = train_and_forecast(stock_data, forecast_days)
+                    
+                    if forecast is not None:
+                        # Combine historical and forecast data
+                        hist_df = pd.DataFrame({'history': stock_data})
+                        forecast_df = pd.DataFrame({'forecast': forecast})
+                        
+                        combined_df = pd.concat([hist_df, forecast_df], axis=1)
+                        
+                        st.subheader(f"📈 Forecasted Stock Price for the Next {forecast_days} Days")
+                        st.line_chart(combined_df)
+                        
+                        # Display forecast data
+                        st.subheader("🔮 Forecast Data")
+                        st.dataframe(forecast.to_frame(name="Forecasted Price"))
+                        
+                        st.success("✅ Forecast generated successfully!")
+                    else:
+                        st.error("❌ Failed to generate forecast.")
+                else:
+                    st.error(f"❌ Could not fetch data for {ticker}.")
+            except Exception as e:
+                st.error(f"An error occurred: {e}")
+
+elif analysis_mode == "�📊 Stock Analysis" and 'analyze_button' in locals() and analyze_button:
     if ticker:
         st.markdown(f"""
         <div class="feature-card">
@@ -446,6 +558,18 @@ if analysis_mode == "📊 Stock Analysis" and 'analyze_button' in locals() and a
                     st.subheader("📈 Price Chart")
                     st.line_chart(hist['Close'])
                     
+                    # Anomaly Detection
+                    st.subheader("🚨 Volume Anomaly Detection")
+                    hist_with_anomalies = detect_volume_anomalies(hist.copy())
+                    anomalies = hist_with_anomalies[hist_with_anomalies['volume_anomaly']]
+                    
+                    if not anomalies.empty:
+                        st.warning(f"Found {len(anomalies)} potential volume anomalies in the last year.")
+                        for idx, row in anomalies.iterrows():
+                            st.info(f"**Date:** {idx.date()} - {row['anomaly_reason']}")
+                    else:
+                        st.success("✅ No significant volume anomalies detected in the last year.")
+
                     # Company info
                     if 'longName' in info:
                         st.subheader("ℹ️ Company Information")
