@@ -1,291 +1,125 @@
-# FinDocGPT - Enterprise AI Financial Analysis Platform
+<!-- FinDocGPT — AkashX | Built for Hack‑Nation’s Global AI Hackathon (with MIT Sloan AI Club) -->
 
-<div align="center">
+<p align="center">
+  <img src="assets/hack-nation-banner.png" alt="Hack‑Nation Global AI Hackathon" width="100%" />
+</p>
 
-[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg?style=for-the-badge&logo=python)](https://python.org)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.29+-FF4B4B.svg?style=for-the-badge&logo=streamlit)](https://streamlit.io)
-[![Google AI](https://img.shields.io/badge/Google%20AI-Gemini%201.5-4285F4.svg?style=for-the-badge&logo=google)](https://ai.google.dev)
-[![LangChain](https://img.shields.io/badge/LangChain-0.1+-1C3C3C.svg?style=for-the-badge)](https://langchain.com)
+<h1 align="center">FinDocGPT</h1>
+<p align="center"><b>Enterprise AI for Financial Document Intelligence</b></p>
 
-*Transforming Financial Documents into Actionable Intelligence*
+<p align="center">
+  <img src="assets/akashx-logo.png" alt="AkashX" height="120" />
+</p>
 
-[🚀 **Live Demo**](http://localhost:8501) • [📖 **Documentation**](./DOCUMENTATION.md) • [🔧 **Installation**](#-quick-start) • [💡 **Features**](#-core-features)
-
-</div>
-
----
-
-## 🎯 Executive Summary
-
-FinDocGPT is an enterprise-grade AI platform that accelerates financial document analysis using natural language processing, sentiment analysis, and ML forecasting. Built on Google’s Gemini 1.5 Flash and transformer-based models, it delivers precise insights with 95%+ accuracy and sub-3-second responses.
-
-### 🏆 Unique Value Proposition
-- TradeX comparison engine with sentiment-aware scoring
-- 99.9% uptime architecture and robust error handling
-- Multi-modal analytics: Q&A, sentiment, forecasting
-- Real-time processing across 150+ filings
+<p align="center">
+  <a href="http://localhost:8501"><b>🚀 Live Demo</b></a> •
+  <a href="#-quick-start"><b>⚡ Quick Start</b></a> •
+  <a href="#-judge-in-2-minutes"><b>🧪 Judge in 2 Minutes</b></a> •
+  <a href="#-submission-deliverables"><b>📦 Deliverables</b></a>
+</p>
 
 ---
 
-## 🧪 Judging & Submission Guide
-
-Use this section to evaluate the project quickly and consistently.
-
-### 1) Setup (5–7 minutes)
-- Python 3.12+ and pip installed
-- Create venv and install dependencies
-  ```bash
-  python -m venv .venv
-  source .venv/bin/activate
-  pip install -r requirements.txt
-  cp .env.example .env
-  echo "GOOGLE_API_KEY=your_api_key_here" >> .env
-  ```
-
-### 2) Launch (app + CLI)
-- Start the Streamlit app:
-  ```bash
-  streamlit run app.py --server.port 8501
-  ```
-  Then open http://localhost:8501 and:
-  - Navigate to “AI Q&A with Sources” and ask: “What was 3M’s FY2018 capital expenditure?”
-  - Verify that cited sources are shown.
-- Quick CLI smoke test:
-  ```bash
-  python -c "from qa_system import run_qa_system; run_qa_system()"
-  ```
-
-### 3) What to Test
-- Q&A correctness with citations from filings
-- Sentiment analysis runs and returns label + score
-- Forecast produces a 30-day price projection without errors
-- Anomaly detection flags plausible volume spikes in the last year
-
-### 4) Acceptance Criteria
-- App boots with no blocking errors
-- Q&A returns a grounded answer with a source (FinanceBench PDF)
-- Sentiment and forecasting complete with visible results
-- Reasonable latency on a laptop (<5s typical per query)
-
-### 5) Submission Deliverables
-- GitHub Repository: Public link with full code and README (setup + description)
-- Zipped Code (.zip): Backup of the full codebase with README and requirements.txt
-- Dataset (if used or generated): Link included below (write “N/A” if not applicable)
-
-See the “Submission Package” section for exact commands and placeholders.
-
----
-
-## 🚀 Core Features
-
-<table>
-<tr>
-<td width="25%" align="center">
-
-### 🤖 AI Q&A Engine
-Powered by **Gemini 1.5 Flash**
-- Natural language financial queries  
-- 95% accuracy on FinanceBench  
-- Source citation and transparency  
-- Sub-3-second response time
-
-</td>
-<td width="25%" align="center">
-
-### 📊 Sentiment Analysis
-Built on **DistilBERT**
-- Real-time document sentiment scoring  
-- 94% classification accuracy  
-- Batch processing at scale  
-- Positive/Neutral/Negative insights
-
-</td>
-<td width="25%" align="center">
-
-### 📈 Predictive Modeling
-ML **Forecasting Engine**
-- Stock price prediction (MSE: 1.75)  
-- Sentiment-enhanced algorithms  
-- 30-day forecast horizon  
-- Risk assessment metrics
-
-</td>
-<td width="25%" align="center">
-
-### ⚖️ TradeX Comparison
-Sentiment-weighted analysis
-- Side-by-side ticker comparison  
-- Weighted signal aggregation  
-- Interactive visualizations  
-- Actionable recommendations
-
-</td>
-</tr>
-</table>
-
----
-
-## 🏗️ Enterprise Architecture
-
-```mermaid
-graph TB
-    A[Financial Documents] --> B[Data Ingestion Layer]
-    B --> C[AI Processing Engine]
-    C --> D[Sentiment Analysis]
-    C --> E[Q&A System]
-    C --> F[Forecasting Model]
-    D --> G[TradeX Engine]
-    E --> G
-    F --> G
-    G --> H[Streamlit Dashboard]
-    H --> I[End User Interface]
-    
-    style A fill:#e1f5fe
-    style C fill:#f3e5f5
-    style G fill:#fff3e0
-    style H fill:#e8f5e8
-```
-
-### Technology Stack
-
-| Component | Technology | Purpose |
-|----------|------------|---------|
-| AI/ML Core | Google Gemini 1.5 Flash, DistilBERT, scikit-learn | NLP + ML |
-| Vector DB | FAISS | Semantic retrieval |
-| Data Processing | pandas, NumPy | Financial data wrangling |
-| Web Framework | Streamlit | Dashboard |
-| Visualization | Plotly, Matplotlib | Charts |
-| Financial APIs | Yahoo Finance | Market data |
+## ✨ In one glance
+- 🤖 Q&A over filings with cited sources (Gemini 1.5)
+- 😊 Financial-text sentiment (DistilBERT)
+- 🔮 30‑day stock forecasting (ML + sentiment)
+- ⚖️ TradeX: side‑by‑side ticker comparison
+- 🚨 Volume anomaly detection
 
 ---
 
 ## ⚡ Quick Start
-
 ```bash
-# Clone repository
+# Clone
 git clone https://github.com/theSaksham02/AkashX.ai-FinDocGPT-AI-for-financial-document-analysis-investment-strategy.git
-cd FinDocGPT
+cd AkashX.ai-FinDocGPT-AI-for-financial-document-analysis-investment-strategy
 
-# Create virtual environment
+# Environment (Python 3.12+ on Ubuntu 24.04)
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-
-# Install dependencies
+source .venv/bin/activate
 pip install -r requirements.txt
 
-# Configure API key
+# Configure (.env)
 cp .env.example .env
 echo "GOOGLE_API_KEY=your_api_key_here" >> .env
 
-# Launch
+# Run
 streamlit run app.py --server.port 8501
 ```
-
-Access: http://localhost:8501
+Open: http://localhost:8501  
+Or: `$BROWSER` http://localhost:8501
 
 ---
 
-## 📊 Performance Benchmarks
+## 🧪 Judge in 2 Minutes
+1) Launch
+- App boots without errors, sidebar shows modes
 
-<div align="center">
+2) Smoke tests
+- Q&A: Ask “What was 3M’s FY2018 capex?” → grounded answer + citation
+- Sentiment: Paste a financial paragraph → label + score
+- Forecast: AAPL → 30‑day chart renders
 
-| Metric | Value | Industry | Delta |
-|-------|-------|----------|-------|
-| Q&A Accuracy | 95% | 85% | +10% |
-| Response Time | 2.3s | 5–8s | 65% faster |
-| Docs Processed | 150/30s | 50/30s | 3x faster |
-| Sentiment Accuracy | 94% | 88% | +6% |
-| Uptime | 99.9% | 99.5% | +0.4% |
+3) Accept
+- Grounded answer with source
+- Sentiment/forecast show visuals
+- Typical latency < 5s
 
-</div>
+---
 
-### 🎯 Sample Results
-```yaml
-Q&A:
-  Query: "What was 3M's FY2018 capital expenditure?"
-  Response: "$1,577 million"
-  Verified: "10-K filing"
-  Latency: "2.1s"
+## 🧩 Features (quick)
+- Sources-first Q&A using Gemini 1.5 + FAISS retrieval
+- DistilBERT sentiment pipeline for earnings/filings
+- Stock forecasting with sentiment features
+- TradeX multi‑ticker comparison with scores
+- Anomaly alerts on unusual volume spikes
 
-Sentiment:
-  Docs: 150
-  Accuracy: 94%
-  Time: 28s
-  Dist: "62% + | 28% = | 10% -"
+---
 
-Forecast:
-  Model: Linear Regression + Sentiment
-  MSE: 1.75
-  Horizon: 30 days
-  Directional Accuracy: 87%
+## 🏗️ Workflow (high level)
+```mermaid
+graph LR
+    A[Financial Docs / Filings] --> B[Chunk + Embed]
+    B --> C[FAISS Vector Store]
+    C --> D[Q&A (Gemini 1.5)]
+    A --> E[Sentiment (DistilBERT)]
+    F[Market Data (Yahoo)] --> G[Forecasting (ML+Sentiment)]
+    D --> H[Streamlit UI]
+    E --> H
+    G --> H
 ```
 
 ---
 
-## 🖥️ User Interface Showcase
+## 🔧 Environment
+- OS: Ubuntu 24.04.2 LTS (dev container)
+- Python: 3.12+
+- Key env vars (.env):
+  - GOOGLE_API_KEY=your_api_key_here
+- Optional: set HTTP(S)_PROXY if behind a proxy
 
-- AI Q&A with citations  
-- Sentiment Dashboard  
-- Forecasting Lab  
-- TradeX Comparison
+Handy commands:
+```bash
+# Lint quick syntax
+python -m py_compile app.py
 
-Key differentiators:
-- Intelligent caching for speed
-- Source transparency for trust
-- Sentiment + technical blend
-- Enterprise-grade UX
-
----
-
-## 🔐 Enterprise Security
-
-- API key encryption via env vars  
-- Local-first processing option  
-- Audit trails and logging  
-- Role-based access (RBAC-ready)  
-- SOC2/GDPR/PCI/ISO alignment principles
-
----
-
-## 🌟 Business Impact
-
-- 90% time reduction vs manual review  
-- Higher accuracy in extraction  
-- Deeper cross-document insights  
-- Faster decision-making
-
-ROI calculator:
-```
-Traditional: 8h/report × $150/h = $1,200
-FinDocGPT: 15m × $150/h = $37.50
-Savings: 97% per analysis | 32x faster | +15% precision
+# Kill existing Streamlit on 8501 (Linux)
+lsof -t -i:8501 | xargs -r kill
 ```
 
 ---
 
-## 🧾 Submission Package
-
-Provide these three items when submitting:
-
-- GitHub Repository: Public link with full code and README  
-  Example: https://github.com/OWNER/REPO
-- Zipped Code (.zip): Full codebase including README and requirements.txt  
-  Create locally:
+## 📦 Submission Deliverables
+- GitHub Repository: Public link with full code and clear README (setup + description)
+- Zipped Code (.zip): Full codebase with README and requirements.txt
   ```bash
-  zip -r findocgpt.zip . -x "*.venv*" "__pycache__/*" ".git/*" "vectorstore_cache/*"
+  zip -r findocgpt.zip . -x ".venv/*" "__pycache__/*" ".git/*"
   ```
-  Or via git archive:
-  ```bash
-  git archive --format=zip --output=findocgpt.zip HEAD
-  ```
-- Dataset (if used or generated):  
-  - Used: data/financebench-main (included in repo)  
-    - Dataset README: [data/financebench-main/README.md](data/financebench-main/README.md)  
-  - Original source: https://arxiv.org/abs/2311.11944 (FinanceBench)  
-  - If not applicable in your fork: write “N/A”
+- Dataset (if used or generated): share a link, or write “N/A”
 
-Submission checklist:
-- [ ] Public GitHub link added
+Checklist
+- [ ] Public repo link added
 - [ ] Zip uploaded with README + requirements.txt
 - [ ] Dataset link or “N/A” provided
 - [ ] App launches and Q&A returns cited results
@@ -632,8 +466,9 @@ FinDocGPT Analysis: 15 minutes × $150/hour = $37.50
 
 **🌟 Ready to transform your financial analysis workflow?**
 
-[![Email](https://img.shields.io/badge/Email-support@findocgpt.ai-blue?style=for-the-badge&logo=gmail)](mailto:sakshammishra0205@gmail.com)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-FinDocGPT-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/saksham-mishra-7b1930345/)
+[![Email](https://img.shields.io/badge/Email-support@findocgpt.ai-blue?style=for-the-badge&logo=gmail)](mailto:support@findocgpt.ai)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-FinDocGPT-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/company/findocgpt)
+[![Twitter](https://img.shields.io/badge/Twitter-@FinDocGPT-blue?style=for-the-badge&logo=twitter)](https://twitter.com/findocgpt)
 
 
 </div>
@@ -992,4 +827,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-*Last Updated: August 2025 | Version 1.0.9*
+*Last Updated: August 2025 | Version 1.0.0*
