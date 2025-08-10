@@ -14,6 +14,7 @@ from typing import Dict, Any
 import pandas as pd
 import streamlit as st
 
+# Import modules
 from config import validate_api_key
 from qa_system import create_qa_chain
 from sentiment_analyzer import get_sentiment_pipeline
@@ -41,45 +42,138 @@ def handle_api_request():
         api_type = api_type[0] if api_type else None
 
     if api_type == "status":
-            return {
-                "status": "connected",
-                "message": "FinDocGPT API is running",
+        return {
+            "status": "connected",
+            "message": "FinDocGPT API is running",
             "features": ["stock_analysis", "qa_system", "sentiment_analysis", "forecasting"],
-            }
+        }
     if api_type == "tools":
-            return {
-                "premium_tools": [
-                    {"name": "TradeX", "status": "active", "description": "Stock comparison tool"},
-                    {"name": "VisualX", "status": "active", "description": "Advanced charting platform"},
+        return {
+            "premium_tools": [
+                {"name": "TradeX", "status": "active", "description": "Stock comparison tool"},
+                {"name": "VisualX", "status": "active", "description": "Advanced charting platform"},
                 {"name": "HFTX", "status": "active", "description": "High-frequency trading simulator"},
-                ]
-            }
+            ]
+        }
     return None
 
 
-st.set_page_config(page_title="FinDocGPT", page_icon="🚀", layout="wide", initial_sidebar_state="expanded")
-
-st.markdown(
-    """
-    <style>
-    .stApp { background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%); color: white; }
-    .feature-card { background: rgba(255,255,255,0.08); padding: 1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,0.15); }
-    .stButton>button { background: linear-gradient(90deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; }
-    .stButton>button:hover { filter: brightness(1.05); }
-    </style>
-    """,
-    unsafe_allow_html=True,
+# Page configuration
+st.set_page_config(
+    page_title="FinDocGPT",
+    page_icon="🚀",
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-st.markdown(
-    """
-<div class="feature-card" style="text-align:center; margin-bottom: 1rem;">
-  <h2 style="margin:0">🚀 FinDocGPT</h2>
-  <p style="margin:0.25rem 0 0 0; color: rgba(255,255,255,0.9)">AI-Powered Financial Analysis Platform</p>
+# Custom CSS for black/purple gradient background
+st.markdown("""
+<style>
+    .stApp {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        color: white;
+    }
+    
+    .main-header {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        padding: 2rem;
+        border-radius: 15px;
+        margin-bottom: 2rem;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+    
+    .main-header h1 {
+        color: white;
+        font-size: 3rem;
+        font-weight: 700;
+        margin: 0;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+    }
+    
+    .feature-card {
+        background: rgba(255,255,255,0.1);
+        padding: 1.5rem;
+        border-radius: 15px;
+        margin: 1rem 0;
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+    }
+    
+    .stButton>button {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        color: white !important;
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .stButton>button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.6);
+    }
+    
+    .st-emotion-cache-1v0mbdj .stButton>button {
+        background: transparent;
+        border: 1px solid #667eea;
+        color: #667eea !important;
+    }
+    
+    .st-emotion-cache-1v0mbdj .stButton>button:hover {
+        background: rgba(102, 126, 234, 0.1);
+        border-color: #764ba2;
+        color: #764ba2 !important;
+    }
+    
+    .st-emotion-cache-1v0mbdj .stButton>button[kind="primary"] {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white !important;
+    }
+    
+    .st-emotion-cache-1v0mbdj .stButton>button[kind="primary"]:hover {
+        background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    .stSelectbox, .stTextInput, .stTextArea {
+        color: white;
+    }
+    .stSelectbox label, .stTextInput label, .stTextArea label {
+        color: white !important;
+    }
+    .st-emotion-cache-1r6slb0, .st-emotion-cache-1kyxreq-container {
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 10px;
+    }
+    .st-emotion-cache-1r6slb0:focus, .st-emotion-cache-1kyxreq-container:focus {
+        border-color: #667eea;
+    }
+    .st-emotion-cache-1tpl0xr p {
+        color: white;
+    }
+    
+    .stTextArea textarea {
+        color: white;
+        background-color: rgba(255,255,255,0.1);
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Header
+st.markdown("""
+<div class="main-header">
+    <h1>🚀 FinDocGPT</h1>
+    <p style="color: rgba(255,255,255,0.9); font-size: 1.2rem; margin: 0.5rem 0 0 0;">
+        AI-Powered Financial Analysis Platform
+    </p>
 </div>
-""",
-    unsafe_allow_html=True,
-)
+""", unsafe_allow_html=True)
 
 # Lightweight API response path
 api_response = handle_api_request()
@@ -92,7 +186,6 @@ if has_api_key:
     st.success("Google AI API configured")
 else:
     st.info("GOOGLE_API_KEY not set. AI Q&A will be disabled; other features work.")
-
 
 # Sidebar
 with st.sidebar:
@@ -120,8 +213,7 @@ with st.sidebar:
         text_input = st.text_area("Enter financial text to analyze:")
         sentiment_button = st.button("Analyze Sentiment")
 
-
-# Modes
+# Main Analysis Logic
 if analysis_mode == "Financial Forecasting" and 'forecast_button' in locals() and forecast_button:
     if not ticker:
         st.warning("Please enter a stock ticker.")
@@ -237,7 +329,6 @@ elif analysis_mode == "Sentiment Analysis" and 'sentiment_button' in locals() an
                 with col2:
                     st.metric("Confidence", f"{score:.2%}")
                 st.info(text_input)
-
 
 # Default view
 if (
