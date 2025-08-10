@@ -21,15 +21,22 @@ def get_query_params() -> Dict[str, Any]:
 
 
 def is_pro_user() -> bool:
-    """Return True if user has Pro access via env var or query parameter."""
+    """Return True if user has Pro access via env var or query parameter.
+
+    Accepts query keys 'pro', 'Pro', 'PRO', etc. (case-insensitive),
+    and values: 1/true/yes (case-insensitive).
+    """
     env_flag = os.getenv("PRO_USER", "false").lower() in {"1", "true", "yes"}
     params = get_query_params()
     pro_param = False
     if params:
-        value = params.get("pro")
-        if isinstance(value, list):
-            value = value[0] if value else None
-        pro_param = str(value).lower() in {"1", "true", "yes"}
+        # find any key named 'pro' regardless of case
+        key = next((k for k in params.keys() if str(k).lower() == "pro"), None)
+        if key is not None:
+            value = params.get(key)
+            if isinstance(value, list):
+                value = value[0] if value else None
+            pro_param = str(value).lower() in {"1", "true", "yes"}
     return env_flag or pro_param
 
 

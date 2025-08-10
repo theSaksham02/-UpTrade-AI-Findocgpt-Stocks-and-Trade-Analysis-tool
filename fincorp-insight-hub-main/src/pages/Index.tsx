@@ -68,7 +68,7 @@ const Index = () => {
       status: 'active',
       features: ['Real-time comparison', 'Sentiment integration', 'Performance metrics'],
       gradient: 'from-blue-600 to-purple-600',
-      link: 'http://localhost:8501'
+      link: 'http://localhost:8501/TradeX_(Pro)?pro=1'
     },
     {
       id: 'visualx',
@@ -77,7 +77,8 @@ const Index = () => {
       description: 'Advanced data visualization and interactive charts',
       status: 'coming-soon',
       features: ['Interactive dashboards', '3D visualizations', 'Custom chart builder'],
-      gradient: 'from-green-600 to-blue-600'
+      gradient: 'from-green-600 to-blue-600',
+      videoLink: 'https://youtu.be/TaeQIEIuJTY'
     },
     {
       id: 'hftx',
@@ -86,7 +87,8 @@ const Index = () => {
       description: 'High-frequency trading algorithms and automation',
       status: 'coming-soon',
       features: ['Microsecond execution', 'ML-driven strategies', 'Risk management'],
-      gradient: 'from-red-600 to-orange-600'
+      gradient: 'from-red-600 to-orange-600',
+      videoLink: 'https://youtu.be/KfGBdWOncqw'
     }
   ];
 
@@ -147,7 +149,7 @@ const Index = () => {
                 size="lg" 
                 variant="outline" 
                 className="border-white/30 text-white hover:bg-white/10 font-medium px-8 py-4 rounded-xl backdrop-blur-sm transition-all duration-300 hover:scale-105"
-                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
+                onClick={() => window.open("https://www.youtube.com/watch?v=hBQDc0DvrIE", "_blank")}
               >
                 <Play className="mr-2 h-5 w-5" />
                 Watch 2-Min Demo
@@ -410,14 +412,24 @@ const Index = () => {
                           {loadingTool === tool.id ? "Launching..." : `Launch ${tool.name}`}
                         </Button>
                       ) : (
-                        <Button 
-                          variant="outline" 
-                          className="w-full border-white/30 text-white/50 cursor-not-allowed"
-                          disabled
-                        >
-                          <Clock className="mr-2 h-4 w-4" />
-                          Coming Soon
-                        </Button>
+                        <div className="flex gap-2">
+                          <Button 
+                            variant="outline" 
+                            className="w-full border-white/30 text-white/80 hover:bg-white/10"
+                            onClick={() => tool.videoLink && window.open(tool.videoLink, '_blank')}
+                          >
+                            <Play className="mr-2 h-4 w-4" />
+                            Watch Demo
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            className="w-full border-white/30 text-white/50 cursor-not-allowed"
+                            disabled
+                          >
+                            <Clock className="mr-2 h-4 w-4" />
+                            Coming Soon
+                          </Button>
+                        </div>
                       )}
                     </div>
                   </CardContent>
@@ -544,7 +556,11 @@ const Index = () => {
                   <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white flex-1">
                     Start 30-Day Trial
                   </Button>
-                  <Button variant="outline" className="border-white/30 text-white hover:bg-white/10 flex-1">
+                  <Button 
+                    variant="outline" 
+                    className="border-white/30 text-white hover:bg-white/10 flex-1"
+                    onClick={() => window.open("https://www.linkedin.com/in/saksham-mishra-7b1930345/", "_blank")}
+                  >
                     Schedule Demo
                   </Button>
                 </div>
@@ -653,7 +669,11 @@ const Index = () => {
                     </li>
                   ))}
                 </ul>
-                <Button variant="outline" className="border-white/30 text-white hover:bg-white/10">
+                <Button 
+                  variant="outline" 
+                  className="border-white/30 text-white hover:bg-white/10"
+                  onClick={() => window.open('https://www.youtube.com/watch?v=TaeQIEIuJTY', '_blank')}
+                >
                   <Eye className="mr-2 h-4 w-4" />
                   Preview Demo
                 </Button>
