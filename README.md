@@ -632,9 +632,8 @@ FinDocGPT Analysis: 15 minutes × $150/hour = $37.50
 
 **🌟 Ready to transform your financial analysis workflow?**
 
-[![Email](https://img.shields.io/badge/Email-support@findocgpt.ai-blue?style=for-the-badge&logo=gmail)](mailto:support@findocgpt.ai)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-FinDocGPT-blue?style=for-the-badge&logo=linkedin)](https://linkedin.com/company/findocgpt)
-[![Twitter](https://img.shields.io/badge/Twitter-@FinDocGPT-blue?style=for-the-badge&logo=twitter)](https://twitter.com/findocgpt)
+[![Email](https://img.shields.io/badge/Email-support@findocgpt.ai-blue?style=for-the-badge&logo=gmail)](mailto:sakshammishra0205@gmail.com)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-FinDocGPT-blue?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/saksham-mishra-7b1930345/)
 
 
 </div>
