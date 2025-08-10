@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Button } from './button';
 import { Input } from './input';
 import { Label } from './label';
@@ -19,7 +19,7 @@ export function ROICalculator() {
   const [hourlyRate, setHourlyRate] = useState(150);
   const [result, setResult] = useState<ROIResult | null>(null);
 
-  const calculateROI = () => {
+  const calculateROI = useCallback(() => {
     const annualHours = hoursPerWeek * 52;
     const currentCost = teamSize * annualHours * hourlyRate;
     const findocgptCost = teamSize * 2347 * 12; // Professional plan
@@ -34,11 +34,11 @@ export function ROICalculator() {
       roi,
       breakEvenMonths
     });
-  };
+  }, [teamSize, hoursPerWeek, hourlyRate]);
 
   useEffect(() => {
     calculateROI();
-  }, [teamSize, hoursPerWeek, hourlyRate]);
+  }, [calculateROI]);
 
   return (
     <div className="space-y-6">

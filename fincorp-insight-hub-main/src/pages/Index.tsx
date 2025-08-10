@@ -21,7 +21,13 @@ import {
   CheckCircle,
   Star,
   Check,
-  X
+  X,
+  Activity,
+  Brain,
+  BarChart2,
+  Scale,
+  LineChart,
+  Smartphone
 } from 'lucide-react';
 
 const Index = () => {
@@ -47,6 +53,42 @@ const Index = () => {
   };
 
   const result = calculateROI();
+
+  // Premium Tools Data
+  const premiumTools = [
+    {
+      id: 'tradex',
+      name: 'TradeX',
+      icon: Scale,
+      description: 'Advanced stock comparison and analysis engine',
+      status: 'active',
+      features: ['Real-time comparison', 'Sentiment integration', 'Performance metrics'],
+      gradient: 'from-blue-600 to-purple-600',
+      link: 'http://localhost:8501'
+    },
+    {
+      id: 'visualx',
+      name: 'VisualX',
+      icon: BarChart2,
+      description: 'Advanced data visualization and interactive charts',
+      status: 'coming-soon',
+      features: ['Interactive dashboards', '3D visualizations', 'Custom chart builder'],
+      gradient: 'from-green-600 to-blue-600'
+    },
+    {
+      id: 'hftx',
+      name: 'HFTX',
+      icon: Zap,
+      description: 'High-frequency trading algorithms and automation',
+      status: 'coming-soon',
+      features: ['Microsecond execution', 'ML-driven strategies', 'Risk management'],
+      gradient: 'from-red-600 to-orange-600'
+    }
+  ];
+
+  const openStreamlitApp = () => {
+    window.open('http://localhost:8501', '_blank');
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-pink-900 to-black">
@@ -261,6 +303,101 @@ const Index = () => {
                 </Card>
               );
             })}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Tools Section */}
+      <section className="py-16 lg:py-24 bg-gradient-to-r from-purple-900/50 to-pink-900/50">
+        <div className="container mx-auto px-4">
+          <div className="text-center space-y-8 max-w-4xl mx-auto mb-12">
+            <h2 className="text-3xl md:text-5xl font-semibold text-white">
+              Premium Trading <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">Arsenal</span>
+            </h2>
+            <p className="text-lg text-white/70">
+              Advanced tools for professional traders and analysts
+            </p>
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {premiumTools.map((tool) => {
+              const Icon = tool.icon;
+              return (
+                <Card 
+                  key={tool.id} 
+                  className={`bg-white/5 border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all duration-300 group relative overflow-hidden ${
+                    tool.status === 'active' ? 'ring-2 ring-purple-500/50' : ''
+                  }`}
+                >
+                  {tool.status === 'active' && (
+                    <div className="absolute top-4 right-4">
+                      <Badge className="bg-green-600/20 text-green-400 border-green-500/30">
+                        ACTIVE
+                      </Badge>
+                    </div>
+                  )}
+                  
+                  <CardContent className="p-8">
+                    <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${tool.gradient} p-4 mb-6 mx-auto`}>
+                      <Icon className="h-8 w-8 text-white" />
+                    </div>
+                    
+                    <h3 className="text-2xl font-bold text-white text-center mb-3">
+                      {tool.name}
+                    </h3>
+                    
+                    <p className="text-white/70 text-center mb-6">
+                      {tool.description}
+                    </p>
+                    
+                    <ul className="space-y-2 mb-8">
+                      {tool.features.map((feature, index) => (
+                        <li key={index} className="flex items-center text-white/60">
+                          <CheckCircle className="h-4 w-4 text-green-400 mr-2 flex-shrink-0" />
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
+                    
+                    <div className="text-center">
+                      {tool.status === 'active' ? (
+                        <Button 
+                          className={`w-full bg-gradient-to-r ${tool.gradient} hover:scale-105 transition-all duration-300 text-white font-semibold`}
+                          onClick={() => window.open(tool.link, '_blank')}
+                        >
+                          <Play className="mr-2 h-4 w-4" />
+                          Launch {tool.name}
+                        </Button>
+                      ) : (
+                        <Button 
+                          variant="outline" 
+                          className="w-full border-white/30 text-white/50 cursor-not-allowed"
+                          disabled
+                        >
+                          <Clock className="mr-2 h-4 w-4" />
+                          Coming Soon
+                        </Button>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+          
+          {/* Main App Access Button */}
+          <div className="text-center mt-12">
+            <Button 
+              size="lg"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-12 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
+              onClick={openStreamlitApp}
+            >
+              <Smartphone className="mr-3 h-6 w-6" />
+              Access Full FinDocGPT Platform
+            </Button>
+            <p className="text-white/60 mt-4">
+              Launch the complete AI-powered financial analysis platform
+            </p>
           </div>
         </div>
       </section>
