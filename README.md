@@ -58,6 +58,7 @@ FinDocGPT is a **state-of-the-art AI platform** that revolutionizes financial do
 | 📊 **Sentiment Analysis** | DistilBERT | 94% accuracy | Market sentiment evaluation |
 | 📈 **Predictive Modeling** | Linear Regression + ML | MSE: 1.75 | Stock price forecasting |
 | ⚖️ **TradeX Comparison** | Custom Algorithm | Real-time | Multi-stock analysis |
+| 📊 **VisualX Analytics** | Advanced Visualization | Real-time | Data visualization platform |
 | 🔍 **Anomaly Detection** | Statistical Analysis | 99% precision | Risk assessment |
 | 📱 **Premium Dashboard** | Streamlit + React | 99.9% uptime | Professional interface |
 
@@ -86,6 +87,13 @@ FinDocGPT is a **state-of-the-art AI platform** that revolutionizes financial do
 - **Sentiment-weighted evaluations**
 - **Interactive visualization charts**
 - **Investment recommendation engine**
+
+### **📊 VisualX Analytics (Pro Feature)**
+- **Advanced data visualization platform**
+- **Real-time market sentiment influence analysis**
+- **Interactive charts and graphs**
+- **Custom dashboard creation**
+- **Multi-dimensional financial data visualization**
 
 ---
 
@@ -318,6 +326,13 @@ Directional Accuracy: 87%
 - **Side-by-side performance analysis**
 - **Sentiment-weighted evaluations**
 - **Interactive visualization charts**
+
+#### **📊 VisualX Analytics (Pro)**
+- **Advanced data visualization platform**
+- **Real-time market sentiment influence analysis**
+- **Interactive charts and graphs**
+- **Custom dashboard creation**
+- **Multi-dimensional financial data visualization**
 
 ### **🔍 Key UI Features**
 1. **Intelligent Caching**: 90% cache hit rate for sub-second responses
