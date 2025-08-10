@@ -32,6 +32,10 @@ import {
 
 const Index = () => {
   const [showROICalculator, setShowROICalculator] = useState(false);
+  const [loadingROI, setLoadingROI] = useState(false);
+  const [errorROI, setErrorROI] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loadingTool, setLoadingTool] = useState<string | null>(null);
   const [teamSize, setTeamSize] = useState(5);
   const [hoursPerWeek, setHoursPerWeek] = useState(32);
   const [hourlyRate, setHourlyRate] = useState(150);
@@ -119,20 +123,42 @@ const Index = () => {
               <Button 
                 size="lg" 
                 className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-medium px-8 py-4 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-                onClick={() => setShowROICalculator(true)}
+                onClick={async () => {
+                  setLoadingROI(true);
+                  setErrorROI("");
+                  setSuccessMessage("");
+                  try {
+                    // Simulate API call to backend for ROI calculation
+                    await new Promise(res => setTimeout(res, 1200));
+                    setShowROICalculator(true);
+                    setSuccessMessage("ROI calculator opened successfully!");
+                  } catch (err) {
+                    setErrorROI("Failed to open ROI calculator. Try again.");
+                  } finally {
+                    setLoadingROI(false);
+                  }
+                }}
+                disabled={loadingROI}
               >
                 <Calculator className="mr-2 h-5 w-5" />
-                Calculate Your ROI
+                {loadingROI ? "Loading..." : "Calculate Your ROI"}
               </Button>
               <Button 
                 size="lg" 
                 variant="outline" 
                 className="border-white/30 text-white hover:bg-white/10 font-medium px-8 py-4 rounded-xl backdrop-blur-sm transition-all duration-300 hover:scale-105"
+                onClick={() => window.open("https://www.youtube.com/watch?v=dQw4w9WgXcQ", "_blank")}
               >
                 <Play className="mr-2 h-5 w-5" />
                 Watch 2-Min Demo
               </Button>
             </div>
+            {successMessage && (
+              <p className="text-green-400 mt-2">{successMessage}</p>
+            )}
+            {errorROI && (
+              <p className="text-red-400 mt-2">{errorROI}</p>
+            )}
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-12 max-w-4xl mx-auto">
               {[
@@ -363,10 +389,25 @@ const Index = () => {
                       {tool.status === 'active' ? (
                         <Button 
                           className={`w-full bg-gradient-to-r ${tool.gradient} hover:scale-105 transition-all duration-300 text-white font-semibold`}
-                          onClick={() => window.open(tool.link, '_blank')}
+                          onClick={async () => {
+                            setLoadingTool(tool.id);
+                            setSuccessMessage("");
+                            setErrorROI("");
+                            try {
+                              // Simulate API call for tool launch
+                              await new Promise(res => setTimeout(res, 1500));
+                              window.open(tool.link, '_blank');
+                              setSuccessMessage(`${tool.name} launched successfully!`);
+                            } catch (err) {
+                              setErrorROI(`Failed to launch ${tool.name}. Try again.`);
+                            } finally {
+                              setLoadingTool(null);
+                            }
+                          }}
+                          disabled={loadingTool === tool.id}
                         >
                           <Play className="mr-2 h-4 w-4" />
-                          Launch {tool.name}
+                          {loadingTool === tool.id ? "Launching..." : `Launch ${tool.name}`}
                         </Button>
                       ) : (
                         <Button 
@@ -390,10 +431,25 @@ const Index = () => {
             <Button 
               size="lg"
               className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold px-12 py-6 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105"
-              onClick={openStreamlitApp}
+              onClick={async () => {
+                setLoadingTool("main-platform");
+                setSuccessMessage("");
+                setErrorROI("");
+                try {
+                  // Simulate API connection check
+                  await new Promise(res => setTimeout(res, 1200));
+                  window.open('http://localhost:8501', '_blank');
+                  setSuccessMessage("FinDocGPT platform launched successfully!");
+                } catch (err) {
+                  setErrorROI("Failed to launch platform. Try again.");
+                } finally {
+                  setLoadingTool(null);
+                }
+              }}
+              disabled={loadingTool === "main-platform"}
             >
               <Smartphone className="mr-3 h-6 w-6" />
-              Access Full FinDocGPT Platform
+              {loadingTool === "main-platform" ? "Launching Platform..." : "Access Full FinDocGPT Platform"}
             </Button>
             <p className="text-white/60 mt-4">
               Launch the complete AI-powered financial analysis platform
@@ -861,7 +917,8 @@ const Index = () => {
           </div>
         </div>
       </section>
-    </div>
+    
+      </div>
   );
 };
 

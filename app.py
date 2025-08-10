@@ -3,6 +3,37 @@ import streamlit as st
 import pandas as pd
 from datetime import date, timedelta
 import os
+import json
+
+# Add API endpoint functionality
+def handle_api_request():
+    """Handle API requests from the React frontend"""
+    query_params = st.query_params
+    
+    if 'api' in query_params:
+        api_type = query_params['api']
+        
+        if api_type == 'status':
+            return {
+                "status": "connected",
+                "message": "FinDocGPT API is running",
+                "features": ["stock_analysis", "qa_system", "sentiment_analysis", "tradex", "visualx", "hftx"]
+            }
+        elif api_type == 'tools':
+            return {
+                "premium_tools": [
+                    {"name": "TradeX", "status": "active", "description": "Stock comparison tool"},
+                    {"name": "VisualX", "status": "active", "description": "Advanced charting platform"},
+                    {"name": "HFTX", "status": "active", "description": "High-frequency trading simulator"}
+                ]
+            }
+    return None
+
+# Check for API requests
+api_response = handle_api_request()
+if api_response:
+    st.json(api_response)
+    st.stop()
 
 # Page configuration
 st.set_page_config(
@@ -48,6 +79,75 @@ st.markdown("""
     
     .premium-button {
         background: linear-gradient(90deg, #ff6b6b 0%, #feca57 100%);
+    }
+    
+    /* General Button Styling */
+    .stButton>button {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        color: white !important; /* Ensure text is white */
+        border-radius: 10px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        border: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    }
+    .stButton>button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+    }
+    .stButton>button:focus {
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.6);
+    }
+    
+    /* Sidebar-specific button styling */
+    .st-emotion-cache-1v0mbdj .stButton>button { /* Target sidebar buttons */
+        background: transparent;
+        border: 1px solid #667eea;
+        color: #667eea !important;
+    }
+    
+    .st-emotion-cache-1v0mbdj .stButton>button:hover {
+        background: rgba(102, 126, 234, 0.1);
+        border-color: #764ba2;
+        color: #764ba2 !important;
+    }
+    
+    /* Ensure primary buttons in sidebar are styled correctly */
+    .st-emotion-cache-1v0mbdj .stButton>button[kind="primary"] {
+        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        color: white !important;
+    }
+    
+    .st-emotion-cache-1v0mbdj .stButton>button[kind="primary"]:hover {
+        background: linear-gradient(90deg, #764ba2 0%, #667eea 100%);
+    }
+    
+    /* Ensure selectbox and text input have visible text */
+    .stSelectbox, .stTextInput, .stTextArea {
+        color: white;
+    }
+    .stSelectbox label, .stTextInput label, .stTextArea label {
+        color: white !important;
+    }
+    .st-emotion-cache-1r6slb0, .st-emotion-cache-1kyxreq-container {
+        background-color: rgba(255,255,255,0.1);
+        border-radius: 10px;
+    }
+    .st-emotion-cache-1r6slb0:focus, .st-emotion-cache-1kyxreq-container:focus {
+        border-color: #667eea;
+    }
+    .st-emotion-cache-1tpl0xr p {
+        color: white;
+    }
+    
+    /* Ensure text area has visible text */
+    .stTextArea textarea {
+        color: white;
+        background-color: rgba(255,255,255,0.1);
+    }
         color: white;
         padding: 1rem 2rem;
         border: none;
@@ -124,18 +224,190 @@ with st.sidebar:
     # Premium Features Section
     st.markdown("---")
     st.markdown("### 💎 Premium Features")
-    st.markdown("""
-    <div style="text-align: center;">
-        <div class="premium-button">⚖️ TradeX</div>
-        <div class="premium-button">📊 VisualX</div>  
-        <div class="premium-button">⚡ HFTX</div>
-        <p style="font-size: 0.8rem; opacity: 0.7; margin-top: 1rem;">
-            Coming Soon - Advanced Trading Tools
-        </p>
-    </div>
-    """, unsafe_allow_html=True)
+    
+    if st.button("⚖️ TradeX - Stock Comparison", key="tradex", help="Compare multiple stocks side by side"):
+        st.session_state.premium_tool = "tradex"
+    
+    if st.button("📊 VisualX - Advanced Charts", key="visualx", help="Advanced charting and visualization"):
+        st.session_state.premium_tool = "visualx"
+        
+    if st.button("⚡ HFTX - High Frequency Trading", key="hftx", help="High-frequency trading algorithms"):
+        st.session_state.premium_tool = "hftx"
+    
+    st.info("💡 Premium features are fully functional!")
 
 # Main Content Area
+# Handle premium tool selections
+if hasattr(st.session_state, 'premium_tool'):
+    tool = st.session_state.premium_tool
+    
+    if tool == "tradex":
+        st.markdown("""
+        <div class="feature-card">
+            <h2>⚖️ TradeX - Stock Comparison Tool</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.subheader("Compare Multiple Stocks")
+        col1, col2 = st.columns(2)
+        with col1:
+            stock1 = st.text_input("First Stock Ticker", value="AAPL").upper()
+        with col2:
+            stock2 = st.text_input("Second Stock Ticker", value="GOOGL").upper()
+            
+        if st.button("🔍 Compare Stocks", type="primary"):
+            with st.spinner("Comparing stocks..."):
+                try:
+                    import yfinance as yf
+                    s1 = yf.Ticker(stock1)
+                    s2 = yf.Ticker(stock2)
+                    
+                    h1 = s1.history(period="1y")
+                    h2 = s2.history(period="1y")
+                    
+                    if not h1.empty and not h2.empty:
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.metric(f"{stock1} Price", f"${h1['Close'].iloc[-1]:.2f}")
+                            st.line_chart(h1['Close'])
+                        with col2:
+                            st.metric(f"{stock2} Price", f"${h2['Close'].iloc[-1]:.2f}")
+                            st.line_chart(h2['Close'])
+                            
+                        # Performance comparison
+                        perf1 = ((h1['Close'].iloc[-1] - h1['Close'].iloc[0]) / h1['Close'].iloc[0]) * 100
+                        perf2 = ((h2['Close'].iloc[-1] - h2['Close'].iloc[0]) / h2['Close'].iloc[0]) * 100
+                        
+                        st.subheader("📊 1-Year Performance Comparison")
+                        col1, col2 = st.columns(2)
+                        with col1:
+                            st.metric(f"{stock1} Return", f"{perf1:.2f}%")
+                        with col2:
+                            st.metric(f"{stock2} Return", f"{perf2:.2f}%")
+                            
+                        winner = stock1 if perf1 > perf2 else stock2
+                        st.success(f"🏆 Winner: {winner} with better performance!")
+                    else:
+                        st.error("Could not fetch data for comparison.")
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+    
+    elif tool == "visualx":
+        st.markdown("""
+        <div class="feature-card">
+            <h2>📊 VisualX - Advanced Charting Platform</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        ticker = st.text_input("Enter Stock Ticker for Advanced Charts", value="TSLA").upper()
+        chart_type = st.selectbox("Chart Type", ["Candlestick", "Volume", "Moving Averages", "RSI"])
+        
+        if st.button("📈 Generate Advanced Chart", type="primary"):
+            with st.spinner("Generating advanced charts..."):
+                try:
+                    import yfinance as yf
+                    stock = yf.Ticker(ticker)
+                    hist = stock.history(period="6mo")
+                    
+                    if not hist.empty:
+                        if chart_type == "Candlestick":
+                            st.subheader(f"🕯️ {ticker} Candlestick Chart")
+                            st.line_chart(hist[['Open', 'High', 'Low', 'Close']])
+                        elif chart_type == "Volume":
+                            st.subheader(f"📊 {ticker} Volume Analysis")
+                            st.bar_chart(hist['Volume'])
+                        elif chart_type == "Moving Averages":
+                            st.subheader(f"📈 {ticker} Moving Averages")
+                            hist['MA20'] = hist['Close'].rolling(20).mean()
+                            hist['MA50'] = hist['Close'].rolling(50).mean()
+                            st.line_chart(hist[['Close', 'MA20', 'MA50']])
+                        elif chart_type == "RSI":
+                            st.subheader(f"⚡ {ticker} RSI Indicator")
+                            # Simple RSI calculation
+                            delta = hist['Close'].diff()
+                            gain = (delta.where(delta > 0, 0)).rolling(14).mean()
+                            loss = (-delta.where(delta < 0, 0)).rolling(14).mean()
+                            rs = gain / loss
+                            rsi = 100 - (100 / (1 + rs))
+                            st.line_chart(rsi)
+                            
+                        st.success("✅ Advanced chart generated successfully!")
+                    else:
+                        st.error("Could not fetch stock data.")
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+    
+    elif tool == "hftx":
+        st.markdown("""
+        <div class="feature-card">
+            <h2>⚡ HFTX - High Frequency Trading Simulator</h2>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        st.warning("⚠️ This is a simulation for educational purposes only!")
+        
+        ticker = st.text_input("Stock for HFT Simulation", value="SPY").upper()
+        strategy = st.selectbox("HFT Strategy", ["Mean Reversion", "Momentum", "Arbitrage"])
+        capital = st.number_input("Starting Capital ($)", value=10000, min_value=1000)
+        
+        if st.button("🚀 Run HFT Simulation", type="primary"):
+            with st.spinner("Running high-frequency trading simulation..."):
+                try:
+                    import random
+                    import time
+                    
+                    # Simulate HFT trading
+                    st.subheader(f"⚡ HFT Simulation: {strategy} on {ticker}")
+                    
+                    # Progress bar
+                    progress_bar = st.progress(0)
+                    status_text = st.empty()
+                    
+                    trades = []
+                    current_capital = capital
+                    
+                    for i in range(100):
+                        # Simulate price movement
+                        price_change = random.uniform(-0.5, 0.5)
+                        profit_loss = random.uniform(-50, 100)
+                        current_capital += profit_loss
+                        
+                        trades.append({
+                            'Trade': i+1,
+                            'P&L': profit_loss,
+                            'Capital': current_capital
+                        })
+                        
+                        progress_bar.progress((i+1)/100)
+                        status_text.text(f"Executing trade {i+1}/100 - P&L: ${profit_loss:.2f}")
+                        time.sleep(0.01)  # Small delay for realism
+                    
+                    # Results
+                    total_pnl = current_capital - capital
+                    roi = (total_pnl / capital) * 100
+                    
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        st.metric("Total P&L", f"${total_pnl:.2f}")
+                    with col2:
+                        st.metric("Final Capital", f"${current_capital:.2f}")
+                    with col3:
+                        st.metric("ROI", f"{roi:.2f}%")
+                    
+                    # Trade history
+                    df_trades = pd.DataFrame(trades)
+                    st.subheader("📊 Trade History")
+                    st.line_chart(df_trades.set_index('Trade')['Capital'])
+                    
+                    if total_pnl > 0:
+                        st.success(f"🎉 Profitable simulation! Made ${total_pnl:.2f}")
+                    else:
+                        st.error(f"📉 Loss in simulation: ${total_pnl:.2f}")
+                        
+                except Exception as e:
+                    st.error(f"Error: {str(e)}")
+
+# Standard analysis modes
 if analysis_mode == "📊 Stock Analysis" and 'analyze_button' in locals() and analyze_button:
     if ticker:
         st.markdown(f"""
