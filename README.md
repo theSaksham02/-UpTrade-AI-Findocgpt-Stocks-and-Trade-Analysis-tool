@@ -8,7 +8,7 @@
 <p align="center"><b>Enterprise AI for Financial Document Intelligence</b></p>
 
 <p align="center">
-  <img src="assets/akashx-logo.png" alt="AkashX" height="120" />
+  <img src="MFsFPLGsMYTBmf9gZLDEDLyoLo41744262507599_200x200.png" alt="AkashX" height="120" />
 </p>
 
 <p align="center">
