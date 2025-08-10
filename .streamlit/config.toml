@@ -1,3 +1,14 @@
+[theme]
+base = "dark"
+primaryColor = "#8b5cf6"
+backgroundColor = "#0f1420"
+secondaryBackgroundColor = "#141a2a"
+textColor = "#ffffff"
+
+[server]
+enableXsrfProtection = true
+cookieSecret = "findocgpt-pro-theme"
+
 [general]
 email = ""
 

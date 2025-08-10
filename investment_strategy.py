@@ -19,9 +19,9 @@ def generate_recommendation(historical_data, forecast_data):
         return "Error", "Insufficient data for a recommendation.", {}
 
     # --- Key Metrics ---
-    last_historical_price = historical_data.iloc[-1]
-    peak_forecast_price = forecast_data.max()
-    end_forecast_price = forecast_data.iloc[-1]
+    last_historical_price = historical_data.iloc[-1].item()
+    peak_forecast_price = forecast_data.max().item() # Use .item() for scalar extraction
+    end_forecast_price = forecast_data.iloc[-1].item()
     
     # Calculate the projected change
     projected_change_pct = ((end_forecast_price - last_historical_price) / last_historical_price) * 100
@@ -65,7 +65,7 @@ def generate_recommendation(historical_data, forecast_data):
     else:
         recommendation = "Hold"
         reason = (
-            f"The forecast shows low volatility with a projected change of only {project_change_pct:.2f}%. "
+            f"The forecast shows low volatility with a projected change of only {projected_change_pct:.2f}%. "
             f"The current trend is not strong enough to signal a clear buy or sell action. "
             f"It is advisable to hold and monitor the asset."
         )

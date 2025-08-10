@@ -25,6 +25,7 @@ faiss-cpu>=1.7.4
 
 # Financial Data APIs
 yfinance>=0.2.18
+statsmodels>=0.14.0
 
 # Visualization & Charts
 plotly>=5.15.0
