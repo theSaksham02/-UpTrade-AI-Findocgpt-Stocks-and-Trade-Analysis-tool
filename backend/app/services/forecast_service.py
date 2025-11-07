@@ -1,5 +1,5 @@
 """Forecasting service for stock price predictions."""
-from typing import List
+from typing import List, Optional
 from datetime import datetime, timedelta
 
 

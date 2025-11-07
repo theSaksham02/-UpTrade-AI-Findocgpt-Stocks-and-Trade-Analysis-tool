@@ -28,6 +28,7 @@ class ForecastResponse(BaseModel):
     
     class Config:
         from_attributes = True
+        protected_namespaces = ()
 
 
 class ModelPerformanceResponse(BaseModel):
@@ -47,3 +48,4 @@ class ModelPerformanceResponse(BaseModel):
     
     class Config:
         from_attributes = True
+        protected_namespaces = ()
