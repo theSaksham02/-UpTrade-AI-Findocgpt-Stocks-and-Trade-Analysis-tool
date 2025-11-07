@@ -19,9 +19,21 @@ def generate_recommendation(historical_data, forecast_data):
         return "Error", "Insufficient data for a recommendation.", {}
 
     # --- Key Metrics ---
-    last_historical_price = historical_data.iloc[-1].item()
-    peak_forecast_price = forecast_data.max().item() # Use .item() for scalar extraction
-    end_forecast_price = forecast_data.iloc[-1].item()
+    # Handle both Series and scalar values
+    if isinstance(historical_data.iloc[-1], (int, float)):
+        last_historical_price = float(historical_data.iloc[-1])
+    else:
+        last_historical_price = float(historical_data.iloc[-1].item())
+    
+    if isinstance(forecast_data.max(), (int, float)):
+        peak_forecast_price = float(forecast_data.max())
+    else:
+        peak_forecast_price = float(forecast_data.max().item())
+    
+    if isinstance(forecast_data.iloc[-1], (int, float)):
+        end_forecast_price = float(forecast_data.iloc[-1])
+    else:
+        end_forecast_price = float(forecast_data.iloc[-1].item())
     
     # Calculate the projected change
     projected_change_pct = ((end_forecast_price - last_historical_price) / last_historical_price) * 100

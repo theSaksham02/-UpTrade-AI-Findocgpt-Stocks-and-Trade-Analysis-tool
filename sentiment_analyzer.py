@@ -2,8 +2,16 @@
 
 import os
 import pandas as pd
-from transformers import pipeline
 from config import get_google_api_key, validate_api_key
+
+# Try to import transformers, but handle if it fails
+try:
+    from transformers import pipeline
+    TRANSFORMERS_AVAILABLE = True
+except ImportError as e:
+    print(f"⚠️ Warning: transformers not available: {e}")
+    TRANSFORMERS_AVAILABLE = False
+    pipeline = None
 
 def load_financial_data():
     """
@@ -59,7 +67,12 @@ def extract_text_for_sentiment(df):
 def get_sentiment_pipeline():
     """
     Initializes and returns a sentiment analysis pipeline using DistilBERT.
+    Falls back to None if transformers is not available.
     """
+    if not TRANSFORMERS_AVAILABLE:
+        print("⚠️ Transformers library not available. Sentiment analysis will be limited.")
+        return None
+        
     try:
         # Use a pre-trained DistilBERT model fine-tuned for sentiment analysis.
         model_name = "distilbert-base-uncased-finetuned-sst-2-english"
@@ -68,6 +81,7 @@ def get_sentiment_pipeline():
         return sentiment_pipeline
     except Exception as e:
         print(f"❌ Error loading sentiment analysis pipeline: {e}")
+        print("   Continuing without sentiment analysis.")
         return None
 
 def analyze_sentiment(df, pipeline):

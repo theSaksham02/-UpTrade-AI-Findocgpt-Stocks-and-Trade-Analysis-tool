@@ -20,29 +20,46 @@ def detect_volume_anomalies(data, window=30, std_dev_factor=2.5):
         pd.DataFrame: The original DataFrame with two new columns:
                       'volume_anomaly' (boolean) and 'anomaly_reason' (string).
     """
-    if 'Volume' not in data or data['Volume'].empty:
+    # Handle MultiIndex columns from yfinance
+    if isinstance(data.columns, pd.MultiIndex):
+        data.columns = ['_'.join(col).strip() if isinstance(col, tuple) else col for col in data.columns]
+    
+    # Find volume column (could be 'Volume', 'Volume_AAPL', etc.)
+    volume_col = None
+    for col in data.columns:
+        if 'Volume' in str(col):
+            volume_col = col
+            break
+    
+    if volume_col is None or data[volume_col].empty:
         data['volume_anomaly'] = False
         data['anomaly_reason'] = ""
         return data
 
     # Calculate the rolling mean and standard deviation of the volume
-    rolling_mean = data['Volume'].rolling(window=window).mean()
-    rolling_std = data['Volume'].rolling(window=window).std()
+    rolling_mean = data[volume_col].rolling(window=window).mean()
+    rolling_std = data[volume_col].rolling(window=window).std()
 
     # Define the anomaly threshold
     anomaly_threshold = rolling_mean + (rolling_std * std_dev_factor)
 
     # Identify anomalies
-    data['volume_anomaly'] = data['Volume'] > anomaly_threshold
+    data['volume_anomaly'] = data[volume_col] > anomaly_threshold
     
     # Provide a reason for the anomaly
     def get_reason(row):
-        if row['volume_anomaly']:
-            mean_vol = rolling_mean[row.name]
-            return (
-                f"Volume of {row['Volume']:,} was "
-                f"{row['Volume'] / mean_vol:.1f}x higher than the {window}-day average."
-            )
+        try:
+            # Get the volume_anomaly value safely
+            is_anomaly = bool(row['volume_anomaly'])
+            if is_anomaly:
+                mean_vol = rolling_mean.loc[row.name]
+                vol = row[volume_col]
+                return (
+                    f"Volume of {vol:,} was "
+                    f"{vol / mean_vol:.1f}x higher than the {window}-day average."
+                )
+        except Exception:
+            pass
         return ""
         
     data['anomaly_reason'] = data.apply(get_reason, axis=1)
