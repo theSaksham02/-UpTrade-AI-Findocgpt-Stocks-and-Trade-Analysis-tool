@@ -28,7 +28,7 @@ class NewsArticle(Base):
     
     # Named entities and metadata
     entities = Column(JSON, default=dict)
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)

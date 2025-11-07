@@ -54,7 +54,7 @@ class Order(Base):
     status = Column(SQLEnum(OrderStatus), default=OrderStatus.PENDING, nullable=False)
     
     # Metadata
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
@@ -90,7 +90,7 @@ class Trade(Base):
     realized_pnl_percent = Column(Float)
     
     # Metadata
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Timestamps
     executed_at = Column(DateTime, default=datetime.utcnow, nullable=False)

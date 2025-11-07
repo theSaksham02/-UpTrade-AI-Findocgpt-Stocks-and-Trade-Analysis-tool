@@ -67,7 +67,7 @@ class ModelPerformance(Base):
     evaluation_end = Column(DateTime)
     
     # Metadata
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     notes = Column(Text)
     
     # Timestamps
