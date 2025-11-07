@@ -2,11 +2,12 @@
 
 FastAPI-based backend for the UpTrade AI financial analysis and trading platform.
 
-## 🚀 Status: Phase 2 Complete
+## 🚀 Status: Phase 3 Complete
 
 - ✅ **Phase 1:** Backend Foundation (Complete)
 - ✅ **Phase 2:** Real API Integrations (Complete)
-- 🔄 **Phase 3:** Advanced ML & Analytics (Planned)
+- ✅ **Phase 3:** ML & Advanced Analytics (Complete)
+- 🔄 **Phase 4:** Production Features (Planned)
 
 ## Features
 
@@ -26,6 +27,14 @@ FastAPI-based backend for the UpTrade AI financial analysis and trading platform
 - **Sentiment Analysis** using VADER algorithm
 - **Automatic fallback** to mock data if APIs unavailable
 - **Error handling** and comprehensive logging
+
+### ML & Advanced Analytics (Phase 3) 🆕
+- **ML Price Forecasting** using Prophet, Linear Regression, Moving Average
+- **Portfolio Optimization** with Modern Portfolio Theory (MPT)
+- **Efficient Frontier** calculation and Sharpe ratio maximization
+- **Risk/Return Analysis** with multiple risk profiles
+- **Diversification Scoring** using information entropy
+- **Confidence Intervals** for all predictions
 
 ## API Endpoints
 
@@ -52,16 +61,16 @@ All endpoints now return **real data** from external APIs:
 - `GET /trending` - Trending stocks by mentions
 - `GET /social/{ticker}` - Social mentions (via news proxy)
 
-### Forecast (`/api/v1/forecast`)
-- `POST /{ticker}` - Create price forecast
-- `GET /{ticker}/latest` - Get latest forecast
-- `GET /performance` - Get model performance
+### Forecast (`/api/v1/forecast`) 🆕 Real ML Models
+- `POST /{ticker}` - **ML-based** price forecasts (Prophet/Linear/MA)
+- `GET /{ticker}/latest` - Latest forecast with confidence
+- `GET /performance` - Model performance metrics
 
-### Portfolio (`/api/v1/portfolio`)
+### Portfolio (`/api/v1/portfolio`) 🆕 Real MPT Optimization
 - `POST /` - Create portfolio
 - `GET /{id}` - Get portfolio details
-- `GET /{id}/performance` - Get performance history
-- `POST /{id}/optimize` - Optimize portfolio
+- `GET /{id}/performance` - Performance history
+- `POST /{id}/optimize` - **MPT optimization** with Sharpe ratio
 
 ### Trading (`/api/v1/trading`)
 - `POST /order` - Create order
@@ -245,14 +254,24 @@ pytest
 - ✅ Comprehensive logging
 - ✅ Environment-based configuration
 
-### 🔄 Phase 3 - Advanced Features (Planned)
-- [ ] ML-based price forecasting
-- [ ] Portfolio optimization algorithms
+### ✅ Phase 3 - ML & Advanced Analytics (Complete)
+- ✅ **ML price forecasting** using Prophet, Linear Regression, Moving Average
+- ✅ **Portfolio optimization** with Modern Portfolio Theory
+- ✅ **Efficient frontier** calculation
+- ✅ **Sharpe ratio** maximization
+- ✅ **Risk/return** analysis and profiling
+- ✅ **Diversification scoring** using information entropy
+- ✅ **Confidence intervals** for predictions
+
+### 🔄 Phase 4 - Production Features (Planned)
+- [ ] LSTM/RNN deep learning forecasts
 - [ ] SEC EDGAR filing integration
 - [ ] Real social media APIs (Reddit/Twitter)
 - [ ] Redis caching layer
-- [ ] Database persistence for historical data
-- [ ] WebSocket for real-time updates
+- [ ] Database persistence for forecasts
+- [ ] WebSocket real-time updates
+- [ ] Backtesting framework
+- [ ] Advanced risk metrics (VaR, CVaR)
 
 ## Real Data Sources
 
@@ -263,6 +282,8 @@ pytest
 | Fundamentals | Yahoo Finance (yfinance) | ✅ Live |
 | News Articles | News API | ✅ Live |
 | Sentiment Analysis | VADER (local) | ✅ Live |
+| Price Forecasting | Prophet/Sklearn (local) | ✅ Live |
+| Portfolio Optimization | PyPortfolioOpt (local) | ✅ Live |
 | Filings | SEC EDGAR | 🔄 Planned |
 | Social Media | Reddit/Twitter API | 🔄 Planned |
 
