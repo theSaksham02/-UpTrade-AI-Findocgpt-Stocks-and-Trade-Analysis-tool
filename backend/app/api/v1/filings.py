@@ -9,6 +9,35 @@ from app.database import get_db
 router = APIRouter(prefix="/filings", tags=["filings"])
 
 
+@router.get("/latest", response_model=list)
+async def get_latest_filings(
+    limit: int = Query(20, le=100),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get latest filings.
+    
+    Args:
+        limit: Maximum number of results
+        db: Database session
+        
+    Returns:
+        Latest filings
+    """
+    # Stub implementation - returns mock data
+    return [
+        {
+            "id": 1,
+            "company_name": "Apple Inc.",
+            "ticker": "AAPL",
+            "filing_type": "10-K",
+            "filing_date": datetime.utcnow(),
+            "source": "SEC",
+            "url": "https://www.sec.gov/example/aapl-10k.html"
+        }
+    ]
+
+
 @router.get("/search", response_model=list)
 async def search_filings(
     ticker: Optional[str] = Query(None),
@@ -73,34 +102,5 @@ async def get_filing(
         "source": "SEC",
         "content": "Annual report content...",
         "url": "https://www.sec.gov/example/aapl-10k.html",
-        "metadata": {}
+        "extra_data": {}
     }
-
-
-@router.get("/latest", response_model=list)
-async def get_latest_filings(
-    limit: int = Query(20, le=100),
-    db: AsyncSession = Depends(get_db)
-):
-    """
-    Get latest filings.
-    
-    Args:
-        limit: Maximum number of results
-        db: Database session
-        
-    Returns:
-        Latest filings
-    """
-    # Stub implementation - returns mock data
-    return [
-        {
-            "id": 1,
-            "company_name": "Apple Inc.",
-            "ticker": "AAPL",
-            "filing_type": "10-K",
-            "filing_date": datetime.utcnow(),
-            "source": "SEC",
-            "url": "https://www.sec.gov/example/aapl-10k.html"
-        }
-    ]
