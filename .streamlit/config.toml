@@ -8,20 +8,9 @@ textColor = "#ffffff"
 [server]
 enableXsrfProtection = true
 cookieSecret = "findocgpt-pro-theme"
-
-[general]
-email = ""
-
-[server]
 headless = true
-port = 8501
+port = 8502
 enableCORS = false
 
 [browser]
 gatherUsageStats = false
-
-[theme]
-primaryColor = "#1E40AF"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F8FAFC"
-textColor = "#1F2937"
