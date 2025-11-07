@@ -100,7 +100,7 @@ class NewsService:
             List[dict]: Search results
         """
         # Stub implementation - returns mock data
-        return self.get_latest_news(limit)
+        return await self.get_latest_news(limit)
 
 
 # Global service instance
