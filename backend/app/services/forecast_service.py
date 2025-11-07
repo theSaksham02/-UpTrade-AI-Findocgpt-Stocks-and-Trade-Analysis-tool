@@ -337,46 +337,4 @@ class ForecastService:
 
 # Global service instance
 forecast_service = ForecastService()
-        """
-        Get the latest forecast for a ticker.
-        
-        Args:
-            ticker: Stock ticker symbol
-            
-        Returns:
-            dict: Latest forecast
-        """
-        # Stub implementation - returns mock data
-        return await self.create_forecast(ticker)
-    
-    async def get_model_performance(self, model_name: Optional[str] = None) -> List[dict]:
-        """
-        Get performance metrics for forecasting models.
-        
-        Args:
-            model_name: Optional filter by model name
-            
-        Returns:
-            List[dict]: Model performance metrics
-        """
-        # Stub implementation - returns mock data
-        return [
-            {
-                "id": 1,
-                "model_name": "default",
-                "model_version": "1.0",
-                "ticker": "SPY",
-                "mae": 2.15,
-                "mse": 6.89,
-                "rmse": 2.62,
-                "mape": 1.45,
-                "r2_score": 0.87,
-                "directional_accuracy": 0.78,
-                "evaluation_start": datetime.utcnow() - timedelta(days=90),
-                "evaluation_end": datetime.utcnow()
-            }
-        ]
 
-
-# Global service instance
-forecast_service = ForecastService()

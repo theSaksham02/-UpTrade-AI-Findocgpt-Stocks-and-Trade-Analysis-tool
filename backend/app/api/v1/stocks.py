@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.schemas.stock import StockPriceResponse, CompanyFundamentalsResponse, StockSearchResponse
 from app.services.market_data import market_data_service
+from app.services.technical_indicators import technical_indicators_service
 
 router = APIRouter(prefix="/stocks", tags=["stocks"])
 
@@ -96,3 +97,24 @@ async def search_stocks(
     """
     results = await market_data_service.search_stocks(query)
     return results
+
+
+@router.get("/{ticker}/indicators", response_model=dict)
+async def get_technical_indicators(
+    ticker: str,
+    period: str = Query("6mo", regex="^(1mo|3mo|6mo|1y|2y)$"),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get all technical indicators for a stock.
+    
+    Args:
+        ticker: Stock ticker symbol
+        period: Historical period for calculations
+        db: Database session
+        
+    Returns:
+        Technical indicators (RSI, MACD, Bollinger Bands, etc.)
+    """
+    indicators = await technical_indicators_service.get_all_indicators(ticker.upper(), period)
+    return indicators

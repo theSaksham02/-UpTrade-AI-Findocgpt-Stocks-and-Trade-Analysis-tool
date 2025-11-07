@@ -5,37 +5,32 @@ from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database import get_db
+from app.services.filing_service import filing_service
 
 router = APIRouter(prefix="/filings", tags=["filings"])
 
 
 @router.get("/latest", response_model=list)
 async def get_latest_filings(
-    limit: int = Query(20, le=100),
+    ticker: str = Query("AAPL", description="Stock ticker"),
+    filing_type: str = Query("10-K", description="Filing type"),
+    limit: int = Query(5, le=20),
     db: AsyncSession = Depends(get_db)
 ):
     """
-    Get latest filings.
+    Get latest filings for a company.
     
     Args:
+        ticker: Stock ticker
+        filing_type: Type of filing (10-K, 10-Q, 8-K)
         limit: Maximum number of results
         db: Database session
         
     Returns:
         Latest filings
     """
-    # Stub implementation - returns mock data
-    return [
-        {
-            "id": 1,
-            "company_name": "Apple Inc.",
-            "ticker": "AAPL",
-            "filing_type": "10-K",
-            "filing_date": datetime.utcnow(),
-            "source": "SEC",
-            "url": "https://www.sec.gov/example/aapl-10k.html"
-        }
-    ]
+    filings = await filing_service.get_latest_filings(ticker, filing_type, limit)
+    return filings
 
 
 @router.get("/search", response_model=list)
@@ -45,7 +40,7 @@ async def search_filings(
     start_date: Optional[datetime] = Query(None),
     end_date: Optional[datetime] = Query(None),
     source: Optional[str] = Query(None, regex="^(SEC|SEDAR|ESMA)$"),
-    limit: int = Query(20, le=100),
+    limit: int = Query(10, le=50),
     db: AsyncSession = Depends(get_db)
 ):
     """
@@ -63,18 +58,14 @@ async def search_filings(
     Returns:
         Filing search results
     """
-    # Stub implementation - returns mock data
-    return [
-        {
-            "id": 1,
-            "company_name": "Apple Inc.",
-            "ticker": "AAPL",
-            "filing_type": "10-K",
-            "filing_date": datetime.utcnow(),
-            "source": "SEC",
-            "url": "https://www.sec.gov/example/aapl-10k.html"
-        }
-    ]
+    filings = await filing_service.search_filings(
+        ticker=ticker,
+        filing_type=filing_type,
+        date_from=start_date,
+        date_to=end_date,
+        limit=limit
+    )
+    return filings
 
 
 @router.get("/{filing_id}", response_model=dict)
@@ -92,15 +83,31 @@ async def get_filing(
     Returns:
         Filing details
     """
-    # Stub implementation - returns mock data
-    return {
-        "id": filing_id,
-        "company_name": "Apple Inc.",
-        "ticker": "AAPL",
-        "filing_type": "10-K",
-        "filing_date": datetime.utcnow(),
-        "source": "SEC",
-        "content": "Annual report content...",
-        "url": "https://www.sec.gov/example/aapl-10k.html",
-        "extra_data": {}
-    }
+    filing = await filing_service.get_filing_by_id(filing_id)
+    
+    if filing is None:
+        return {
+            "error": "Filing not found",
+            "filing_id": filing_id
+        }
+    
+    return filing
+
+
+@router.get("/{filing_id}/sentiment", response_model=dict)
+async def get_filing_sentiment(
+    filing_id: int,
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Analyze sentiment of a filing document.
+    
+    Args:
+        filing_id: Filing ID
+        db: Database session
+        
+    Returns:
+        Sentiment analysis results
+    """
+    sentiment = await filing_service.analyze_filing_sentiment(filing_id)
+    return sentiment

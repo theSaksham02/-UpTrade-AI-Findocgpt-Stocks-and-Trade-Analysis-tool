@@ -100,3 +100,47 @@ async def get_leaderboard(
     """
     leaderboard = await trading_service.get_leaderboard(limit=limit)
     return leaderboard
+
+
+@router.get("/portfolio/{portfolio_id}/summary", response_model=dict)
+async def get_portfolio_summary(
+    portfolio_id: int,
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Get portfolio summary with total value and P&L.
+    
+    Args:
+        portfolio_id: Portfolio ID
+        current_user: Current authenticated user
+        db: Database session
+        
+    Returns:
+        Portfolio summary
+    """
+    summary = await trading_service.get_portfolio_summary(portfolio_id)
+    return summary
+
+
+@router.get("/portfolio/{portfolio_id}/var", response_model=dict)
+async def calculate_value_at_risk(
+    portfolio_id: int,
+    confidence: float = Query(0.95, ge=0.9, le=0.99),
+    current_user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db)
+):
+    """
+    Calculate Value at Risk (VaR) for portfolio.
+    
+    Args:
+        portfolio_id: Portfolio ID
+        confidence: Confidence level (0.95 or 0.99)
+        current_user: Current authenticated user
+        db: Database session
+        
+    Returns:
+        VaR metrics
+    """
+    var_metrics = await trading_service.calculate_var(portfolio_id, confidence)
+    return var_metrics
