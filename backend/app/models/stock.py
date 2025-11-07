@@ -56,7 +56,7 @@ class CompanyFundamentals(Base):
     beta = Column(Float)
     
     # Additional data as JSON
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Timestamps
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)

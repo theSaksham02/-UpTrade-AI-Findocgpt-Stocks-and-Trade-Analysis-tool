@@ -28,7 +28,7 @@ class SocialMention(Base):
     sentiment_label = Column(String)  # positive, negative, neutral
     
     # Metadata
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Timestamps
     posted_at = Column(DateTime, index=True, nullable=False)

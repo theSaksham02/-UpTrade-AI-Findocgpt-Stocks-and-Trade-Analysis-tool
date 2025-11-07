@@ -21,7 +21,7 @@ class Portfolio(Base):
     current_value = Column(Float, nullable=False)
     
     # Metadata
-    metadata = Column(JSON, default=dict)
+    extra_data = Column(JSON, default=dict)
     
     # Timestamps
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
