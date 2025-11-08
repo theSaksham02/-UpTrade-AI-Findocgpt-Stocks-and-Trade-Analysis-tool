@@ -124,27 +124,26 @@ export default function NewsSentiment() {
   return (
     <div>
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">News & Sentiment Analysis</h1>
-        <p className="mt-2 text-gray-600">Real-time news and market sentiment tracking</p>
+        <h1 className="text-4xl font-bold text-gradient">News & Sentiment Analysis</h1>
+        <p className="mt-2 text-text-secondary">Real-time news and market sentiment tracking</p>
       </div>
 
       {/* Search */}
       <form onSubmit={handleSearch} className="mb-8">
         <div className="flex gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <div className="flex-1 search-premium">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-accent-blue w-5 h-5 z-10" />
             <input
               type="text"
               value={symbol}
               onChange={(e) => setSymbol(e.target.value.toUpperCase())}
               placeholder="Enter stock symbol (e.g., AAPL)"
-              className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
           <button
             type="submit"
             disabled={loading}
-            className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 disabled:opacity-50"
+            className="btn-premium disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Loading...' : 'Search'}
           </button>
@@ -153,7 +152,7 @@ export default function NewsSentiment() {
 
       {/* Sentiment Overview */}
       {sentiment && (
-        <div className="bg-white rounded-lg shadow p-6 mb-8">
+        <div className="card-premium mb-8">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Sentiment Overview - {sentiment.ticker}</h2>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center">

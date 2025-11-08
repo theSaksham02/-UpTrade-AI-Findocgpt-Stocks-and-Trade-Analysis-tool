@@ -36,17 +36,17 @@ export default function Layout({ children }: LayoutProps) {
   const [showAI, setShowAI] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-primary-bg">
       {/* Sidebar */}
-      <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-white border-r border-gray-200">
+      <aside className="fixed inset-y-0 left-0 z-50 w-64 bg-gradient-surface border-r border-border/50 shadow-premium">
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center h-16 px-6 border-b border-gray-200">
-            <h1 className="text-xl font-bold text-blue-600">UpTrade AI</h1>
+          <div className="flex items-center h-16 px-6 border-b border-border/30">
+            <h1 className="text-2xl font-bold text-gradient">UpTrade AI</h1>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
+          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
             {navigation.map((item) => {
               const isActive = location.pathname === item.href;
               const Icon = item.icon;
@@ -55,13 +55,13 @@ export default function Layout({ children }: LayoutProps) {
                 <Link
                   key={item.name}
                   to={item.href}
-                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${
+                  className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-all duration-300 group ${
                     isActive
-                      ? 'bg-blue-50 text-blue-600'
-                      : 'text-gray-700 hover:bg-gray-50'
+                      ? 'bg-gradient-blue text-white shadow-premium'
+                      : 'text-text-secondary hover:bg-primary-hover hover:text-text-primary hover:shadow-md'
                   }`}
                 >
-                  <Icon className="w-5 h-5 mr-3" />
+                  <Icon className={`w-5 h-5 mr-3 transition-transform duration-300 ${isActive ? '' : 'group-hover:scale-110'}`} />
                   {item.name}
                 </Link>
               );
@@ -69,9 +69,9 @@ export default function Layout({ children }: LayoutProps) {
           </nav>
 
           {/* Footer */}
-          <div className="p-4 border-t border-gray-200">
-            <p className="text-xs text-gray-500 text-center">
-              UpTrade AI v1.0.0
+          <div className="p-4 border-t border-border/30">
+            <p className="text-xs text-text-muted text-center">
+              UpTrade AI v1.0.0 <span className="text-gradient-gold">Premium</span>
             </p>
           </div>
         </div>
@@ -91,11 +91,12 @@ export default function Layout({ children }: LayoutProps) {
       {!showAI && (
         <button
           onClick={() => setShowAI(true)}
-          className="fixed bottom-6 right-6 w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-full shadow-2xl flex items-center justify-center transition-all hover:scale-110 z-40 group"
+          className="fixed bottom-6 right-6 w-16 h-16 btn-gradient text-white rounded-full shadow-glow flex items-center justify-center z-40 group relative overflow-hidden"
           title="Open AI Assistant"
         >
-          <Sparkles className="w-6 h-6" />
-          <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full animate-pulse" />
+          <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300" />
+          <Sparkles className="w-7 h-7 relative z-10 group-hover:rotate-12 transition-transform duration-300" />
+          <div className="absolute -top-1 -right-1 w-3 h-3 bg-status-success rounded-full animate-pulse shadow-glow" />
         </button>
       )}
 
@@ -104,7 +105,7 @@ export default function Layout({ children }: LayoutProps) {
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+            className="fixed inset-0 bg-black/40 backdrop-blur-md z-40 transition-all duration-300"
             onClick={() => setShowAI(false)}
           />
           {/* AI Assistant */}
