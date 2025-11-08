@@ -1,10 +1,25 @@
 """News service for fetching and analyzing news articles."""
 from typing import Optional, List
 from datetime import datetime, timedelta
-from newsapi import NewsApiClient
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from app.config import settings
 from app.core.logging import logger
+
+# Optional imports
+try:
+    from newsapi import NewsApiClient
+    NEWSAPI_AVAILABLE = True
+except ImportError:
+    logger.warning("NewsAPI not available - install with: pip install newsapi-python")
+    NEWSAPI_AVAILABLE = False
+    NewsApiClient = None
+
+try:
+    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+    VADER_AVAILABLE = True
+except ImportError:
+    logger.warning("VADER Sentiment not available - install with: pip install vaderSentiment")
+    VADER_AVAILABLE = False
+    SentimentIntensityAnalyzer = None
 
 
 class NewsService:
@@ -13,14 +28,14 @@ class NewsService:
     def __init__(self):
         """Initialize news service."""
         self.news_api = None
-        if settings.news_api_key:
+        if NEWSAPI_AVAILABLE and settings.news_api_key:
             try:
                 self.news_api = NewsApiClient(api_key=settings.news_api_key)
             except Exception as e:
                 logger.error(f"Failed to initialize News API: {e}")
         
         # Initialize sentiment analyzer
-        self.sentiment_analyzer = SentimentIntensityAnalyzer()
+        self.sentiment_analyzer = SentimentIntensityAnalyzer() if VADER_AVAILABLE else None
     
     def _analyze_sentiment(self, text: str) -> tuple:
         """

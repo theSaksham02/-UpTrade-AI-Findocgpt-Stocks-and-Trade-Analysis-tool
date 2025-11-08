@@ -1,9 +1,17 @@
 """Sentiment analysis service."""
 from typing import Optional
 from datetime import datetime
-from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
 from app.services.news_service import news_service
 from app.core.logging import logger
+
+# Optional import
+try:
+    from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+    VADER_AVAILABLE = True
+except ImportError:
+    logger.warning("VADER Sentiment not available - install with: pip install vaderSentiment")
+    VADER_AVAILABLE = False
+    SentimentIntensityAnalyzer = None
 
 
 class SentimentService:
@@ -11,7 +19,7 @@ class SentimentService:
     
     def __init__(self):
         """Initialize sentiment service."""
-        self.analyzer = SentimentIntensityAnalyzer()
+        self.analyzer = SentimentIntensityAnalyzer() if VADER_AVAILABLE else None
     
     async def get_sentiment(self, ticker: str, period: str = "daily") -> dict:
         """

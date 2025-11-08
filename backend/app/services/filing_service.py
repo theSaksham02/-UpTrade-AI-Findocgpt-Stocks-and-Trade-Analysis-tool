@@ -1,11 +1,20 @@
 """SEC EDGAR filing service for regulatory document retrieval."""
 from typing import List, Dict, Optional
 from datetime import datetime, timedelta
-from sec_edgar_downloader import Downloader
 import os
 import logging
 import tempfile
 import shutil
+
+# Optional import
+try:
+    from sec_edgar_downloader import Downloader
+    SEC_AVAILABLE = True
+except ImportError:
+    logger = logging.getLogger(__name__)
+    logger.warning("SEC EDGAR downloader not available - install with: pip install sec-edgar-downloader")
+    SEC_AVAILABLE = False
+    Downloader = None
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +31,7 @@ class FilingService:
     @property
     def downloader(self):
         """Lazy-load the SEC downloader."""
-        if self._downloader is None:
+        if self._downloader is None and SEC_AVAILABLE:
             try:
                 # SEC requires company name and email for downloads
                 self._downloader = Downloader("UpTrade AI", "contact@uptrade.ai", self.temp_dir)

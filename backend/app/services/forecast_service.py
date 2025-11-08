@@ -3,11 +3,25 @@ from typing import List, Optional, Dict
 from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
-from prophet import Prophet
-from sklearn.preprocessing import MinMaxScaler
-from sklearn.linear_model import LinearRegression
 import warnings
 warnings.filterwarnings('ignore')
+
+# Optional imports
+try:
+    from prophet import Prophet
+    PROPHET_AVAILABLE = True
+except ImportError:
+    PROPHET_AVAILABLE = False
+    Prophet = None
+    
+try:
+    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.linear_model import LinearRegression
+    SKLEARN_AVAILABLE = True
+except ImportError:
+    SKLEARN_AVAILABLE = False
+    MinMaxScaler = None
+    LinearRegression = None
 
 from app.services.market_data import market_data_service
 from app.core.logging import logger
