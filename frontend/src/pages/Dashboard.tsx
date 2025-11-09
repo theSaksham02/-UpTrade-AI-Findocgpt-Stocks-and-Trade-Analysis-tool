@@ -7,12 +7,8 @@ import { tradingAPI, healthCheck } from '../services/api';
 import { 
   TrendingUp, TrendingDown, DollarSign, Activity, 
   ArrowUpRight, ArrowDownRight, ShoppingCart,
-  FileText, AlertCircle, CheckCircle 
+  Clock, FileText, AlertCircle 
 } from 'lucide-react';
-import { Card, StatCard, QuickActionCard } from '../components/ui/Card';
-import { PreviewItem } from '../components/ui/PreviewItem';
-import { DashboardAreaChart, DashboardPieChart } from '../components/ui/Chart';
-import { StatusTable } from '../components/ui/StatusTable';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<'loading' | 'connected' | 'error'>('loading');
@@ -63,32 +59,6 @@ export default function Dashboard() {
     { date: '05 Jan 2024, 11:45AM', type: 'Stock Sale', amount: '$1,450', status: 'completed' },
   ];
 
-  const portfolioDistribution = [
-    { name: 'Stocks', value: 400 },
-    { name: 'ETFs', value: 300 },
-    { name: 'Crypto', value: 300 },
-    { name: 'Cash', value: 200 },
-  ];
-
-  const portfolioHistory = [
-    { name: 'Jan', value: 100000 },
-    { name: 'Feb', value: 102000 },
-    { name: 'Mar', value: 101500 },
-    { name: 'Apr', value: 105000 },
-    { name: 'May', value: 108000 },
-    { name: 'Jun', value: 112000 },
-  ];
-
-  const marketMovers = {
-    headers: ['Symbol', 'Price', 'Change', 'Volume', 'Progress'],
-    data: [
-      { id: 1, values: ['AAPL', '$175.23', '+1.2%', '1.2M'], progress: 75, progressColor: 'bg-status-success' },
-      { id: 2, values: ['TSLA', '$245.01', '-2.5%', '2.1M'], progress: 40, progressColor: 'bg-status-danger' },
-      { id: 3, values: ['AMZN', '$134.50', '+0.8%', '980K'], progress: 60, progressColor: 'bg-accent-blue' },
-      { id: 4, values: ['GOOGL', '$140.10', '+1.5%', '1.5M'], progress: 85, progressColor: 'bg-accent-purple' },
-    ],
-  };
-
   return (
     <div>
       {/* Header */}
@@ -120,21 +90,31 @@ export default function Dashboard() {
       {/* Quick Stats Grid - Corona Inspired */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
         {quickStats.map((stat, index) => (
-          <StatCard 
-            key={index}
-            title={stat.name}
-            value={stat.value}
-            change={stat.change}
-            isPositive={stat.isPositive}
-            icon={stat.icon}
-          />
+          <div key={index} className="card-premium hover:scale-105 transition-transform duration-300">
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <h3 className="text-text-muted font-medium mb-3">{stat.name}</h3>
+                <div className="flex items-baseline gap-2">
+                  <p className="text-3xl font-bold text-gradient">{stat.value}</p>
+                  <span className={`text-sm font-medium ${stat.isPositive ? 'text-status-success' : 'text-status-danger'}`}>
+                    {stat.change}
+                  </span>
+                </div>
+              </div>
+              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
+                stat.isPositive ? 'bg-status-success/20' : 'bg-status-danger/20'
+              }`}>
+                <stat.icon className={`w-6 h-6 ${stat.isPositive ? 'text-status-success' : 'text-status-danger'}`} />
+              </div>
+            </div>
+          </div>
         ))}
       </div>
 
       {/* Main Account Stats - 3 Column */}
       {account && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <Card hoverEffect="glow">
+          <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-text-muted font-medium">Account Value</h3>
               <div className="w-10 h-10 bg-gradient-blue rounded-lg flex items-center justify-center shadow-glow">
@@ -146,9 +126,9 @@ export default function Dashboard() {
             </p>
             <p className="text-sm text-text-secondary">Total portfolio value</p>
             <div className="mt-4 h-1.5 bg-gradient-blue rounded-full shadow-glow" />
-          </Card>
+          </div>
 
-          <Card hoverEffect="glow">
+          <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-text-muted font-medium">Buying Power</h3>
               <div className="w-10 h-10 bg-gradient-gold rounded-lg flex items-center justify-center shadow-glow">
@@ -160,9 +140,9 @@ export default function Dashboard() {
             </p>
             <p className="text-sm text-text-secondary">Available for trading</p>
             <div className="mt-4 h-1.5 bg-gradient-gold rounded-full shadow-glow" />
-          </Card>
+          </div>
 
-          <Card hoverEffect="glow">
+          <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
             <div className="flex justify-between items-start mb-4">
               <h3 className="text-text-muted font-medium">Total P&L</h3>
               <div className={`w-10 h-10 rounded-lg flex items-center justify-center shadow-glow ${
@@ -185,118 +165,95 @@ export default function Dashboard() {
             <div className={`mt-4 h-1.5 rounded-full shadow-glow ${
               (account.equity - 100000) >= 0 ? 'bg-status-success' : 'bg-status-danger'
             }`} />
-          </Card>
+          </div>
         </div>
       )}
-
-      {/* Charting Section - Full Width */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
-        <div className="lg:col-span-3">
-          <Card>
-            <h2 className="text-xl font-bold text-gradient mb-6">Portfolio Value Over Time</h2>
-            <DashboardAreaChart data={portfolioHistory} dataKey="value" xAxisKey="name" />
-          </Card>
-        </div>
-        <div className="lg:col-span-2">
-          <Card>
-            <h2 className="text-xl font-bold text-gradient mb-6">Portfolio Distribution</h2>
-            <DashboardPieChart data={portfolioDistribution} />
-          </Card>
-        </div>
-      </div>
 
       {/* Two Column Layout - Corona Style */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Transaction History */}
-        <Card>
+        <div className="card-premium">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gradient">Transaction History</h2>
             <a href="/portfolio" className="text-sm text-accent-blue hover:text-accent-purple transition-colors">View All →</a>
           </div>
           <div className="space-y-4">
             {transactions.map((tx, index) => (
-              <PreviewItem
-                key={index}
-                icon={CheckCircle}
-                iconColor="text-status-success"
-                title={tx.type}
-                description={tx.date}
-              >
+              <div key={index} className="flex items-center justify-between p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-blue/50 transition-all group">
+                <div>
+                  <p className="font-semibold text-text-primary group-hover:text-gradient transition-colors">{tx.type}</p>
+                  <p className="text-sm text-text-muted mt-1">{tx.date}</p>
+                </div>
                 <div className="text-right">
                   <p className="font-bold text-lg text-gradient-gold">{tx.amount}</p>
                   <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-status-success/20 text-status-success rounded-full">
                     {tx.status}
                   </span>
                 </div>
-              </PreviewItem>
+              </div>
             ))}
           </div>
-        </Card>
+        </div>
 
         {/* Recent Activity */}
-        <Card>
+        <div className="card-premium">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gradient">Recent Activity</h2>
             <button className="text-sm text-accent-blue hover:text-accent-purple transition-colors">Clear All</button>
           </div>
           <div className="space-y-4">
             {recentActivities.map((activity) => (
-              <PreviewItem
-                key={activity.id}
-                icon={activity.icon}
-                iconColor={activity.color}
-                title={activity.title}
-                description={activity.desc}
-                meta={activity.time}
-              />
+              <div key={activity.id} className="flex items-start gap-4 p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-purple/50 transition-all group">
+                <div className={`w-10 h-10 rounded-lg bg-primary-hover flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
+                  <activity.icon className={`w-5 h-5 ${activity.color}`} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-text-primary group-hover:text-gradient transition-colors">{activity.title}</p>
+                  <p className="text-sm text-text-muted mt-0.5">{activity.desc}</p>
+                </div>
+                <span className="text-xs text-text-muted whitespace-nowrap">
+                  <Clock className="w-3 h-3 inline mr-1" />
+                  {activity.time}
+                </span>
+              </div>
             ))}
           </div>
-        </Card>
-      </div>
-
-      {/* Market Movers Table */}
-      <div className="mb-8">
-        <StatusTable 
-          title="Top Market Movers"
-          headers={marketMovers.headers}
-          data={marketMovers.data}
-        />
+        </div>
       </div>
 
       {/* Quick Actions Grid */}
-      <Card>
+      <div className="card-premium">
         <h2 className="text-2xl font-bold text-gradient mb-6">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <QuickActionCard 
-            href="/market"
-            title="Market Analysis"
-            description="Real-time stock prices"
-            icon={TrendingUp}
-            color="blue"
-          />
-          <QuickActionCard 
-            href="/trading"
-            title="Paper Trading"
-            description="$100K virtual capital"
-            icon={Activity}
-            color="purple"
-          />
-          <QuickActionCard 
-            href="/forecasting"
-            title="AI Forecasting"
-            description="Price predictions"
-            icon={ArrowUpRight}
-            color="gold"
-          />
-          <QuickActionCard 
-            href="/research"
-            title="SEC Filings"
-            description="10-K, 10-Q reports"
-            icon={FileText}
-            color="blue"
-          />
+          <a href="/market" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-blue/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-blue/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-blue opacity-0 group-hover:opacity-10 transition-opacity" />
+            <TrendingUp className="w-8 h-8 text-accent-blue mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient transition-all">Market Analysis</h3>
+            <p className="text-sm text-text-secondary">Real-time stock prices</p>
+          </a>
+          
+          <a href="/trading" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-purple/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-purple/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-purple opacity-0 group-hover:opacity-10 transition-opacity" />
+            <Activity className="w-8 h-8 text-accent-purple mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient transition-all">Paper Trading</h3>
+            <p className="text-sm text-text-secondary">$100K virtual capital</p>
+          </a>
+          
+          <a href="/forecasting" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-gold/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-gold/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity" />
+            <ArrowUpRight className="w-8 h-8 text-accent-gold mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient-gold transition-all">AI Forecasting</h3>
+            <p className="text-sm text-text-secondary">Price predictions</p>
+          </a>
+          
+          <a href="/research" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-blue/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-blue/5 overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-blue opacity-0 group-hover:opacity-10 transition-opacity" />
+            <FileText className="w-8 h-8 text-accent-blue mb-3 group-hover:scale-110 transition-transform" />
+            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient transition-all">SEC Filings</h3>
+            <p className="text-sm text-text-secondary">10-K, 10-Q reports</p>
+          </a>
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
