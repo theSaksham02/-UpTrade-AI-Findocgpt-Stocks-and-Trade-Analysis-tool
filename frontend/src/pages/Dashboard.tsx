@@ -1,14 +1,15 @@
 /**
- * Dashboard Page - Corona Template Inspired
- * Enhanced premium dashboard with comprehensive overview
+ * Dashboard Page - Full Corona Template Integration
+ * Complete premium dashboard with all Corona UI elements
  */
 import { useState, useEffect } from 'react';
 import { tradingAPI, healthCheck } from '../services/api';
 import { 
   TrendingUp, TrendingDown, DollarSign, Activity, 
   ArrowUpRight, ArrowDownRight, ShoppingCart,
-  Clock, FileText, AlertCircle 
+  FileText, AlertCircle
 } from 'lucide-react';
+import { StatCard, PreviewItem, TransactionCard, DataTable, PremiumBanner, TableColumn, TableRow } from '../components/corona';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<'loading' | 'connected' | 'error'>('loading');
@@ -38,36 +39,88 @@ export default function Dashboard() {
     }
   };
 
-  // Mock data for enhanced features
+  // Mock data for Corona components
   const recentActivities = [
-    { id: 1, type: 'trade', title: 'AAPL Buy Order', desc: 'Bought 10 shares', time: '15 min ago', icon: TrendingUp, color: 'text-status-success' },
-    { id: 2, type: 'alert', title: 'Price Alert Triggered', desc: 'TSLA reached $250', time: '1 hour ago', icon: AlertCircle, color: 'text-accent-gold' },
-    { id: 3, type: 'trade', title: 'MSFT Sell Order', desc: 'Sold 5 shares', time: '2 hours ago', icon: TrendingDown, color: 'text-status-danger' },
-    { id: 4, type: 'report', title: 'Daily Report Generated', desc: 'Portfolio performance summary', time: '3 hours ago', icon: FileText, color: 'text-accent-blue' },
-  ];
-
-  const quickStats = [
-    { name: 'Revenue Current', value: '$17,234', change: '+11%', isPositive: true, icon: DollarSign },
-    { name: 'Daily Trades', value: '12', change: '-2.4%', isPositive: false, icon: Activity },
-    { name: 'Active Positions', value: '8', change: '+3.5%', isPositive: true, icon: TrendingUp },
-    { name: 'Portfolio Growth', value: '15.2%', change: '+2.1%', isPositive: true, icon: ArrowUpRight },
+    { id: 1, icon: TrendingUp, iconColor: 'text-status-success', title: 'AAPL Buy Order', description: 'Bought 10 shares at $175.50', time: '15 min ago' },
+    { id: 2, icon: AlertCircle, iconColor: 'text-accent-gold', title: 'Price Alert', description: 'TSLA reached target price $250', time: '1 hour ago' },
+    { id: 3, icon: TrendingDown, iconColor: 'text-status-danger', title: 'MSFT Sell Order', description: 'Sold 5 shares at $380.25', time: '2 hours ago' },
+    { id: 4, icon: FileText, iconColor: 'text-accent-blue', title: 'Report Generated', description: 'Daily portfolio performance summary', time: '3 hours ago' },
   ];
 
   const transactions = [
-    { date: '07 Jan 2024, 09:12AM', type: 'Stock Purchase', amount: '$593', status: 'completed' },
-    { date: '06 Jan 2024, 14:30PM', type: 'Dividend Received', amount: '$236', status: 'completed' },
-    { date: '05 Jan 2024, 11:45AM', type: 'Stock Sale', amount: '$1,450', status: 'completed' },
+    { date: '07 Jan 2024, 09:12AM', type: 'Stock Purchase - AAPL', amount: '$1,755.00', status: 'completed' as const },
+    { date: '06 Jan 2024, 14:30PM', type: 'Dividend Received - MSFT', amount: '$236.50', status: 'completed' as const },
+    { date: '05 Jan 2024, 11:45AM', type: 'Stock Sale - TSLA', amount: '$2,450.00', status: 'completed' as const },
+    { date: '04 Jan 2024, 16:20PM', type: 'Stock Purchase - GOOGL', amount: '$850.75', status: 'pending' as const },
+  ];
+
+  // Order Status Table Data (Corona style)
+  const orderColumns: TableColumn[] = [
+    { key: 'client', label: 'Client Name', width: '20%' },
+    { key: 'orderNo', label: 'Order No', width: '12%' },
+    { key: 'productCost', label: 'Product Cost', width: '15%' },
+    { key: 'project', label: 'Project', width: '15%' },
+    { key: 'payment', label: 'Payment Mode', width: '15%' },
+    { key: 'date', label: 'Start Date', width: '13%' },
+    { key: 'status', label: 'Status', width: '10%' },
+  ];
+
+  const orderData: TableRow[] = [
+    {
+      id: 1,
+      client: { type: 'image', src: '/api/placeholder/32/32', label: 'Henry Klein', alt: 'client' },
+      orderNo: '02312',
+      productCost: '$14,500',
+      project: 'Dashboard',
+      payment: 'Credit card',
+      date: '04 Dec 2024',
+      status: { type: 'badge', label: 'Approved', variant: 'success' }
+    },
+    {
+      id: 2,
+      client: { type: 'image', src: '/api/placeholder/32/32', label: 'Estella Bryan', alt: 'client' },
+      orderNo: '02313',
+      productCost: '$9,200',
+      project: 'Website',
+      payment: 'Cash on delivery',
+      date: '04 Dec 2024',
+      status: { type: 'badge', label: 'Pending', variant: 'warning' }
+    },
+    {
+      id: 3,
+      client: { type: 'image', src: '/api/placeholder/32/32', label: 'Lucy Abbott', alt: 'client' },
+      orderNo: '02314',
+      productCost: '$12,800',
+      project: 'App design',
+      payment: 'Credit card',
+      date: '04 Dec 2024',
+      status: { type: 'badge', label: 'Rejected', variant: 'danger' }
+    },
+    {
+      id: 4,
+      client: { type: 'image', src: '/api/placeholder/32/32', label: 'Peter Gill', alt: 'client' },
+      orderNo: '02315',
+      productCost: '$18,500',
+      project: 'Development',
+      payment: 'Online Payment',
+      date: '05 Dec 2024',
+      status: { type: 'badge', label: 'Approved', variant: 'success' }
+    },
   ];
 
   return (
     <div>
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-gradient mb-2">Dashboard</h1>
-        <p className="text-text-secondary">Welcome to UpTrade AI <span className="text-gradient-gold font-semibold">Premium</span> - Your complete trading command center</p>
+      {/* Premium Banner - Corona Style */}
+      <div className="mb-6">
+        <PremiumBanner 
+          title="🎉 New Refreshing Look for UpTrade AI Premium!"
+          description="Enhanced UI with Corona admin template patterns, featuring modern cards, tables, and comprehensive dashboard views."
+          buttonText="Explore Features"
+          buttonHref="/market"
+        />
       </div>
 
-      {/* Connection Status Banner */}
+      {/* Connection Status */}
       <div className="mb-6">
         <div className={`inline-flex items-center px-6 py-3 rounded-xl shadow-premium transition-all duration-300 ${
           status === 'connected' ? 'bg-status-success/20 text-status-success border border-status-success/30' :
@@ -81,37 +134,49 @@ export default function Dashboard() {
           }`} />
           <span className="font-semibold">
             {status === 'connected' ? '✨ Connected to Backend - All Systems Operational' :
-             status === 'error' ? 'Backend Connection Failed - Check Your Server' :
-             'Connecting to Backend...'}
+             status === 'error' ? '❌ Backend Connection Failed - Check Server' :
+             '⏳ Connecting to Backend...'}
           </span>
         </div>
       </div>
 
-      {/* Quick Stats Grid - Corona Inspired */}
+      {/* Quick Stats Grid - Corona Stat Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-8">
-        {quickStats.map((stat, index) => (
-          <div key={index} className="card-premium hover:scale-105 transition-transform duration-300">
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <h3 className="text-text-muted font-medium mb-3">{stat.name}</h3>
-                <div className="flex items-baseline gap-2">
-                  <p className="text-3xl font-bold text-gradient">{stat.value}</p>
-                  <span className={`text-sm font-medium ${stat.isPositive ? 'text-status-success' : 'text-status-danger'}`}>
-                    {stat.change}
-                  </span>
-                </div>
-              </div>
-              <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                stat.isPositive ? 'bg-status-success/20' : 'bg-status-danger/20'
-              }`}>
-                <stat.icon className={`w-6 h-6 ${stat.isPositive ? 'text-status-success' : 'text-status-danger'}`} />
-              </div>
-            </div>
-          </div>
-        ))}
+        <StatCard 
+          title="Revenue Current"
+          value="$17,234"
+          change="+11%"
+          isPositive={true}
+          icon={DollarSign}
+          gradient="blue"
+        />
+        <StatCard 
+          title="Daily Trades"
+          value="12"
+          change="-2.4%"
+          isPositive={false}
+          icon={Activity}
+          gradient="danger"
+        />
+        <StatCard 
+          title="Active Positions"
+          value="8"
+          change="+3.5%"
+          isPositive={true}
+          icon={TrendingUp}
+          gradient="success"
+        />
+        <StatCard 
+          title="Portfolio Growth"
+          value="15.2%"
+          change="+2.1%"
+          isPositive={true}
+          icon={ArrowUpRight}
+          gradient="purple"
+        />
       </div>
 
-      {/* Main Account Stats - 3 Column */}
+      {/* Main Account Stats - Enhanced with Icons */}
       {account && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
           <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
@@ -169,9 +234,9 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Two Column Layout - Corona Style */}
+      {/* Two Column Layout - Corona Transaction & Activity */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
-        {/* Transaction History */}
+        {/* Transaction History - Using TransactionCard */}
         <div className="card-premium">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gradient">Transaction History</h2>
@@ -179,23 +244,18 @@ export default function Dashboard() {
           </div>
           <div className="space-y-4">
             {transactions.map((tx, index) => (
-              <div key={index} className="flex items-center justify-between p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-blue/50 transition-all group">
-                <div>
-                  <p className="font-semibold text-text-primary group-hover:text-gradient transition-colors">{tx.type}</p>
-                  <p className="text-sm text-text-muted mt-1">{tx.date}</p>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-lg text-gradient-gold">{tx.amount}</p>
-                  <span className="inline-block mt-1 px-2 py-0.5 text-xs bg-status-success/20 text-status-success rounded-full">
-                    {tx.status}
-                  </span>
-                </div>
-              </div>
+              <TransactionCard 
+                key={index}
+                date={tx.date}
+                type={tx.type}
+                amount={tx.amount}
+                status={tx.status}
+              />
             ))}
           </div>
         </div>
 
-        {/* Recent Activity */}
+        {/* Recent Activity - Using PreviewItem */}
         <div className="card-premium">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold text-gradient">Recent Activity</h2>
@@ -203,22 +263,31 @@ export default function Dashboard() {
           </div>
           <div className="space-y-4">
             {recentActivities.map((activity) => (
-              <div key={activity.id} className="flex items-start gap-4 p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-purple/50 transition-all group">
-                <div className={`w-10 h-10 rounded-lg bg-primary-hover flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform`}>
-                  <activity.icon className={`w-5 h-5 ${activity.color}`} />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-text-primary group-hover:text-gradient transition-colors">{activity.title}</p>
-                  <p className="text-sm text-text-muted mt-0.5">{activity.desc}</p>
-                </div>
-                <span className="text-xs text-text-muted whitespace-nowrap">
-                  <Clock className="w-3 h-3 inline mr-1" />
-                  {activity.time}
-                </span>
-              </div>
+              <PreviewItem 
+                key={activity.id}
+                icon={activity.icon}
+                iconColor={activity.iconColor}
+                title={activity.title}
+                description={activity.description}
+                time={activity.time}
+              />
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Order Status Table - Corona Style DataTable */}
+      <div className="card-premium mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-gradient">Order Status</h2>
+          <button className="text-sm text-accent-blue hover:text-accent-purple transition-colors">Export Data →</button>
+        </div>
+        <DataTable 
+          columns={orderColumns}
+          data={orderData}
+          selectable={true}
+          onRowClick={(row) => console.log('Row clicked:', row)}
+        />
       </div>
 
       {/* Quick Actions Grid */}
