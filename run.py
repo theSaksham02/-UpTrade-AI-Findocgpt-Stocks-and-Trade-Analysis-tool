@@ -66,7 +66,7 @@ def main():
     print_colored("🔧 Starting servers...", BLUE)
     print("="*50)
     print_colored("\n📍 Backend:  http://localhost:8000", GREEN)
-    print_colored("📍 Frontend: http://localhost:3000", GREEN)
+    print_colored("📍 Frontend: http://localhost:5050", GREEN)
     print_colored("\n💡 Press Ctrl+C to stop all servers\n", YELLOW)
     print("="*50 + "\n")
     
@@ -99,7 +99,7 @@ def main():
         processes.append(("Frontend", frontend_process))
         
         print_colored("\n✨ All servers started successfully!", GREEN)
-        print_colored("🌐 Open http://localhost:3000 in your browser\n", MAGENTA)
+        print_colored("🌐 Open http://localhost:5050 in your browser\n", MAGENTA)
         
         # Monitor processes and output
         while True:
