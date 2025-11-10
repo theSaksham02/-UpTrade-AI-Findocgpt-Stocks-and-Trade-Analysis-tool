@@ -1,12 +1,24 @@
 /**
  * VisualX (Pro) - Decode the Market's True Pulse
- * Real-time sentiment analysis and narrative detection
+ * Real-time sentiment analysis and narrative detection with live AI
  */
 import { useNavigate } from 'react-router-dom';
-import { Menu, Activity, MessageSquare, Bell, Users, Share2, TrendingUp, TrendingDown } from 'lucide-react';
+import { Menu, Activity, MessageSquare, Bell, Users, Share2, TrendingUp, TrendingDown, RefreshCw } from 'lucide-react';
+import { useNewsSentiment } from '../utils/hooks';
+import { LoadingSpinner } from '../components/LoadingSpinner';
+import { useEffect, useState } from 'react';
 
 export default function VisualX() {
   const navigate = useNavigate();
+  const { data: sentimentData, loading, error, refetch } = useNewsSentiment('stock market tech', 10);
+  const [liveSentimentScore, setLiveSentimentScore] = useState(0);
+
+  // Update live sentiment score when data changes
+  useEffect(() => {
+    if (sentimentData?.sentiment_analysis) {
+      setLiveSentimentScore(sentimentData.sentiment_analysis.average_score);
+    }
+  }, [sentimentData]);
 
   return (
     <div className="relative w-full overflow-x-hidden min-h-screen">
@@ -108,49 +120,74 @@ export default function VisualX() {
 
           {/* Sentiment Network Visualization */}
           <div className="mt-16 w-full max-w-5xl h-96 relative bg-black/30 rounded-xl border border-white/10 flex items-center justify-center p-4 overflow-hidden">
-            <div className="absolute inset-0 w-full h-full">
-              <svg className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <line className="stroke-current text-white/10 animate-pulse-slow" strokeDasharray="4 4" strokeWidth="1" x1="20%" x2="50%" y1="20%" y2="50%" />
-                <line className="stroke-current text-white/10 animate-pulse-slow" style={{ animationDelay: '0.5s' }} strokeDasharray="4 4" strokeWidth="1" x1="80%" x2="50%" y1="30%" y2="50%" />
-                <line className="stroke-current text-white/10 animate-pulse-slow" style={{ animationDelay: '1s' }} strokeDasharray="4 4" strokeWidth="1" x1="30%" x2="50%" y1="80%" y2="50%" />
-                <line className="stroke-current text-white/10 animate-pulse-slow" strokeDasharray="4 4" strokeWidth="1" x1="60%" x2="50%" y1="15%" y2="50%" />
-                <line className="stroke-current text-white/10 animate-pulse-slow" style={{ animationDelay: '0.5s' }} strokeDasharray="4 4" strokeWidth="1" x1="75%" x2="50%" y1="75%" y2="50%" />
-                <circle className="fill-current text-white/20 animate-pulse-slow" cx="20%" cy="20%" r="6" />
-                <circle className="fill-current text-white/20 animate-pulse-slow" style={{ animationDelay: '0.5s' }} cx="80%" cy="30%" r="8" />
-                <circle className="fill-current text-white/20 animate-pulse-slow" style={{ animationDelay: '1s' }} cx="30%" cy="80%" r="5" />
-                <circle className="fill-current text-white/20 animate-pulse-slow" cx="60%" cy="15%" r="7" />
-                <circle className="fill-current text-white/20 animate-pulse-slow" style={{ animationDelay: '0.5s' }} cx="75%" cy="75%" r="9" />
-                <circle className="fill-current text-accent-purple/80" cx="50%" cy="50%" r="20" />
-              </svg>
-              
-              {/* Floating Sentiment Indicators */}
-              <div className="absolute top-1/4 left-1/4 animate-pulse-slow">
-                <div className="flex items-center gap-1 bg-green-500/80 text-white text-xs px-2 py-1 rounded-full">
-                  <span>+0.85</span>
-                  <TrendingUp className="w-3 h-3" />
+            {loading ? (
+              <LoadingSpinner size="lg" text="Loading live sentiment data..." />
+            ) : (
+              <>
+                <div className="absolute inset-0 w-full h-full">
+                  <svg className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <line className="stroke-current text-white/10 animate-pulse-slow" strokeDasharray="4 4" strokeWidth="1" x1="20%" x2="50%" y1="20%" y2="50%" />
+                    <line className="stroke-current text-white/10 animate-pulse-slow" style={{ animationDelay: '0.5s' }} strokeDasharray="4 4" strokeWidth="1" x1="80%" x2="50%" y1="30%" y2="50%" />
+                    <line className="stroke-current text-white/10 animate-pulse-slow" style={{ animationDelay: '1s' }} strokeDasharray="4 4" strokeWidth="1" x1="30%" x2="50%" y1="80%" y2="50%" />
+                    <line className="stroke-current text-white/10 animate-pulse-slow" strokeDasharray="4 4" strokeWidth="1" x1="60%" x2="50%" y1="15%" y2="50%" />
+                    <line className="stroke-current text-white/10 animate-pulse-slow" style={{ animationDelay: '0.5s' }} strokeDasharray="4 4" strokeWidth="1" x1="75%" x2="50%" y1="75%" y2="50%" />
+                    <circle className="fill-current text-white/20 animate-pulse-slow" cx="20%" cy="20%" r="6" />
+                    <circle className="fill-current text-white/20 animate-pulse-slow" style={{ animationDelay: '0.5s' }} cx="80%" cy="30%" r="8" />
+                    <circle className="fill-current text-white/20 animate-pulse-slow" style={{ animationDelay: '1s' }} cx="30%" cy="80%" r="5" />
+                    <circle className="fill-current text-white/20 animate-pulse-slow" cx="60%" cy="15%" r="7" />
+                    <circle className="fill-current text-white/20 animate-pulse-slow" style={{ animationDelay: '0.5s' }} cx="75%" cy="75%" r="9" />
+                    <circle className="fill-current text-accent-purple/80" cx="50%" cy="50%" r="20" />
+                  </svg>
+                  
+                  {/* Floating Sentiment Indicators - Real Data */}
+                  {sentimentData?.articles && sentimentData.articles.length > 0 && (
+                    <>
+                      {sentimentData.articles.slice(0, 3).map((article, index) => {
+                        const positions = [
+                          { top: 'top-1/4', left: 'left-1/4', delay: '0s' },
+                          { top: 'top-1/3', right: 'right-1/4', delay: '1.5s' },
+                          { bottom: 'bottom-1/4', left: 'left-1/3', delay: '2.5s' }
+                        ];
+                        const pos = positions[index];
+                        const score = article.sentiment_score || 0;
+                        const isPositive = score > 0;
+                        const isNegative = score < 0;
+                        
+                        return (
+                          <div 
+                            key={index}
+                            className={`absolute ${pos.top || ''} ${pos.bottom || ''} ${pos.left || ''} ${pos.right || ''} animate-pulse-slow`}
+                            style={{ animationDelay: pos.delay }}
+                          >
+                            <div className={`flex items-center gap-1 ${isPositive ? 'bg-green-500/80' : isNegative ? 'bg-red-500/80' : 'bg-gray-500/80'} text-white text-xs px-2 py-1 rounded-full`}>
+                              <span>{isPositive ? '+' : ''}{score.toFixed(2)}</span>
+                              {isPositive ? <TrendingUp className="w-3 h-3" /> : isNegative ? <TrendingDown className="w-3 h-3" /> : null}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </>
+                  )}
                 </div>
-              </div>
-              <div className="absolute top-1/3 right-1/4 animate-pulse-slow" style={{ animationDelay: '1.5s' }}>
-                <div className="flex items-center gap-1 bg-red-500/80 text-white text-xs px-2 py-1 rounded-full">
-                  <span>-1.20</span>
-                  <TrendingDown className="w-3 h-3" />
-                </div>
-              </div>
-              <div className="absolute bottom-1/4 left-1/3 animate-pulse-slow" style={{ animationDelay: '2.5s' }}>
-                <div className="flex items-center gap-1 bg-green-500/80 text-white text-xs px-2 py-1 rounded-full">
-                  <span>+2.15</span>
-                  <TrendingUp className="w-3 h-3" />
-                </div>
-              </div>
-            </div>
 
-            {/* Central Sentiment Score */}
-            <div className="animate-pulse-slow rounded-full p-2">
-              <div className="bg-accent-purple/30 w-32 h-32 rounded-full flex flex-col items-center justify-center border-2 border-accent-purple">
-                <span className="text-3xl font-bold text-white">+1.42</span>
-                <span className="text-xs text-white/70">Live Sentiment</span>
-              </div>
-            </div>
+                {/* Central Sentiment Score - Live Data */}
+                <div className="animate-pulse-slow rounded-full p-2 relative">
+                  <div className={`${liveSentimentScore > 0 ? 'bg-green-500/30 border-green-500' : liveSentimentScore < 0 ? 'bg-red-500/30 border-red-500' : 'bg-accent-purple/30 border-accent-purple'} w-32 h-32 rounded-full flex flex-col items-center justify-center border-2`}>
+                    <span className="text-3xl font-bold text-white">
+                      {liveSentimentScore > 0 ? '+' : ''}{liveSentimentScore.toFixed(2)}
+                    </span>
+                    <span className="text-xs text-white/70">Live Sentiment</span>
+                  </div>
+                  <button
+                    onClick={() => refetch()}
+                    className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 text-accent-purple hover:text-accent-purple/70 transition-colors"
+                    title="Refresh sentiment data"
+                  >
+                    <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </section>
 
