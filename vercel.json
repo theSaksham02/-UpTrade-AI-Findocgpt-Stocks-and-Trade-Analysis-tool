@@ -1,0 +1,43 @@
+{
+  "version": 2,
+  "name": "uptrade-ai",
+  "builds": [
+    {
+      "src": "api_server.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "50mb",
+        "runtime": "python3.9"
+      }
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "frontend/dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api_server.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/frontend/$1"
+    }
+  ],
+  "env": {
+    "NEWS_API_KEY": "@news-api-key",
+    "ALPHA_VANTAGE_KEY": "@alpha-vantage-key",
+    "FINNHUB_KEY": "@finnhub-key"
+  },
+  "functions": {
+    "api_server.py": {
+      "memory": 3008,
+      "maxDuration": 60
+    }
+  },
+  "regions": ["iad1"]
+}
