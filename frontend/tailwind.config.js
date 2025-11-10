@@ -8,9 +8,9 @@ export default {
     extend: {
       colors: {
         primary: {
-          bg: '#0A0E27',
-          surface: '#1A1F3A',
-          hover: '#252B4A',
+          bg: '#0D0219',
+          surface: '#1A0537',
+          hover: '#221022',
         },
         accent: {
           purple: '#8B5CF6',

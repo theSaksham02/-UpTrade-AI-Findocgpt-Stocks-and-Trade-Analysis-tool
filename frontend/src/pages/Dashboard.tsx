@@ -42,9 +42,9 @@ export default function Dashboard() {
   // Mock data for Corona components
   const recentActivities = [
     { id: 1, icon: TrendingUp, iconColor: 'text-status-success', title: 'AAPL Buy Order', description: 'Bought 10 shares at $175.50', time: '15 min ago' },
-    { id: 2, icon: AlertCircle, iconColor: 'text-accent-gold', title: 'Price Alert', description: 'TSLA reached target price $250', time: '1 hour ago' },
+    { id: 2, icon: AlertCircle, iconColor: 'text-accent-purple', title: 'Price Alert', description: 'TSLA reached target price $250', time: '1 hour ago' },
     { id: 3, icon: TrendingDown, iconColor: 'text-status-danger', title: 'MSFT Sell Order', description: 'Sold 5 shares at $380.25', time: '2 hours ago' },
-    { id: 4, icon: FileText, iconColor: 'text-accent-blue', title: 'Report Generated', description: 'Daily portfolio performance summary', time: '3 hours ago' },
+    { id: 4, icon: FileText, iconColor: 'text-accent-purple', title: 'Report Generated', description: 'Daily portfolio performance summary', time: '3 hours ago' },
   ];
 
   const transactions = [
@@ -179,38 +179,38 @@ export default function Dashboard() {
       {/* Main Account Stats - Enhanced with Icons */}
       {account && (
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="card-premium group hover:shadow-xl transition-all duration-200 cursor-pointer">
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-text-muted font-medium">Account Value</h3>
-              <div className="w-10 h-10 bg-gradient-blue rounded-lg flex items-center justify-center shadow-glow">
+              <h3 className="text-white/60 font-medium">Account Value</h3>
+              <div className="w-10 h-10 bg-gradient-purple rounded-lg flex items-center justify-center shadow-lg">
                 <DollarSign className="w-5 h-5 text-white" />
               </div>
             </div>
-            <p className="text-4xl font-bold text-gradient mb-3">
+            <p className="text-4xl font-bold text-accent-purple mb-3">
               ${account.equity?.toLocaleString() || '100,000'}
             </p>
-            <p className="text-sm text-text-secondary">Total portfolio value</p>
-            <div className="mt-4 h-1.5 bg-gradient-blue rounded-full shadow-glow" />
+            <p className="text-sm text-white/70">Total portfolio value</p>
+            <div className="mt-4 h-1.5 bg-gradient-purple rounded-full shadow-lg" />
           </div>
 
-          <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="card-premium group hover:shadow-xl transition-all duration-200 cursor-pointer">
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-text-muted font-medium">Buying Power</h3>
-              <div className="w-10 h-10 bg-gradient-gold rounded-lg flex items-center justify-center shadow-glow">
+              <h3 className="text-white/60 font-medium">Buying Power</h3>
+              <div className="w-10 h-10 bg-gradient-purple rounded-lg flex items-center justify-center shadow-lg">
                 <ShoppingCart className="w-5 h-5 text-white" />
               </div>
             </div>
-            <p className="text-4xl font-bold text-gradient-gold mb-3">
+            <p className="text-4xl font-bold text-accent-purple mb-3">
               ${account.buying_power?.toLocaleString() || '100,000'}
             </p>
-            <p className="text-sm text-text-secondary">Available for trading</p>
-            <div className="mt-4 h-1.5 bg-gradient-gold rounded-full shadow-glow" />
+            <p className="text-sm text-white/70">Available for trading</p>
+            <div className="mt-4 h-1.5 bg-gradient-purple rounded-full shadow-lg" />
           </div>
 
-          <div className="card-premium group hover:scale-105 transition-all duration-300 cursor-pointer">
+          <div className="card-premium group hover:shadow-xl transition-all duration-200 cursor-pointer">
             <div className="flex justify-between items-start mb-4">
-              <h3 className="text-text-muted font-medium">Total P&L</h3>
-              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shadow-glow ${
+              <h3 className="text-white/60 font-medium">Total P&L</h3>
+              <div className={`w-10 h-10 rounded-lg flex items-center justify-center shadow-lg ${
                 (account.equity - 100000) >= 0 ? 'bg-status-success' : 'bg-status-danger'
               }`}>
                 {(account.equity - 100000) >= 0 ? 
@@ -224,10 +224,10 @@ export default function Dashboard() {
             }`}>
               ${((account.equity || 100000) - 100000).toLocaleString()}
             </p>
-            <p className="text-sm text-text-secondary">
+            <p className="text-sm text-white/70">
               {((account.equity - 100000) / 100000 * 100).toFixed(2)}% since inception
             </p>
-            <div className={`mt-4 h-1.5 rounded-full shadow-glow ${
+            <div className={`mt-4 h-1.5 rounded-full shadow-lg ${
               (account.equity - 100000) >= 0 ? 'bg-status-success' : 'bg-status-danger'
             }`} />
           </div>
@@ -239,8 +239,8 @@ export default function Dashboard() {
         {/* Transaction History - Using TransactionCard */}
         <div className="card-premium">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gradient">Transaction History</h2>
-            <a href="/portfolio" className="text-sm text-accent-blue hover:text-accent-purple transition-colors">View All →</a>
+            <h2 className="text-xl font-bold text-accent-purple">Transaction History</h2>
+            <a href="/portfolio" className="text-sm text-accent-purple hover:text-[#A78BFA] transition-colors">View All →</a>
           </div>
           <div className="space-y-4">
             {transactions.map((tx, index) => (
@@ -258,8 +258,8 @@ export default function Dashboard() {
         {/* Recent Activity - Using PreviewItem */}
         <div className="card-premium">
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-xl font-bold text-gradient">Recent Activity</h2>
-            <button className="text-sm text-accent-blue hover:text-accent-purple transition-colors">Clear All</button>
+            <h2 className="text-xl font-bold text-accent-purple">Recent Activity</h2>
+            <button className="text-sm text-accent-purple hover:text-[#A78BFA] transition-colors">Clear All</button>
           </div>
           <div className="space-y-4">
             {recentActivities.map((activity) => (
@@ -279,8 +279,8 @@ export default function Dashboard() {
       {/* Order Status Table - Corona Style DataTable */}
       <div className="card-premium mb-8">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gradient">Order Status</h2>
-          <button className="text-sm text-accent-blue hover:text-accent-purple transition-colors">Export Data →</button>
+          <h2 className="text-2xl font-bold text-accent-purple">Order Status</h2>
+          <button className="text-sm text-accent-purple hover:text-[#A78BFA] transition-colors">Export Data →</button>
         </div>
         <DataTable 
           columns={orderColumns}
@@ -292,34 +292,30 @@ export default function Dashboard() {
 
       {/* Quick Actions Grid */}
       <div className="card-premium">
-        <h2 className="text-2xl font-bold text-gradient mb-6">Quick Actions</h2>
+        <h2 className="text-2xl font-bold text-accent-purple mb-6">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          <a href="/market" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-blue/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-blue/5 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-blue opacity-0 group-hover:opacity-10 transition-opacity" />
-            <TrendingUp className="w-8 h-8 text-accent-blue mb-3 group-hover:scale-110 transition-transform" />
-            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient transition-all">Market Analysis</h3>
-            <p className="text-sm text-text-secondary">Real-time stock prices</p>
+          <a href="/market" className="group relative p-6 border-2 border-white/10 rounded-xl hover:border-accent-purple/50 transition-all duration-200 hover:shadow-xl bg-gradient-to-br from-white/5 to-accent-purple/5 overflow-hidden">
+            <TrendingUp className="w-8 h-8 text-accent-purple mb-3 transition-transform" />
+            <h3 className="font-semibold text-white mb-2 transition-all">Market Analysis</h3>
+            <p className="text-sm text-white/70">Real-time stock prices</p>
           </a>
           
-          <a href="/trading" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-purple/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-purple/5 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-purple opacity-0 group-hover:opacity-10 transition-opacity" />
-            <Activity className="w-8 h-8 text-accent-purple mb-3 group-hover:scale-110 transition-transform" />
-            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient transition-all">Paper Trading</h3>
-            <p className="text-sm text-text-secondary">$100K virtual capital</p>
+          <a href="/trading" className="group relative p-6 border-2 border-white/10 rounded-xl hover:border-accent-purple/50 transition-all duration-200 hover:shadow-xl bg-gradient-to-br from-white/5 to-accent-purple/5 overflow-hidden">
+            <Activity className="w-8 h-8 text-accent-purple mb-3 transition-transform" />
+            <h3 className="font-semibold text-white mb-2 transition-all">Paper Trading</h3>
+            <p className="text-sm text-white/70">$100K virtual capital</p>
           </a>
           
-          <a href="/forecasting" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-gold/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-gold/5 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-gold opacity-0 group-hover:opacity-10 transition-opacity" />
-            <ArrowUpRight className="w-8 h-8 text-accent-gold mb-3 group-hover:scale-110 transition-transform" />
-            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient-gold transition-all">AI Forecasting</h3>
-            <p className="text-sm text-text-secondary">Price predictions</p>
+          <a href="/forecasting" className="group relative p-6 border-2 border-white/10 rounded-xl hover:border-accent-purple/50 transition-all duration-200 hover:shadow-xl bg-gradient-to-br from-white/5 to-accent-purple/5 overflow-hidden">
+            <ArrowUpRight className="w-8 h-8 text-accent-purple mb-3 transition-transform" />
+            <h3 className="font-semibold text-white mb-2 transition-all">AI Forecasting</h3>
+            <p className="text-sm text-white/70">Price predictions</p>
           </a>
           
-          <a href="/research" className="group relative p-6 border-2 border-border/50 rounded-xl hover:border-accent-blue/50 transition-all duration-300 hover:shadow-premium hover:scale-105 bg-gradient-to-br from-primary-surface/80 to-accent-blue/5 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-blue opacity-0 group-hover:opacity-10 transition-opacity" />
-            <FileText className="w-8 h-8 text-accent-blue mb-3 group-hover:scale-110 transition-transform" />
-            <h3 className="font-semibold text-text-primary mb-2 group-hover:text-gradient transition-all">SEC Filings</h3>
-            <p className="text-sm text-text-secondary">10-K, 10-Q reports</p>
+          <a href="/research" className="group relative p-6 border-2 border-white/10 rounded-xl hover:border-accent-purple/50 transition-all duration-200 hover:shadow-xl bg-gradient-to-br from-white/5 to-accent-purple/5 overflow-hidden">
+            <FileText className="w-8 h-8 text-accent-purple mb-3 transition-transform" />
+            <h3 className="font-semibold text-white mb-2 transition-all">SEC Filings</h3>
+            <p className="text-sm text-white/70">10-K, 10-Q reports</p>
           </a>
         </div>
       </div>
