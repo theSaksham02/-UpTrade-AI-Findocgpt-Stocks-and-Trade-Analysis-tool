@@ -57,9 +57,6 @@ export default function VisualX() {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 md:px-10 lg:px-20">
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 md:px-10 lg:px-20">
         {/* Hero Section with Animated Network */}
         <section className="min-h-[calc(100vh-69px)] flex flex-col items-center justify-center text-center py-20 relative">
           {/* Rotating Arcs Background */}
