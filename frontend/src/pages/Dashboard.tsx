@@ -1,19 +1,24 @@
 /**
- * Dashboard Page - Full Corona Template Integration
- * Complete premium dashboard with all Corona UI elements
+ * Dashboard Page - Full Corona Template Integration with Live AI
+ * Complete premium dashboard with all Corona UI elements + Real-time AI data
  */
 import { useState, useEffect } from 'react';
 import { tradingAPI, healthCheck } from '../services/api';
 import { 
   TrendingUp, TrendingDown, DollarSign, Activity, 
   ArrowUpRight, ArrowDownRight, ShoppingCart,
-  FileText, AlertCircle
+  FileText, AlertCircle, RefreshCw, ExternalLink
 } from 'lucide-react';
 import { StatCard, PreviewItem, TransactionCard, DataTable, PremiumBanner, TableColumn, TableRow } from '../components/corona';
+import { useNewsSentiment } from '../utils/hooks';
+import { LoadingSpinner, ErrorAlert } from '../components/LoadingSpinner';
 
 export default function Dashboard() {
   const [status, setStatus] = useState<'loading' | 'connected' | 'error'>('loading');
   const [account, setAccount] = useState<any>(null);
+  
+  // Live AI data hooks
+  const { data: newsData, loading: newsLoading, error: newsError, refetch: refetchNews } = useNewsSentiment('stock market', 5);
 
   useEffect(() => {
     checkConnection();
@@ -288,6 +293,117 @@ export default function Dashboard() {
           selectable={true}
           onRowClick={(row) => console.log('Row clicked:', row)}
         />
+      </div>
+
+      {/* AI News Feed with Sentiment */}
+      <div className="card-premium mb-8">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl font-bold text-accent-purple flex items-center gap-2">
+            📰 Market News & Sentiment
+            {newsLoading && <LoadingSpinner size="sm" />}
+          </h2>
+          <button 
+            onClick={() => refetchNews()}
+            disabled={newsLoading}
+            className="text-sm text-accent-purple hover:text-[#A78BFA] transition-colors flex items-center gap-2 disabled:opacity-50"
+          >
+            <RefreshCw className={`w-4 h-4 ${newsLoading ? 'animate-spin' : ''}`} />
+            Refresh
+          </button>
+        </div>
+
+        {newsError ? (
+          <ErrorAlert error={newsError} onRetry={refetchNews} />
+        ) : newsLoading ? (
+          <div className="py-8"><LoadingSpinner text="Loading latest news..." /></div>
+        ) : newsData && newsData.articles.length > 0 ? (
+          <>
+            {/* Sentiment Overview */}
+            {newsData.sentiment_analysis && (
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-gradient-purple/10 rounded-lg p-4 border border-accent-purple/30">
+                  <div className="text-sm text-white/60 mb-1">Overall Sentiment</div>
+                  <div className={`text-2xl font-bold ${
+                    newsData.sentiment_analysis.overall_sentiment === 'positive' ? 'text-status-success' :
+                    newsData.sentiment_analysis.overall_sentiment === 'negative' ? 'text-status-danger' :
+                    'text-white/70'
+                  }`}>
+                    {newsData.sentiment_analysis.overall_sentiment === 'positive' ? '📈 Positive' :
+                     newsData.sentiment_analysis.overall_sentiment === 'negative' ? '📉 Negative' :
+                     '➡️ Neutral'}
+                  </div>
+                </div>
+                <div className="bg-status-success/10 rounded-lg p-4 border border-status-success/30">
+                  <div className="text-sm text-white/60 mb-1">Positive News</div>
+                  <div className="text-2xl font-bold text-status-success">
+                    {newsData.sentiment_analysis.positive_count}
+                  </div>
+                </div>
+                <div className="bg-status-danger/10 rounded-lg p-4 border border-status-danger/30">
+                  <div className="text-sm text-white/60 mb-1">Negative News</div>
+                  <div className="text-2xl font-bold text-status-danger">
+                    {newsData.sentiment_analysis.negative_count}
+                  </div>
+                </div>
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <div className="text-sm text-white/60 mb-1">Neutral News</div>
+                  <div className="text-2xl font-bold text-white/70">
+                    {newsData.sentiment_analysis.neutral_count}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* News Articles */}
+            <div className="space-y-3">
+              {newsData.articles.slice(0, 5).map((article, index) => (
+                <div 
+                  key={index}
+                  className="bg-white/5 hover:bg-white/10 rounded-lg p-4 border border-white/10 hover:border-accent-purple/50 transition-all cursor-pointer group"
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`px-2 py-0.5 rounded-full text-xs font-semibold ${
+                          article.sentiment === 'positive' ? 'bg-status-success/20 text-status-success' :
+                          article.sentiment === 'negative' ? 'bg-status-danger/20 text-status-danger' :
+                          'bg-white/10 text-white/70'
+                        }`}>
+                          {article.sentiment === 'positive' ? '↗' : article.sentiment === 'negative' ? '↘' : '→'} 
+                          {' '}{article.sentiment_confidence?.toFixed(2)}
+                        </span>
+                        <span className="text-xs text-white/40">{article.source}</span>
+                        <span className="text-xs text-white/40">•</span>
+                        <span className="text-xs text-white/40">
+                          {new Date(article.published_at).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <h3 className="text-white font-semibold mb-1 group-hover:text-accent-purple transition-colors">
+                        {article.title}
+                      </h3>
+                      <p className="text-white/60 text-sm line-clamp-2">
+                        {article.description}
+                      </p>
+                    </div>
+                    <a 
+                      href={article.url} 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-accent-purple hover:text-[#A78BFA] transition-colors"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <ExternalLink className="w-5 h-5" />
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <div className="text-center py-8 text-white/60">
+            No news articles available
+          </div>
+        )}
       </div>
 
       {/* Quick Actions Grid */}
