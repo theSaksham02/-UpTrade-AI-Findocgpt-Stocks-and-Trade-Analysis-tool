@@ -40,17 +40,17 @@ export default function TransactionCard({
 
   return (
     <div 
-      className="flex items-center justify-between p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-blue/50 transition-all group cursor-pointer"
+      className="flex items-center justify-between p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-purple/50 transition-all duration-200 group cursor-pointer"
       onClick={onClick}
     >
       <div>
-        <p className="font-semibold text-text-primary group-hover:text-gradient transition-colors">
+        <p className="font-semibold text-text-primary group-hover:text-accent-purple transition-colors duration-200">
           {type}
         </p>
         <p className="text-sm text-text-muted mt-1">{date}</p>
       </div>
       <div className="text-right">
-        <p className="font-bold text-lg text-gradient-gold">{amount}</p>
+        <p className="font-bold text-lg text-accent-purple">{amount}</p>
         <span className={`inline-block mt-1 px-2 py-0.5 text-xs rounded-full ${config.bg} ${config.text}`}>
           {config.label}
         </span>

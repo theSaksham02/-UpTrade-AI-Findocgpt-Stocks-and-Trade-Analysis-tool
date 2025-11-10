@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>visualX - Decode the Market's True Pulse</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap');
+        @layer keyframes {
+          @keyframes pulse-sentiment {
+            0%, 100% {
+              transform: scale(1);
+              opacity: 1;
+              box-shadow: 0 0 0 0 rgba(139, 92, 246, 0.4);
+            }
+            50% {
+              transform: scale(1.05);
+              opacity: 0.85;
+              box-shadow: 0 0 0 10px rgba(139, 92, 246, 0);
+            }
+          }
+           @keyframes pulse-node {
+            0%, 100% {
+              opacity: 0.6;
+            }
+            50% {
+              opacity: 1;
+            }
+          }
+          @keyframes float-up {
+            0% {
+              transform: translateY(0);
+              opacity: 0;
+            }
+            25%, 75% {
+              opacity: 1;
+            }
+            100% {
+              transform: translateY(-50px);
+              opacity: 0;
+            }
+          }
+           @keyframes arc-rotate {
+            0% {
+              transform: rotate(0deg);
+            }
+            100% {
+              transform: rotate(360deg);
+            }
+          }
+           @keyframes arc-rotate-reverse {
+            0% {
+              transform: rotate(360deg);
+            }
+            100% {
+              transform: rotate(0deg);
+            }
+          }
+        }
+        .animate-pulse-sentiment {
+          animation: pulse-sentiment 2s ease-in-out infinite;
+        }
+         .animate-pulse-node-1 {
+            animation: pulse-node 3s ease-in-out infinite;
+          }
+          .animate-pulse-node-2 {
+            animation: pulse-node 3s ease-in-out infinite 0.5s;
+          }
+          .animate-pulse-node-3 {
+            animation: pulse-node 3s ease-in-out infinite 1s;
+          }
+          .animate-float-1 {
+            animation: float-up 4s ease-in-out infinite 0s;
+          }
+          .animate-float-2 {
+            animation: float-up 4s ease-in-out infinite 1.5s;
+          }
+          .animate-float-3 {
+            animation: float-up 4s ease-in-out infinite 2.5s;
+          }
+          .animate-arc-rotate {
+            animation: arc-rotate 40s linear infinite;
+          }
+           .animate-arc-rotate-reverse {
+            animation: arc-rotate-reverse 60s linear infinite;
+          }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#8B5CF6", // Updated from #f425f4 to violet-500
+              "background-light": "#f8f5f8",
+              "background-dark": "#221022",
+            },
+            fontFamily: {
+              "display": ["Plus Jakarta Sans", "sans-serif"],
+              "body": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+             animation: {
+                'pulse-sentiment': 'pulse-sentiment 2s ease-in-out infinite',
+            },
+            keyframes: {
+                'pulse-sentiment': {
+                    '0%, 100%': { transform: 'scale(1)', opacity: '1', boxShadow: '0 0 0 0 rgba(139, 92, 246, 0.4)' },
+                    '50%': { transform: 'scale(1.05)', opacity: '0.85', boxShadow: '0 0 0 10px rgba(139, 92, 246, 0)' },
+                }
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-body text-white antialiased">
+<div class="relative w-full overflow-x-hidden">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#1A0537] via-[#221022] to-[#0D0219] -z-10"></div>
+<div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/grid.png')] opacity-5 -z-10"></div>
+<header class="sticky top-0 z-50 px-4 md:px-10 lg:px-20 backdrop-blur-md bg-background-dark/50">
+<nav class="container mx-auto flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 py-3">
+<div class="flex items-center gap-4">
+<svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.5L2.5 12L12 21.5L21.5 12L12 2.5Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M15 9L9 15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path><path d="M9 9L15 15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path></svg>
+<h2 class="text-white text-xl font-bold font-display leading-tight tracking-[-0.015em]">visualX</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Features</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Pricing</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Integrations</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">About</a>
+</div>
+<div class="hidden md:flex gap-2">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] hover:brightness-110 hover:scale-105 transition-all duration-300 transform-gpu">
+<span class="truncate">Experience visualX Now</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent border border-white text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors">
+<span class="truncate">Learn More</span>
+</button>
+</div>
+<div class="md:hidden">
+<button class="text-white">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="container mx-auto px-4 md:px-10 lg:px-20">
+<section class="min-h-[calc(100vh-69px)] flex flex-col items-center justify-center text-center py-20 relative">
+<div class="absolute inset-0 -top-20 -z-10 flex items-center justify-center opacity-20 [mask-image:radial-gradient(ellipse_at_center,black_40%,transparent_70%)]">
+<div class="relative w-full max-w-4xl aspect-square">
+<svg class="absolute inset-0 w-full h-full animate-arc-rotate" fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="48" stroke="url(#gradient-1)" stroke-dasharray="2 4" stroke-linecap="round" stroke-width="1"></circle>
+<defs>
+<linearGradient id="gradient-1" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#8B5CF6"></stop>
+<stop offset="100%" stop-color="#8B5CF6" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+<svg class="absolute inset-0 w-full h-full animate-arc-rotate-reverse" fill="none" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<circle cx="50" cy="50" r="40" stroke="url(#gradient-2)" stroke-dasharray="4 2" stroke-linecap="round" stroke-width="1"></circle>
+<defs>
+<linearGradient id="gradient-2" x1="0%" x2="100%" y1="0%" y2="100%">
+<stop offset="0%" stop-color="#FFFFFF"></stop>
+<stop offset="100%" stop-color="#FFFFFF" stop-opacity="0"></stop>
+</linearGradient>
+</defs>
+</svg>
+</div>
+</div>
+<div class="max-w-4xl flex flex-col items-center gap-6">
+<h1 class="text-white text-4xl font-black font-display leading-tight tracking-[-0.033em] md:text-6xl">visualX: Decode the Market's True Pulse.</h1>
+<h2 class="text-white/80 text-base font-normal leading-normal md:text-xl">Beyond the headlines. Beyond the noise. visualX reveals the real-time market narrative and sentiment that drives price action.</h2>
+<div class="mt-4 flex flex-wrap gap-3 justify-center">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 hover:scale-105 transition-all duration-300 transform-gpu">
+<span class="truncate">Experience visualX Now</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-white text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors">
+<span class="truncate">Learn More About Uptrade's AI</span>
+</button>
+</div>
+</div>
+<div class="mt-16 w-full max-w-5xl h-96 relative bg-black/30 rounded-xl border border-white/10 flex items-center justify-center p-4 overflow-hidden">
+<div class="absolute inset-0 w-full h-full">
+<svg class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+<line class="stroke-current text-white/10 animate-pulse-node-1" stroke-dasharray="4 4" stroke-width="1" x1="20%" x2="50%" y1="20%" y2="50%"></line>
+<line class="stroke-current text-white/10 animate-pulse-node-2" stroke-dasharray="4 4" stroke-width="1" x1="80%" x2="50%" y1="30%" y2="50%"></line>
+<line class="stroke-current text-white/10 animate-pulse-node-3" stroke-dasharray="4 4" stroke-width="1" x1="30%" x2="50%" y1="80%" y2="50%"></line>
+<line class="stroke-current text-white/10 animate-pulse-node-1" stroke-dasharray="4 4" stroke-width="1" x1="60%" x2="50%" y1="15%" y2="50%"></line>
+<line class="stroke-current text-white/10 animate-pulse-node-2" stroke-dasharray="4 4" stroke-width="1" x1="75%" x2="50%" y1="75%" y2="50%"></line>
+<circle class="fill-current text-white/20 animate-pulse-node-1" cx="20%" cy="20%" r="6"></circle>
+<circle class="fill-current text-white/20 animate-pulse-node-2" cx="80%" cy="30%" r="8"></circle>
+<circle class="fill-current text-white/20 animate-pulse-node-3" cx="30%" cy="80%" r="5"></circle>
+<circle class="fill-current text-white/20 animate-pulse-node-1" cx="60%" cy="15%" r="7"></circle>
+<circle class="fill-current text-white/20 animate-pulse-node-2" cx="75%" cy="75%" r="9"></circle>
+<circle class="fill-current text-primary/80" cx="50%" cy="50%" r="20"></circle>
+</svg>
+<div class="absolute top-1/4 left-1/4">
+<div class="animate-float-1 flex items-center gap-1 bg-green-500/80 text-white text-xs px-2 py-1 rounded-full"><span>+0.85</span><span class="material-symbols-outlined text-sm">trending_up</span></div>
+</div>
+<div class="absolute top-1/3 right-1/4">
+<div class="animate-float-2 flex items-center gap-1 bg-red-500/80 text-white text-xs px-2 py-1 rounded-full"><span>-1.20</span><span class="material-symbols-outlined text-sm">trending_down</span></div>
+</div>
+<div class="absolute bottom-1/4 left-1/3">
+<div class="animate-float-3 flex items-center gap-1 bg-green-500/80 text-white text-xs px-2 py-1 rounded-full"><span>+2.15</span><span class="material-symbols-outlined text-sm">trending_up</span></div>
+</div>
+</div>
+<div class="animate-pulse-sentiment rounded-full p-2">
+<div class="bg-primary/30 w-32 h-32 rounded-full flex flex-col items-center justify-center border-2 border-primary">
+<span class="text-3xl font-bold font-display text-white">+1.42</span>
+<span class="text-xs text-white/70">Live Sentiment</span>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 text-center">
+<div class="max-w-3xl mx-auto">
+<h2 class="text-white text-3xl md:text-4xl font-bold font-display leading-tight tracking-[-0.015em]">Why News Feeds Aren't Enough.</h2>
+<p class="text-white/70 text-base md:text-lg font-normal leading-normal mt-6">Traditional news feeds provide a fragmented view. They report events, but miss the critical context: the collective emotional impact of the narrative, its direct influence on specific stocks, and the subtle shifts in market perception that signal major trend changes.</p>
+</div>
+</section>
+<section class="py-20 text-center">
+<div class="max-w-3xl mx-auto">
+<h2 class="text-white text-3xl md:text-4xl font-bold font-display leading-tight tracking-[-0.015em]">AI-Powered Sentiment, In Real-Time.</h2>
+<p class="text-white/70 text-base md:text-lg font-normal leading-normal mt-6">visualX uses advanced NLP models to analyze millions of global news articles, social media discussions, and analyst reports, transforming unstructured text into precise, actionable sentiment scores and narrative trends that you can trade on.</p>
+</div>
+</section>
+<section class="py-20">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+<div class="bg-white/5 p-6 rounded-xl border border-white/10 text-center flex flex-col items-center group hover:bg-white/10 hover:border-primary transition-all duration-300">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary/20 mb-4 transition-all duration-300 group-hover:bg-primary/30 group-hover:scale-110"><svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+<h3 class="text-lg font-bold font-display mb-2">Real-time Sentiment Stream</h3>
+</div>
+<div class="bg-white/5 p-6 rounded-xl border border-white/10 text-center flex flex-col items-center group hover:bg-white/10 hover:border-primary transition-all duration-300">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary/20 mb-4 transition-all duration-300 group-hover:bg-primary/30 group-hover:scale-110"><svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg></div>
+<h3 class="text-lg font-bold font-display mb-2">Narrative Detection</h3>
+</div>
+<div class="bg-white/5 p-6 rounded-xl border border-white/10 text-center flex flex-col items-center group hover:bg-white/10 hover:border-primary transition-all duration-300">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary/20 mb-4 transition-all duration-300 group-hover:bg-primary/30 group-hover:scale-110"><svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg></div>
+<h3 class="text-lg font-bold font-display mb-2">Sentiment Volatility Alerts</h3>
+</div>
+<div class="bg-white/5 p-6 rounded-xl border border-white/10 text-center flex flex-col items-center group hover:bg-white/10 hover:border-primary transition-all duration-300">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary/20 mb-4 transition-all duration-300 group-hover:bg-primary/30 group-hover:scale-110"><svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg></div>
+<h3 class="text-lg font-bold font-display mb-2">Correlation Overlay</h3>
+</div>
+<div class="bg-white/5 p-6 rounded-xl border border-white/10 text-center flex flex-col items-center group hover:bg-white/10 hover:border-primary transition-all duration-300">
+<div class="w-12 h-12 flex items-center justify-center rounded-lg bg-primary/20 mb-4 transition-all duration-300 group-hover:bg-primary/30 group-hover:scale-110"><svg class="w-6 h-6 text-primary" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"></circle><circle cx="6" cy="12" r="3"></circle><circle cx="18" cy="19" r="3"></circle><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"></line><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"></line></svg></div>
+<h3 class="text-lg font-bold font-display mb-2">Source Attribution</h3>
+</div>
+</div>
+</section>
+<section class="py-20">
+<div class="text-center mb-12">
+<h2 class="text-white text-3xl md:text-4xl font-bold font-display leading-tight tracking-[-0.015em]">Anticipate Shifts. Minimize Risk.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+<div class="p-8 bg-white/5 rounded-xl border border-white/10 h-full text-center">
+<h3 class="text-xl font-bold font-display mb-4">Pre-emptive Trading</h3>
+<p class="text-white/70">Identify market-moving narratives before they hit the mainstream, giving you a critical time advantage.</p>
+</div>
+<div class="p-8 bg-white/5 rounded-xl border border-white/10 h-full text-center">
+<h3 class="text-xl font-bold font-display mb-4">Risk Mitigation</h3>
+<p class="text-white/70">Detect negative sentiment spikes and narrative decay to protect your portfolio from unforeseen downturns.</p>
+</div>
+<div class="p-8 bg-white/5 rounded-xl border border-white/10 h-full text-center">
+<h3 class="text-xl font-bold font-display mb-4">Strategic Entry/Exit Points</h3>
+<p class="text-white/70">Use sentiment momentum and volatility data to time your trades with greater precision and confidence.</p>
+</div>
+</div>
+</section>
+<section class="py-20 text-center">
+<div class="max-w-2xl mx-auto">
+<h2 class="text-white text-4xl font-black font-display leading-tight tracking-[-0.033em] md:text-5xl">Your Edge is Waiting.</h2>
+<p class="text-white/70 text-base md:text-lg font-normal leading-normal mt-6">Stop reacting to old news. Decode the market's true pulse and start trading the narrative. Experience the future of financial analysis today.</p>
+<div class="mt-8 flex flex-wrap gap-3 justify-center">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-primary text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 hover:scale-105 transition-all duration-300 transform-gpu">
+<span class="truncate">Experience visualX Now</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-white text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors">
+<span class="truncate">Learn More About Uptrade's AI</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-white/10 mt-20">
+<div class="container mx-auto px-4 md:px-10 lg:px-20 py-8 text-center text-sm text-white/50">
+                © 2024 visualX. All rights reserved.
+            </div>
+</footer>
+</div>
+</body></html>

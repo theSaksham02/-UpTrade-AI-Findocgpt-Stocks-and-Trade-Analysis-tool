@@ -14,98 +14,85 @@
 }
 
 @layer components {
-  /* Premium Button Styles */
+  /* Formal Button Styles - Purple-Black Theme */
   .btn-premium {
-    @apply relative overflow-hidden px-6 py-3 rounded-lg font-semibold transition-all duration-300;
-    @apply bg-gradient-blue text-white shadow-premium hover:shadow-glow;
-    @apply transform hover:scale-105 hover:-translate-y-0.5;
+    @apply relative overflow-hidden px-6 py-3 rounded-lg font-semibold transition-all duration-200;
+    @apply bg-accent-purple text-white shadow-lg;
+    @apply hover:bg-accent-purple/90;
   }
   
   .btn-premium::before {
     content: '';
-    @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-300;
+    @apply absolute inset-0 bg-white opacity-0 transition-opacity duration-200;
   }
   
   .btn-premium:hover::before {
-    @apply opacity-10;
+    @apply opacity-5;
   }
   
   .btn-gradient {
     @apply relative overflow-hidden px-6 py-3 rounded-lg font-semibold;
-    @apply bg-gradient-cyber text-white shadow-premium;
-    @apply transition-all duration-300 transform hover:scale-105;
-    background-size: 200% 200%;
-    animation: gradient 8s ease infinite;
+    @apply bg-gradient-to-r from-accent-purple to-purple-900 text-white shadow-lg;
+    @apply transition-all duration-200 hover:from-accent-purple/90 hover:to-purple-900/90;
   }
   
   .btn-gold {
-    @apply bg-gradient-gold text-white px-6 py-3 rounded-lg font-semibold;
-    @apply shadow-lg hover:shadow-xl transition-all duration-300;
-    @apply transform hover:scale-105 hover:-translate-y-0.5;
+    @apply bg-accent-purple text-white px-6 py-3 rounded-lg font-semibold;
+    @apply shadow-lg hover:shadow-xl transition-all duration-200;
+    @apply hover:bg-accent-purple/90;
   }
   
-  /* Premium Card Styles */
+  /* Formal Card Styles - Purple-Black Theme */
   .card-premium {
-    @apply bg-gradient-surface border border-border/50 rounded-xl p-6;
-    @apply shadow-premium backdrop-blur-sm;
-    @apply transition-all duration-300 hover:shadow-glow hover:border-accent-blue/50;
+    @apply bg-primary-surface border border-border/50 rounded-lg p-6;
+    @apply shadow-lg backdrop-blur-sm;
+    @apply transition-all duration-200 hover:border-accent-purple/50;
   }
   
   .card-glass {
-    @apply bg-primary-surface/60 backdrop-blur-md border border-border/30 rounded-xl p-6;
-    @apply shadow-xl hover:shadow-glow transition-all duration-300;
+    @apply bg-primary-surface/80 backdrop-blur-md border border-border/30 rounded-lg p-6;
+    @apply shadow-lg transition-all duration-200;
   }
   
-  /* Premium Input Styles */
+  /* Formal Input Styles */
   .input-premium {
-    @apply w-full px-4 py-3 bg-primary-surface/80 border border-border rounded-lg;
+    @apply w-full px-4 py-3 bg-primary-surface/90 border border-border rounded-lg;
     @apply text-text-primary placeholder-text-muted;
-    @apply focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue;
-    @apply transition-all duration-300;
+    @apply focus:outline-none focus:ring-1 focus:ring-accent-purple/50 focus:border-accent-purple;
+    @apply transition-all duration-200;
   }
   
   .input-premium::placeholder {
-    @apply text-text-muted opacity-70;
+    @apply text-text-muted opacity-60;
   }
   
-  /* Search Bar Premium */
+  /* Search Bar Formal */
   .search-premium {
     @apply relative w-full;
   }
   
   .search-premium input {
-    @apply w-full px-4 py-3 pl-12 bg-primary-surface/90 border-2 border-border rounded-xl;
+    @apply w-full px-4 py-3 pl-12 bg-primary-surface/90 border border-border rounded-lg;
     @apply text-text-primary placeholder:text-text-secondary;
-    @apply focus:outline-none focus:ring-2 focus:ring-accent-blue/50 focus:border-accent-blue;
-    @apply transition-all duration-300 shadow-md hover:shadow-premium;
+    @apply focus:outline-none focus:ring-1 focus:ring-accent-purple/50 focus:border-accent-purple;
+    @apply transition-all duration-200 shadow-md;
   }
   
   .search-premium input::placeholder {
-    @apply text-text-secondary font-medium;
+    @apply text-text-secondary font-normal;
   }
   
-  /* Gradient Text */
+  /* Formal Text - Purple Theme */
   .text-gradient {
-    @apply bg-gradient-cyber bg-clip-text text-transparent;
-    background-size: 200% 200%;
-    animation: gradient 8s ease infinite;
+    @apply text-accent-purple font-semibold;
   }
   
   .text-gradient-gold {
-    @apply bg-gradient-gold bg-clip-text text-transparent;
+    @apply text-accent-purple font-semibold;
   }
   
   /* Shimmer Effect */
-  .shimmer {
-    background: linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0) 100%
-    );
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
-  }
+  /* Removed shimmer effect for formal design */
 }
 
 @layer utilities {
@@ -119,41 +106,14 @@
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    @apply bg-accent-blue/30 rounded-full;
+    @apply bg-accent-purple/40 rounded-full;
   }
   
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    @apply bg-accent-blue/50;
+    @apply bg-accent-purple/60;
   }
   
-  /* Glow effects */
-  .glow-blue {
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
-  }
-  
-  .glow-purple {
-    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
-  }
-  
-  .glow-gold {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
-  }
+  /* Removed all glow effects for formal corporate design */
 }
 
-@keyframes gradient {
-  0%, 100% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-}
-
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
-}
+/* Removed all animations for formal corporate design */

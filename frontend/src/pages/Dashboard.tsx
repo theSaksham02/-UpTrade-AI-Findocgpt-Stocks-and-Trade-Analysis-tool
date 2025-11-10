@@ -148,7 +148,7 @@ export default function Dashboard() {
           change="+11%"
           isPositive={true}
           icon={DollarSign}
-          gradient="blue"
+          gradient="purple"
         />
         <StatCard 
           title="Daily Trades"

@@ -16,7 +16,7 @@ interface PreviewItemProps {
 
 export default function PreviewItem({ 
   icon: Icon, 
-  iconColor = 'text-accent-blue',
+  iconColor = 'text-accent-purple',
   title, 
   description, 
   time,
@@ -24,14 +24,14 @@ export default function PreviewItem({
 }: PreviewItemProps) {
   return (
     <div 
-      className="flex items-start gap-4 p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-purple/50 transition-all group cursor-pointer"
+      className="flex items-start gap-4 p-4 bg-primary-surface rounded-xl border border-border/30 hover:border-accent-purple/50 transition-all duration-200 group cursor-pointer"
       onClick={onClick}
     >
-      <div className="w-10 h-10 rounded-lg bg-primary-hover flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform">
+      <div className="w-10 h-10 rounded-lg bg-primary-hover flex items-center justify-center flex-shrink-0 transition-transform duration-200">
         <Icon className={`w-5 h-5 ${iconColor}`} />
       </div>
       <div className="flex-1 min-w-0">
-        <p className="font-semibold text-text-primary group-hover:text-gradient transition-colors">
+        <p className="font-semibold text-text-primary group-hover:text-accent-purple transition-colors duration-200">
           {title}
         </p>
         <p className="text-sm text-text-muted mt-0.5">{description}</p>

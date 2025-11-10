@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Uptrade - The Terminal, Reimagined by AI</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&display=swap');
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+        .animate-fadeIn {
+            animation: fadeIn 1s ease-out forwards;
+        }
+        .delay-1 { animation-delay: 0.2s; }
+        .delay-2 { animation-delay: 0.4s; }
+        .delay-3 { animation-delay: 0.6s; }
+        .delay-4 { animation-delay: 0.8s; }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#8B5CF6",
+              "background-light": "#f8f5f8",
+              "background-dark": "#221022",
+              "violet": "#6D28D9",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-white antialiased">
+<div class="relative w-full overflow-x-hidden">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-[#1A0537] via-[#221022] to-[#0D0219] -z-10"></div>
+<div class="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/grid.png')] opacity-5 -z-10"></div>
+<div class="absolute -top-1/4 -left-1/4 w-1/2 h-1/2 bg-purple-900/50 rounded-full filter blur-3xl animate-float -z-10"></div>
+<div class="absolute -bottom-1/4 -right-1/4 w-1/2 h-1/2 bg-violet-900/40 rounded-full filter blur-3xl animate-float animation-delay-3000 -z-10"></div>
+<header class="sticky top-0 z-50 px-4 md:px-10 lg:px-20 backdrop-blur-md bg-background-dark/50">
+<nav class="container mx-auto flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 py-3">
+<div class="flex items-center gap-4">
+<svg class="h-6 w-6 text-primary" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_535)">
+<path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clipPath id="clip0_6_535"><rect fill="white" height="48" width="48"></rect></clipPath>
+</defs>
+</svg>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">Uptrade</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Features</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Pricing</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">API</a>
+<a class="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors" href="#">Blog</a>
+</div>
+<div class="hidden md:flex gap-2">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-violet text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">Get Started for Free</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-white/10 text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/20 transition-colors">
+<span class="truncate">Book Demo</span>
+</button>
+</div>
+<div class="md:hidden">
+<button class="text-white">
+<span class="material-symbols-outlined text-3xl">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="container mx-auto px-4 md:px-10 lg:px-20">
+<section class="min-h-[calc(100vh-69px)] flex items-center justify-center text-center py-20 relative">
+<div class="absolute inset-0 flex items-center justify-center -z-10">
+<div class="w-[500px] h-[500px] md:w-[700px] md:h-[700px] rounded-full border border-purple-500/10 relative">
+<div class="absolute inset-2 md:inset-4 rounded-full border border-purple-500/10"></div>
+<div class="absolute inset-4 md:inset-8 rounded-full border border-purple-500/10"></div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 bg-purple-500 rounded-full shadow-[0_0_20px_5px] shadow-purple-500"></div>
+<div class="absolute top-1/4 left-1/4 w-2 h-2 bg-violet-400 rounded-full animate-float" style="animation-duration: 8s;"></div>
+<div class="absolute top-1/3 right-1/4 w-1 h-1 bg-violet-400 rounded-full animate-float" style="animation-duration: 5s;"></div>
+<div class="absolute bottom-1/4 left-1/3 w-2 h-2 bg-violet-400 rounded-full animate-float" style="animation-duration: 7s;"></div>
+<div class="absolute bottom-1/2 right-1/4 w-3 h-3 bg-violet-400 rounded-full animate-float" style="animation-duration: 4s;"></div>
+</div>
+</div>
+<div class="max-w-3xl flex flex-col items-center gap-6">
+<h1 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] md:text-6xl">The Terminal, Reimagined by AI.</h1>
+<h2 class="text-white/80 text-base font-normal leading-normal md:text-xl">Uptrade unifies real-time market data, institutional-grade document analysis, and predictive AI insights into one powerful, intuitive platform. Stop switching tabs. Start finding alpha.</h2>
+<div class="mt-4 flex flex-wrap gap-3 justify-center">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-violet text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">Get Started for Free</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-white/10 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/20 transition-colors">
+<span class="truncate">Book Enterprise Demo</span>
+</button>
+</div>
+</div>
+</section>
+<section class="py-20 text-center">
+<div class="max-w-3xl mx-auto">
+<div class="relative mb-12 flex justify-center items-center">
+<div class="w-full h-24 bg-gradient-to-r from-transparent via-purple-900/50 to-transparent blur-xl"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<svg class="w-full h-16 text-purple-400/30" fill="none" preserveAspectRatio="none" stroke="currentColor" viewBox="0 0 200 20">
+<polyline points="0,10 20,15 40,5 60,18 80,8 100,12 120,5 140,15 160,10 180,18 200,10"></polyline>
+</svg>
+</div>
+</div>
+<h2 class="text-white text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em]">Stop Drowning in Disconnected Data.</h2>
+<p class="text-white/70 text-base md:text-lg font-normal leading-normal mt-6">Professional investors and quants waste hours a day trying to connect the dots. You have one tool for charts, another for SEC filings, a third for news, and a fourth for social sentiment. By the time you manually synthesize this fragmented data, the market has moved. Your alpha is gone.</p>
+</div>
+</section>
+<section class="py-20 text-center">
+<div class="max-w-3xl mx-auto">
+<div class="relative mb-12 flex flex-col justify-center items-center gap-4">
+<div class="relative w-48 h-24">
+<div class="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-purple-900/60 to-transparent blur-lg"></div>
+<svg class="absolute inset-0 w-full h-full text-purple-400" fill="none" viewBox="0 0 100 50">
+<path d="M10 40 Q 30 10, 50 25 T 90 15" stroke="currentColor" stroke-linecap="round" stroke-width="2"></path>
+<path d="M85 20 L 90 15 L 85 10" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+</div>
+</div>
+<h2 class="text-white text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em]">From Noise to Signal. Instantly.</h2>
+<p class="text-white/70 text-base md:text-lg font-normal leading-normal mt-6">Uptrade is your single source of truth. We ingest, index, and analyze millions of financial data points in real-time. Our AI-native engine connects them for you. Ask complex questions, get data-backed answers. Identify cross-asset correlations. Discover narrative-driven opportunities. Build, backtest, and deploy strategies—all from one command.</p>
+</div>
+</section>
+<section class="py-20">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<div class="bg-white/5 p-8 rounded-xl border border-white/10 opacity-0 animate-fadeIn delay-1">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-3xl text-primary">psychology</span>
+<h3 class="text-xl font-bold">Query Your Universe</h3>
+</div>
+<p class="text-white/70">Our core engine (FinDocGPT) has read and understood millions of global SEC filings, earnings call transcripts, and research reports. Ask complex, natural language questions and get an instant, sourced, and synthesized answer.</p>
+</div>
+<div class="bg-white/5 p-8 rounded-xl border border-white/10 opacity-0 animate-fadeIn delay-2">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-3xl text-primary">podcasts</span>
+<h3 class="text-xl font-bold">Trade the Narrative</h3>
+</div>
+<p class="text-white/70">visualX is your real-time market pulse, processing global news and social media 24/7. It identifies emerging narratives, detects sentiment-driven volatility, and alerts you to narrative shifts.</p>
+</div>
+<div class="bg-white/5 p-8 rounded-xl border border-white/10 opacity-0 animate-fadeIn delay-3">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-3xl text-primary">insights</span>
+<h3 class="text-xl font-bold">Find Your Asymmetric Edge</h3>
+</div>
+<p class="text-white/70">TradeX and Compare X are your alpha discovery tools. Stack any two assets against thousands of metrics—from standard fundamentals to our proprietary, real-time sentiment scores. Uncover asymmetric opportunities and hidden correlations.</p>
+</div>
+<div class="bg-white/5 p-8 rounded-xl border border-white/10 opacity-0 animate-fadeIn delay-4">
+<div class="flex items-center gap-4 mb-4">
+<span class="material-symbols-outlined text-3xl text-primary">science</span>
+<h3 class="text-xl font-bold">Build, Test, Deploy</h3>
+</div>
+<p class="text-white/70">This is your personal quant lab. Use our Portfolio twin to manage and optimize your holdings with AI. Test complex, multi-factor strategies against real-world data with our real-time Paper Trading environment. Deploy your strategy with a single click.</p>
+</div>
+</div>
+</section>
+<section class="py-20">
+<div class="text-center mb-12">
+<h2 class="text-white text-3xl md:text-4xl font-bold leading-tight tracking-[-0.015em]">Built for Analysts. Scalable for Quants.</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+<div class="p-8 bg-white/5 rounded-xl border border-white/10 h-full">
+<h3 class="text-xl font-bold mb-4">For the Modern Analyst &amp; Investor</h3>
+<p class="text-white/70 mb-6">Get the power of a Bloomberg terminal with the intuitive feel of a modern web app. A clean, customizable dashboard gives you all the intelligence you need, without the clutter.</p>
+<div class="bg-black/50 p-4 rounded-lg h-48" data-alt="A sleek, dark-themed dashboard UI with charts and data widgets."></div>
+</div>
+<div class="p-8 bg-white/5 rounded-xl border border-white/10 h-full">
+<h3 class="text-xl font-bold mb-4">For the Quant &amp; HFT Firm</h3>
+<p class="text-white/70 mb-6">The engine, exposed. Access our data and models via a comprehensive, low-latency API. Integrate our sentiment scores and forecasting data directly into your own trading algorithms.</p>
+<div class="bg-black/50 p-4 rounded-lg h-48 font-mono text-sm text-green-400 overflow-hidden" data-alt="A dark terminal window showing Python code for API data fetching.">
+<p class="text-purple-400">import <span class="text-sky-400">uptrade</span></p>
+<p><span class="text-sky-400">client</span> = <span class="text-purple-400">uptrade</span>.Client(api_key=<span class="text-yellow-400">"..."</span>)</p>
+<p><span class="text-sky-400">sentiment</span> = <span class="text-purple-400">client</span>.get_sentiment(<span class="text-yellow-400">"TSLA"</span>)</p>
+</div>
+</div>
+</div>
+</section>
+<section class="py-20 text-center">
+<div class="max-w-2xl mx-auto">
+<h2 class="text-white text-4xl font-black leading-tight tracking-[-0.033em] md:text-5xl">Your Alpha is Waiting.</h2>
+<p class="text-white/70 text-base md:text-lg font-normal leading-normal mt-6">Stop switching tabs. Stop analyzing stale data. Stop guessing. Sign up for the platform that's built for the future of finance.</p>
+<div class="mt-8 flex flex-wrap gap-3 justify-center">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-violet text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity">
+<span class="truncate">Get Started for Free</span>
+</button>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-white/10 text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/20 transition-colors">
+<span class="truncate">Request Enterprise Demo</span>
+</button>
+</div>
+</div>
+</section>
+</main>
+<footer class="border-t border-white/10 mt-20">
+<div class="container mx-auto px-4 md:px-10 lg:px-20 py-8 text-center text-sm text-white/50">
+                © 2024 Uptrade. All rights reserved.
+            </div>
+</footer>
+</div>
+</body></html>
