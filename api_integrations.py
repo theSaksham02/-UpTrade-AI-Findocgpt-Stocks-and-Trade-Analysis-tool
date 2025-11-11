@@ -10,6 +10,10 @@ import logging
 from datetime import datetime, timedelta
 from functools import lru_cache
 import time
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -19,16 +23,95 @@ class APIManager:
     """Manages external API integrations with rate limiting and caching"""
     
     def __init__(self):
-        # API Keys (use environment variables in production)
-        self.news_api_key = os.getenv('NEWS_API_KEY', '')
+        # Market Data API Keys
         self.alpha_vantage_key = os.getenv('ALPHA_VANTAGE_KEY', 'demo')
         self.finnhub_key = os.getenv('FINNHUB_KEY', '')
+        self.polygon_key = os.getenv('POLYGON_API_KEY', '')
+        
+        # News API Keys
+        self.news_api_key = os.getenv('NEWS_API_KEY', '')
+        self.newsdata_key = os.getenv('NEWSDATA_API_KEY', '')
+        self.marketaux_key = os.getenv('MARKETAUX_API_KEY', '')
         
         # Rate limiting
         self.last_request_time = {}
         self.min_request_interval = 1  # seconds between requests
         
+        # Cache for API responses
+        self.cache = {}
+        self.cache_ttl = 300  # 5 minutes cache
+        
+        logger.info("🔌 API Manager initialized with multiple data sources")
+        self._log_api_status()
+    
+    def _log_api_status(self):
+        """Log which APIs are configured"""
+        logger.info("📊 API Configuration Status:")
+        logger.info(f"  ✅ Alpha Vantage: {'Configured' if self.alpha_vantage_key and self.alpha_vantage_key != 'demo' else '❌ Missing'}")
+        logger.info(f"  ✅ Finnhub: {'Configured' if self.finnhub_key else '❌ Missing'}")
+        logger.info(f"  ✅ Polygon: {'Configured' if self.polygon_key else '❌ Missing'}")
+        logger.info(f"  ✅ NewsAPI: {'Configured' if self.news_api_key else '❌ Missing'}")
+        logger.info(f"  ✅ NewsData: {'Configured' if self.newsdata_key else '❌ Missing'}")
+        logger.info(f"  ✅ Marketaux: {'Configured' if self.marketaux_key else '❌ Missing'}")
+    
+    def _get_cache_key(self, prefix: str, params: Dict) -> str:
+        """Generate cache key from prefix and parameters"""
+        param_str = '_'.join(f"{k}={v}" for k, v in sorted(params.items()))
+        return f"{prefix}_{param_str}"
+    
+    def _get_from_cache(self, cache_key: str) -> Optional[Any]:
+        """Get data from cache if not expired"""
+        if cache_key in self.cache:
+            data, timestamp = self.cache[cache_key]
+            if time.time() - timestamp < self.cache_ttl:
+                logger.info(f"📦 Cache hit: {cache_key}")
+                return data
+            else:
+                del self.cache[cache_key]
+        return None
+    
+    def _set_cache(self, cache_key: str, data: Any):
+        """Store data in cache with timestamp"""
+        self.cache[cache_key] = (data, time.time())
+    
+    def _rate_limit(self, api_name: str):
+
+import requests
+import os
+from typing import List, Dict, Any, Optional
+import logging
+from datetime import datetime, timedelta
+from functools import lru_cache
+import time
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+
+class APIManager:
+    """Manages external API integrations with rate limiting and caching"""
+    
+    def __init__(self):
+        # Load environment variables
+        from dotenv import load_dotenv
+        load_dotenv()
+        
+        # API Keys (use environment variables in production)
+        self.news_api_key = os.getenv('NEWS_API_KEY', '')
+        self.alpha_vantage_key = os.getenv('ALPHA_VANTAGE_KEY', '')
+        self.finnhub_key = os.getenv('FINNHUB_KEY', '')
+        self.polygon_key = os.getenv('POLYGON_API_KEY', '')
+        self.fred_key = os.getenv('FRED_API_KEY', '')
+        
+        # Rate limiting
+        self.last_request_time = {}
+        self.min_request_interval = 1  # seconds between requests
+        
+        # Log API status
         logger.info("🔌 API Manager initialized")
+        logger.info(f"   Alpha Vantage: {'✅ Configured' if self.alpha_vantage_key else '❌ Not configured'}")
+        logger.info(f"   NewsAPI: {'✅ Configured' if self.news_api_key else '❌ Not configured'}")
+        logger.info(f"   Finnhub: {'✅ Configured' if self.finnhub_key else '❌ Not configured'}")
     
     def _rate_limit(self, api_name: str):
         """Simple rate limiting"""

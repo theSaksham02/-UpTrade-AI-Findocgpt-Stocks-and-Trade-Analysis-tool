@@ -133,3 +133,7 @@ docker-compose.override.yml
 
 # Alembic
 alembic/versions/*.pyc
+
+# Documentation files with API keys (keep local only)
+BEAST_MODE_COMPLETE.md
+API_INTEGRATION_COMPLETE.md
