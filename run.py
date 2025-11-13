@@ -111,7 +111,7 @@ def main():
     print_colored("  • API Documentation:  http://localhost:8000/docs", GREEN)
     print_colored("  • Interactive API:    http://localhost:8000/redoc", GREEN)
     if has_frontend:
-        print_colored("  • React Frontend:     http://localhost:5173 (or check logs)", GREEN)
+        print_colored("  • React Frontend:     http://localhost:5051 (or check logs)", GREEN)
     print_colored("\n  • WebSocket Endpoints:", GREEN)
     print_colored("    - ws://localhost:8000/ws", GREEN)
     print_colored("    - ws://localhost:8000/ws/live", GREEN)
