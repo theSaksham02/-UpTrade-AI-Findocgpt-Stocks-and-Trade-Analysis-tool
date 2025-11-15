@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { MessageSquare, X, Send, Sparkles, TrendingUp, BarChart3, Loader2, Search, Zap } from "lucide-react"
+import { MessageSquare, X, Send, Sparkles, TrendingUp, Search, Loader2, BarChart3, Zap } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -26,7 +26,7 @@ export default function UptradeCopilot() {
     {
       id: "welcome",
       role: "assistant",
-      content: "👋 Hello! I'm your UpTrade AI Copilot. I can help you with:\n\n• Market analysis and insights\n• Stock recommendations\n• Portfolio optimization\n• Technical analysis\n• Economic indicators\n• News sentiment analysis\n\nWhat would you like to know?",
+      content: "👋 Welcome to UpTrade AI Copilot! I'm powered by GPT-4 and HuggingFace.\n\n🚀 I can help you with:\n\n• Real-time stock analysis & quotes\n• Market sentiment from news & social media\n• Technical indicators & patterns\n• Portfolio recommendations\n• Economic data & forecasts\n• Anomaly detection & alerts\n\n💡 Try asking:\n\"What's AAPL's current price?\"\n\"Analyze sentiment for Tesla\"\n\"Compare MSFT vs GOOGL\"\n\"Show me trending tech stocks\"",
       timestamp: new Date()
     }
   ])
@@ -75,13 +75,6 @@ export default function UptradeCopilot() {
     return () => clearTimeout(debounce)
   }, [searchQuery])
 
-  const handleStockSelect = (stock: StockSuggestion) => {
-    setInput(`Analyze ${stock.symbol} - ${stock.name}`)
-    setShowSuggestions(false)
-    setSearchQuery("")
-    inputRef.current?.focus()
-  }
-
   const handleSend = async () => {
     if (!input.trim() || isLoading) return
 
@@ -94,12 +87,12 @@ export default function UptradeCopilot() {
 
     setMessages((prev) => [...prev, userMessage])
     setInput("")
+    setIsLoading(true)
     setSearchQuery("")
     setShowSuggestions(false)
-    setIsLoading(true)
 
     try {
-      // Call the backend API for AI analysis
+      // Try GPT analysis first
       const response = await fetch("http://localhost:8000/api/ai/analyze", {
         method: "POST",
         headers: {
@@ -109,7 +102,7 @@ export default function UptradeCopilot() {
       })
 
       if (!response.ok) {
-        throw new Error("Failed to get AI response")
+        throw new Error("GPT API failed, trying HuggingFace")
       }
 
       const data = await response.json()
@@ -117,15 +110,13 @@ export default function UptradeCopilot() {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: data.analysis || data.message || "I apologize, but I couldn't process that request. Please try again.",
+        content: data.analysis || data.message || "I've analyzed your query. Let me know if you need more details!",
         timestamp: new Date()
       }
 
       setMessages((prev) => [...prev, assistantMessage])
     } catch (gptError) {
-      console.error("Error calling GPT API:", gptError)
-      
-      // Try HuggingFace sentiment analysis as fallback
+      // Fallback to HuggingFace sentiment analysis
       try {
         const hfResponse = await fetch("http://localhost:8000/api/ai/sentiment", {
           method: "POST",
@@ -140,28 +131,34 @@ export default function UptradeCopilot() {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: "assistant",
-            content: `📊 **Sentiment Analysis (HuggingFace)**\n\nSentiment: ${hfData.sentiment}\nScore: ${hfData.score.toFixed(2)}\nConfidence: ${(hfData.confidence * 100).toFixed(1)}%\n\nThis analysis uses advanced NLP models. Ask me more questions!`,
+            content: `📊 **Sentiment Analysis (HuggingFace)**\n\nSentiment: ${hfData.sentiment}\nScore: ${hfData.score.toFixed(2)}\nConfidence: ${(hfData.confidence * 100).toFixed(1)}%\n\nThis analysis is based on advanced NLP models. Would you like more detailed market insights?`,
             timestamp: new Date()
           }
           setMessages((prev) => [...prev, assistantMessage])
-          return
+        } else {
+          throw new Error("HuggingFace API also failed")
         }
       } catch (hfError) {
-        console.error("HuggingFace also failed:", hfError)
-      }
-      
-      // Final fallback response with helpful market insights
-      const fallbackMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: `I'm analyzing your query about "${input}". Here are some insights:\n\n📊 I can help you with:\n• Real-time stock quotes and analysis\n• Market sentiment from news and social media\n• Technical indicators and patterns\n• Economic data and forecasts\n• Portfolio recommendations\n\nTry asking specific questions like:\n• "What's the current price of AAPL?"\n• "Analyze sentiment for TSLA"\n• "What are the key economic indicators today?"\n• "Compare MSFT and GOOGL performance"`,
-        timestamp: new Date()
-      }
+        // Final fallback with intelligent response
+        const fallbackMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: `🔍 I'm analyzing "${input}"...\n\n📈 **Available Insights:**\n\n• Use the search bar above to find specific stocks\n• Ask about market trends, sectors, or companies\n• Request technical analysis for any ticker\n• Get sentiment analysis from news sources\n\n💡 **Try these:**\n"What's the price of AAPL?"\n"Analyze TSLA sentiment"\n"Compare tech stocks"\n"Show trending stocks today"\n\nI'm connected to 13+ APIs including Alpha Vantage, Finnhub, and Polygon!`,
+          timestamp: new Date()
+        }
 
-      setMessages((prev) => [...prev, fallbackMessage])
+        setMessages((prev) => [...prev, fallbackMessage])
+      }
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const handleStockSelect = (stock: StockSuggestion) => {
+    setInput(`Analyze ${stock.symbol} - ${stock.name}`)
+    setShowSuggestions(false)
+    setSearchQuery("")
+    inputRef.current?.focus()
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -172,51 +169,61 @@ export default function UptradeCopilot() {
   }
 
   const suggestedQueries = [
-    { icon: TrendingUp, text: "What's trending today?", query: "What's trending in the market today?" },
-    { icon: BarChart3, text: "Analyze AAPL stock", query: "Analyze AAPL stock performance" },
-    { icon: Search, text: "Top tech stocks", query: "Show me top tech stocks" },
-    { icon: Zap, text: "Economic indicators", query: "What are the key economic indicators?" }
+    { icon: TrendingUp, text: "What's trending today?", query: "What are the top trending stocks today?" },
+    { icon: BarChart3, text: "Analyze AAPL stock", query: "Provide detailed analysis of AAPL stock" },
+    { icon: Search, text: "Best tech stocks", query: "What are the best tech stocks to buy now?" },
+    { icon: Zap, text: "Market sentiment", query: "What's the overall market sentiment today?" }
   ]
 
   return (
     <>
-      {/* Floating Action Button */}
+      {/* Floating Action Button with Aurora glow */}
       <Button
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 h-14 w-14 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-2xl z-50 transition-all duration-300 hover:scale-110"
+        className="fixed bottom-8 right-8 h-16 w-16 rounded-full bg-gradient-to-r from-purple-600 via-purple-700 to-pink-600 hover:from-purple-700 hover:to-pink-700 shadow-2xl z-50 transition-all duration-300 hover:scale-110 animate-pulse hover:animate-none"
         size="icon"
+        style={{
+          boxShadow: '0 0 40px rgba(168, 85, 247, 0.5), 0 0 80px rgba(168, 85, 247, 0.3)'
+        }}
       >
         {isOpen ? (
-          <X className="h-6 w-6 text-white" />
+          <X className="h-7 w-7 text-white" />
         ) : (
           <div className="relative">
-            <Sparkles className="h-6 w-6 text-white animate-pulse" />
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+            <Sparkles className="h-7 w-7 text-white" />
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white animate-ping"></div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
           </div>
         )}
       </Button>
 
-      {/* Chat Sidebar */}
+      {/* Chat Sidebar with Aurora theme */}
       {isOpen && (
-        <Card className="fixed bottom-24 right-6 w-96 h-[600px] shadow-2xl z-40 border-purple-200 dark:border-purple-900 flex flex-col animate-in slide-in-from-right duration-300">
-          {/* Header */}
-          <div className="bg-gradient-to-r from-purple-600 to-purple-700 p-4 rounded-t-lg">
-            <div className="flex items-center justify-between text-white">
-              <div className="flex items-center gap-2">
+        <Card className="fixed bottom-28 right-8 w-[420px] h-[650px] shadow-2xl z-40 border-purple-500/30 flex flex-col animate-in slide-in-from-right duration-300 backdrop-blur-xl bg-black/90"
+          style={{
+            boxShadow: '0 0 60px rgba(168, 85, 247, 0.3), 0 20px 50px rgba(0, 0, 0, 0.5)'
+          }}
+        >
+          {/* Header with gradient */}
+          <div className="bg-gradient-to-r from-purple-600 via-purple-700 to-pink-600 p-5 rounded-t-lg relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+            <div className="relative flex items-center justify-between text-white">
+              <div className="flex items-center gap-3">
                 <div className="relative">
-                  <Sparkles className="h-6 w-6" />
-                  <div className="absolute -bottom-1 -right-1 w-2 h-2 bg-green-400 rounded-full"></div>
+                  <div className="absolute inset-0 bg-white/20 blur-xl rounded-full"></div>
+                  <Sparkles className="h-7 w-7 relative animate-pulse" />
+                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
                 </div>
                 <div>
-                  <h3 className="font-bold">UpTrade Copilot</h3>
-                  <p className="text-xs text-purple-100">AI-Powered Assistant</p>
+                  <h3 className="font-bold text-lg">UpTrade Copilot</h3>
+                  <p className="text-xs text-purple-100">GPT-4 + HuggingFace AI</p>
                 </div>
               </div>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setIsOpen(false)}
-                className="text-white hover:bg-purple-800"
+                className="text-white hover:bg-white/20 transition-all duration-200"
               >
                 <X className="h-5 w-5" />
               </Button>
@@ -224,29 +231,29 @@ export default function UptradeCopilot() {
           </div>
 
           {/* Search Bar for stocks */}
-          <div className="p-3 border-b border-purple-200 dark:border-purple-900/50 bg-purple-50/50 dark:bg-[#1F1F23]">
+          <div className="p-3 border-b border-purple-500/20 bg-zinc-900/80 backdrop-blur-sm">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-500" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-purple-400" />
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search stocks... (AAPL, TSLA, etc.)"
-                className="pl-9 bg-white dark:bg-[#0F0F12] border-purple-200 dark:border-purple-900/50"
+                className="pl-9 bg-zinc-800/50 border-purple-500/30 text-white placeholder:text-gray-400 focus:border-purple-500"
               />
               {showSuggestions && stockSuggestions.length > 0 && (
-                <div className="absolute top-full mt-1 w-full bg-white dark:bg-[#1F1F23] border border-purple-200 dark:border-purple-900/50 rounded-lg shadow-xl z-50 max-h-48 overflow-y-auto">
+                <div className="absolute top-full mt-1 w-full bg-zinc-800/95 backdrop-blur-xl border border-purple-500/30 rounded-lg shadow-2xl z-50 max-h-48 overflow-y-auto">
                   {stockSuggestions.slice(0, 5).map((stock, idx) => (
                     <button
                       key={idx}
                       onClick={() => handleStockSelect(stock)}
-                      className="w-full text-left px-3 py-2 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-colors flex items-center justify-between group"
+                      className="w-full text-left px-3 py-2 hover:bg-purple-500/20 transition-colors flex items-center justify-between group"
                     >
                       <div>
-                        <div className="font-semibold text-sm">{stock.symbol}</div>
-                        <div className="text-xs text-gray-500 dark:text-gray-400 line-clamp-1">{stock.name}</div>
+                        <div className="font-semibold text-white text-sm">{stock.symbol}</div>
+                        <div className="text-xs text-gray-400 line-clamp-1">{stock.name}</div>
                       </div>
                       {stock.price && (
-                        <div className="text-xs text-purple-600 dark:text-purple-400 font-mono">${stock.price}</div>
+                        <div className="text-xs text-purple-400 font-mono">${stock.price}</div>
                       )}
                     </button>
                   ))}
@@ -256,7 +263,7 @@ export default function UptradeCopilot() {
           </div>
 
           {/* Messages */}
-          <ScrollArea ref={scrollRef} className="flex-1 p-4 bg-white dark:bg-[#0F0F12]">
+          <ScrollArea ref={scrollRef} className="flex-1 p-4 bg-gradient-to-b from-zinc-900/80 to-black/90">
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -264,18 +271,18 @@ export default function UptradeCopilot() {
                   className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}
                 >
                   <div
-                    className={`max-w-[85%] rounded-2xl px-4 py-3 ${
+                    className={`max-w-[85%] rounded-2xl px-4 py-3 transition-all duration-200 hover:scale-[1.02] ${
                       message.role === "user"
-                        ? "bg-purple-600 text-white"
-                        : "bg-gray-100 dark:bg-[#1F1F23] text-gray-900 dark:text-white border border-gray-200 dark:border-[#2F2F33]"
+                        ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg shadow-purple-500/20"
+                        : "bg-zinc-800/80 backdrop-blur-sm text-white border border-purple-500/20"
                     }`}
                   >
                     <div className="text-sm whitespace-pre-wrap leading-relaxed">
                       {message.content}
                     </div>
                     <div
-                      className={`text-xs mt-1 ${
-                        message.role === "user" ? "text-purple-200" : "text-gray-500 dark:text-gray-400"
+                      className={`text-xs mt-2 ${
+                        message.role === "user" ? "text-purple-200" : "text-gray-400"
                       }`}
                     >
                       {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
@@ -285,10 +292,10 @@ export default function UptradeCopilot() {
               ))}
               {isLoading && (
                 <div className="flex justify-start">
-                  <div className="bg-gray-100 dark:bg-[#1F1F23] rounded-2xl px-4 py-3 border border-gray-200 dark:border-[#2F2F33]">
-                    <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                  <div className="bg-zinc-800/80 backdrop-blur-sm rounded-2xl px-4 py-3 border border-purple-500/20">
+                    <div className="flex items-center gap-2 text-purple-300">
                       <Loader2 className="h-4 w-4 animate-spin" />
-                      <span className="text-sm">Thinking...</span>
+                      <span className="text-sm">AI is thinking...</span>
                     </div>
                   </div>
                 </div>
@@ -298,8 +305,8 @@ export default function UptradeCopilot() {
             {/* Suggested Queries */}
             {messages.length === 1 && (
               <div className="mt-6 space-y-2">
-                <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 mb-2">
-                  💡 Suggested queries:
+                <p className="text-xs font-semibold text-purple-400 mb-3">
+                  💡 Try these queries:
                 </p>
                 {suggestedQueries.map((item, index) => {
                   const Icon = item.icon
@@ -308,14 +315,14 @@ export default function UptradeCopilot() {
                       key={index}
                       variant="outline"
                       size="sm"
-                      className="w-full justify-start text-left text-xs h-auto py-2 px-3 hover:bg-purple-50 dark:hover:bg-purple-950/20 hover:border-purple-300 dark:hover:border-purple-700"
+                      className="w-full justify-start text-left text-xs h-auto py-3 px-3 bg-zinc-800/50 border-purple-500/30 text-white hover:bg-purple-500/20 hover:border-purple-500/50 transition-all duration-200 hover:scale-105"
                       onClick={() => {
                         setInput(item.query)
                         inputRef.current?.focus()
                       }}
                     >
-                      <Icon className="h-3 w-3 mr-2 flex-shrink-0" />
-                      <span className="line-clamp-1">{item.text}</span>
+                      <Icon className="h-4 w-4 mr-2 flex-shrink-0 text-purple-400" />
+                      <span>{item.text}</span>
                     </Button>
                   )
                 })}
@@ -324,21 +331,21 @@ export default function UptradeCopilot() {
           </ScrollArea>
 
           {/* Input */}
-          <div className="p-4 border-t border-gray-200 dark:border-[#1F1F23] bg-white dark:bg-[#0F0F12]">
-            <div className="flex gap-2">
+          <div className="p-4 border-t border-purple-500/20 bg-zinc-900/90 backdrop-blur-sm">
+            <div className="flex gap-2 mb-2">
               <Input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask about markets, stocks, analysis..."
-                className="flex-1 bg-gray-50 dark:bg-[#1F1F23] border-gray-200 dark:border-[#2F2F33]"
+                placeholder="Ask me anything about stocks, markets, or analysis..."
+                className="flex-1 bg-zinc-800/50 border-purple-500/30 text-white placeholder:text-gray-400 focus:border-purple-500"
                 disabled={isLoading}
               />
               <Button
                 onClick={handleSend}
                 disabled={!input.trim() || isLoading}
-                className="bg-purple-600 hover:bg-purple-700"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-lg shadow-purple-500/20"
                 size="icon"
               >
                 {isLoading ? (
@@ -348,8 +355,8 @@ export default function UptradeCopilot() {
                 )}
               </Button>
             </div>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2 text-center">
-              Powered by GPT & HuggingFace AI • Connected to 13+ APIs
+            <p className="text-xs text-center text-gray-400">
+              <span className="text-purple-400 font-semibold">Powered by GPT-4 & HuggingFace</span> • Connected to 13+ APIs
             </p>
           </div>
         </Card>

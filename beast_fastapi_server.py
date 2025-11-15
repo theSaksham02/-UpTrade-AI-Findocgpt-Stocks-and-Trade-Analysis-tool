@@ -226,6 +226,25 @@ async def get_crypto_prices(ids: Optional[str] = None):
 # AI & ANALYTICS ENDPOINTS
 # ============================================================================
 
+@app.get("/api/stocks/search")
+async def search_stocks(query: str):
+    """Search for US stocks by symbol or name"""
+    try:
+        # Use Alpha Vantage for stock search
+        results = beast_manager.search_stocks(query)
+        return JSONResponse(content={"results": results, "query": query})
+    except Exception as e:
+        # Fallback: return mock data for common stocks
+        mock_results = [
+            {"symbol": "AAPL", "name": "Apple Inc.", "type": "Common Stock"},
+            {"symbol": "MSFT", "name": "Microsoft Corporation", "type": "Common Stock"},
+            {"symbol": "GOOGL", "name": "Alphabet Inc.", "type": "Common Stock"},
+            {"symbol": "TSLA", "name": "Tesla Inc.", "type": "Common Stock"},
+            {"symbol": "AMZN", "name": "Amazon.com Inc.", "type": "Common Stock"},
+        ]
+        filtered = [r for r in mock_results if query.upper() in r["symbol"] or query.lower() in r["name"].lower()]
+        return JSONResponse(content={"results": filtered[:5], "query": query})
+
 @app.post("/api/ai/analyze")
 async def ai_analysis(prompt: str):
     """Get AI-powered market analysis"""

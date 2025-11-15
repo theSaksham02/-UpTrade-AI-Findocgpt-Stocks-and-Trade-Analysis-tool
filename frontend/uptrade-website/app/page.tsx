@@ -4,6 +4,7 @@ import { GlassmorphismNav } from "@/components/glassmorphism-nav"
 import { HeroSection } from "@/components/hero-section"
 import Aurora from "@/components/Aurora"
 import { FeaturesSection } from "@/components/features-section"
+import UptradeCopilot from "@/components/uptrade-copilot"
 import { AIAnalysisSection } from "@/components/ai-analysis-section"
 import { TestimonialsSection } from "@/components/testimonials-section"
 import { PerformanceSection } from "@/components/performance-section"
@@ -54,6 +55,7 @@ export default function HomePage() {
           <CTASection />
           <Footer />
         </div>
+        <UptradeCopilot />
       </main>
     </div>
   )
