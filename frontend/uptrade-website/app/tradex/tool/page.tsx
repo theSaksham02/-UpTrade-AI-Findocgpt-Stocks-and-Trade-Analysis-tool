@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, X, TrendingUp, TrendingDown, BarChart3, Newspaper, MessageSquare, Activity, DollarSign, Calendar } from 'lucide-react';
+import { Search, X, TrendingUp, TrendingDown, BarChart3, Newspaper, MessageSquare, Activity, DollarSign, Calendar, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
 import { AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from 'recharts';
 import { getStockQuote, getHistoricalData, getStockNews, getSocialSentiment, searchUSStocks, type StockQuote, type HistoricalData, type NewsItem, type SocialSentiment } from '@/lib/api/stock-api';
+import Link from 'next/link';
 
 export default function TradeXPage() {
   const [selectedStocks, setSelectedStocks] = useState<string[]>(['AAPL', 'GOOGL', 'MSFT']);
@@ -130,6 +131,12 @@ export default function TradeXPage() {
             </h1>
             <p className="text-white/60 text-sm md:text-base">Compare up to 5 stocks with real-time data and sentiment analysis</p>
           </div>
+          <Link href="/dashboard">
+            <Button variant="outline" className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10">
+              <Home className="w-4 h-4 mr-2" />
+              Dashboard
+            </Button>
+          </Link>
         </div>
 
         {/* Search Bar */}

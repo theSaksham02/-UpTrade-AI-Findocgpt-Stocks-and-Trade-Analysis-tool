@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Search, TrendingUp, TrendingDown, AlertTriangle, Zap, Calendar, Newspaper, BarChart3, Activity, Target } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, AlertTriangle, Zap, Calendar, Newspaper, BarChart3, Activity, Target, Home } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, AreaChart, Area, BarChart, Bar, ScatterChart, Scatter, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ReferenceLine, ReferenceArea } from 'recharts';
 import { getStockQuote, getHistoricalData, getStockNews, searchUSStocks, type HistoricalData, type NewsItem } from '@/lib/api/stock-api';
+import Link from 'next/link';
 
 interface MarketEvent {
   date: string;
@@ -231,12 +232,18 @@ export default function VisualXPage() {
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex items-center justify-between mb-4">
-          <div>
+          <div className="flex-1">
             <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent mb-2">
               VisualX - Deep Market Analysis
             </h1>
             <p className="text-white/60 text-sm md:text-base">Timeline analysis with news correlation, anomaly detection, and forecasting</p>
           </div>
+          <Link href="/dashboard">
+            <Button variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10">
+              <Home className="w-4 h-4 mr-2" />
+              Dashboard
+            </Button>
+          </Link>
         </div>
 
         {/* Search Bar */}
