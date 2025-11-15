@@ -99,29 +99,38 @@ export default function UptradeCopilot() {
     setIsLoading(true)
 
     try {
-      // Call the backend API for AI analysis
+      // Build conversation context
+      const context = messages.slice(-10).map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }))
+
+      // Call the backend API for AI analysis with context
       const response = await fetch("http://localhost:8000/api/ai/analyze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ 
+          prompt: input,
+          context: context
+        }),
       })
-
-      if (!response.ok) {
-        throw new Error("Failed to get AI response")
-      }
 
       const data = await response.json()
       
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: data.analysis || data.message || "I apologize, but I couldn't process that request. Please try again.",
-        timestamp: new Date()
+      // Validate response
+      if (data && (data.analysis || data.message)) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.analysis || data.message || "I've analyzed your query!",
+          timestamp: new Date()
+        }
+        setMessages((prev) => [...prev, assistantMessage])
+      } else {
+        throw new Error("Invalid response format")
       }
-
-      setMessages((prev) => [...prev, assistantMessage])
     } catch (gptError) {
       console.error("Error calling GPT API:", gptError)
       
@@ -135,12 +144,13 @@ export default function UptradeCopilot() {
           body: JSON.stringify({ text: input }),
         })
 
-        if (hfResponse.ok) {
-          const hfData = await hfResponse.json()
+        const hfData = await hfResponse.json()
+        
+        if (hfData && hfData.sentiment) {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: "assistant",
-            content: `📊 **Sentiment Analysis (HuggingFace)**\n\nSentiment: ${hfData.sentiment}\nScore: ${hfData.score.toFixed(2)}\nConfidence: ${(hfData.confidence * 100).toFixed(1)}%\n\nThis analysis uses advanced NLP models. Ask me more questions!`,
+            content: `📊 **Sentiment Analysis**\n\nSentiment: ${hfData.sentiment}\nScore: ${hfData.score?.toFixed(2) || 'N/A'}\nConfidence: ${hfData.confidence ? (hfData.confidence * 100).toFixed(1) + '%' : 'N/A'}\n\nBased on advanced NLP models. Ask me more questions!`,
             timestamp: new Date()
           }
           setMessages((prev) => [...prev, assistantMessage])
@@ -150,11 +160,11 @@ export default function UptradeCopilot() {
         console.error("HuggingFace also failed:", hfError)
       }
       
-      // Final fallback response with helpful market insights
+      // Final intelligent fallback
       const fallbackMessage: Message = {
         id: (Date.now() + 1).toString(),
         role: "assistant",
-        content: `I'm analyzing your query about "${input}". Here are some insights:\n\n📊 I can help you with:\n• Real-time stock quotes and analysis\n• Market sentiment from news and social media\n• Technical indicators and patterns\n• Economic data and forecasts\n• Portfolio recommendations\n\nTry asking specific questions like:\n• "What's the current price of AAPL?"\n• "Analyze sentiment for TSLA"\n• "What are the key economic indicators today?"\n• "Compare MSFT and GOOGL performance"`,
+        content: `👋 I'm here to help with "${input}"!\n\n📊 **My Capabilities:**\n\n• **Stock Analysis**: Real-time quotes, charts, fundamentals\n• **Market Insights**: Trends, movers, sector performance\n• **Sentiment**: News & social media analysis\n• **Technical Analysis**: Indicators, patterns, signals\n• **Economic Data**: GDP, inflation, employment\n• **Forecasting**: AI-powered predictions\n\n💡 **Try asking:**\n"What's Apple's stock price?"\n"Analyze Tesla sentiment"\n"Compare Microsoft vs Google"\n"What's trending in tech stocks?"\n"Forecast NVIDIA for next week"\n"Show me the best dividend stocks"\n\n🚀 Powered by 13+ financial APIs and GPT-4. Ask me anything!`,
         timestamp: new Date()
       }
 

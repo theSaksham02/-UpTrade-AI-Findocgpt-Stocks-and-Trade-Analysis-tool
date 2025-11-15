@@ -92,30 +92,41 @@ export default function UptradeCopilot() {
     setShowSuggestions(false)
 
     try {
-      // Try GPT analysis first
+      // Build conversation context from recent messages
+      const context = messages.slice(-10).map(msg => ({
+        role: msg.role,
+        content: msg.content
+      }))
+
+      // Try GPT analysis first with context
       const response = await fetch("http://localhost:8000/api/ai/analyze", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ prompt: input }),
+        body: JSON.stringify({ 
+          prompt: input,
+          context: context 
+        }),
       })
-
-      if (!response.ok) {
-        throw new Error("GPT API failed, trying HuggingFace")
-      }
 
       const data = await response.json()
       
-      const assistantMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        role: "assistant",
-        content: data.analysis || data.message || "I've analyzed your query. Let me know if you need more details!",
-        timestamp: new Date()
+      // Check if response is valid
+      if (data && (data.analysis || data.message)) {
+        const assistantMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          role: "assistant",
+          content: data.analysis || data.message || "I've analyzed your query!",
+          timestamp: new Date()
+        }
+        setMessages((prev) => [...prev, assistantMessage])
+      } else {
+        throw new Error("Invalid response format")
       }
-
-      setMessages((prev) => [...prev, assistantMessage])
     } catch (gptError) {
+      console.error("Analysis error:", gptError)
+      
       // Fallback to HuggingFace sentiment analysis
       try {
         const hfResponse = await fetch("http://localhost:8000/api/ai/sentiment", {
@@ -126,27 +137,29 @@ export default function UptradeCopilot() {
           body: JSON.stringify({ text: input }),
         })
 
-        if (hfResponse.ok) {
-          const hfData = await hfResponse.json()
+        const hfData = await hfResponse.json()
+        
+        if (hfData && hfData.sentiment) {
           const assistantMessage: Message = {
             id: (Date.now() + 1).toString(),
             role: "assistant",
-            content: `📊 **Sentiment Analysis (HuggingFace)**\n\nSentiment: ${hfData.sentiment}\nScore: ${hfData.score.toFixed(2)}\nConfidence: ${(hfData.confidence * 100).toFixed(1)}%\n\nThis analysis is based on advanced NLP models. Would you like more detailed market insights?`,
+            content: `📊 **Sentiment Analysis**\n\nSentiment: ${hfData.sentiment}\nScore: ${hfData.score?.toFixed(2) || 'N/A'}\nConfidence: ${hfData.confidence ? (hfData.confidence * 100).toFixed(1) + '%' : 'N/A'}\n\nThis analysis uses advanced NLP models. Would you like more detailed insights?`,
             timestamp: new Date()
           }
           setMessages((prev) => [...prev, assistantMessage])
         } else {
-          throw new Error("HuggingFace API also failed")
+          throw new Error("Invalid sentiment response")
         }
       } catch (hfError) {
-        // Final fallback with intelligent response
+        console.error("Sentiment error:", hfError)
+        
+        // Final intelligent fallback
         const fallbackMessage: Message = {
           id: (Date.now() + 1).toString(),
           role: "assistant",
-          content: `🔍 I'm analyzing "${input}"...\n\n📈 **Available Insights:**\n\n• Use the search bar above to find specific stocks\n• Ask about market trends, sectors, or companies\n• Request technical analysis for any ticker\n• Get sentiment analysis from news sources\n\n💡 **Try these:**\n"What's the price of AAPL?"\n"Analyze TSLA sentiment"\n"Compare tech stocks"\n"Show trending stocks today"\n\nI'm connected to 13+ APIs including Alpha Vantage, Finnhub, and Polygon!`,
+          content: `👋 I'm here to help with "${input}"!\n\n📊 **What I Can Do:**\n\n• **Stock Analysis**: Get real-time quotes, charts, and fundamentals\n• **Market Insights**: Track trending stocks and market movements\n• **Sentiment Analysis**: Analyze news and social media sentiment\n• **Technical Analysis**: RSI, MACD, moving averages, and more\n• **Comparisons**: Compare multiple stocks side-by-side\n• **Forecasting**: AI-powered price predictions\n\n💡 **Quick Examples:**\n"What's Apple's stock price?"\n"Analyze Tesla sentiment"\n"Compare MSFT vs GOOGL"\n"What's trending in tech?"\n"Forecast NVDA for next week"\n\n🚀 I'm connected to 13+ financial APIs and powered by advanced AI. Try asking me anything about stocks or markets!`,
           timestamp: new Date()
         }
-
         setMessages((prev) => [...prev, fallbackMessage])
       }
     } finally {

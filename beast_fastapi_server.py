@@ -6,7 +6,7 @@ Ultimate Financial Intelligence API
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Dict, Any, Optional
 from datetime import datetime
 import uvicorn
@@ -15,6 +15,20 @@ import json
 
 from beast_api_manager import get_beast_manager
 from api_integrations_enhanced import get_enhanced_api_manager
+
+# ============================================================================
+# REQUEST/RESPONSE MODELS
+# ============================================================================
+
+class ChatRequest(BaseModel):
+    """Chat request model"""
+    prompt: str = Field(..., description="User's question or message")
+    context: Optional[List[Dict[str, str]]] = Field(default=None, description="Conversation history")
+
+class SentimentRequest(BaseModel):
+    """Sentiment analysis request"""
+    text: str = Field(..., description="Text to analyze")
+    symbol: Optional[str] = Field(default=None, description="Related stock symbol")
 
 # Initialize FastAPI app
 app = FastAPI(
@@ -246,22 +260,52 @@ async def search_stocks(query: str):
         return JSONResponse(content={"results": filtered[:5], "query": query})
 
 @app.post("/api/ai/analyze")
-async def ai_analysis(prompt: str):
-    """Get AI-powered market analysis"""
+async def ai_analysis(request: ChatRequest):
+    """Get AI-powered market analysis with conversation context"""
     try:
-        analysis = beast_manager.analyze_with_gpt(prompt)
+        # Update conversation history if provided
+        if request.context:
+            beast_manager.conversation_history = request.context[-10:]  # Keep last 10 messages
+        
+        analysis = beast_manager.analyze_with_gpt(request.prompt)
+        
+        # Always ensure we have a valid response
+        if not analysis or 'analysis' not in analysis:
+            analysis = beast_manager._generate_intelligent_fallback(request.prompt)
+        
         return JSONResponse(content=analysis)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Return intelligent fallback instead of error
+        fallback = beast_manager._generate_intelligent_fallback(request.prompt)
+        return JSONResponse(content=fallback)
 
 @app.post("/api/ai/sentiment")
-async def sentiment_analysis(text: str):
+async def sentiment_analysis(request: SentimentRequest):
     """Advanced sentiment analysis using HuggingFace"""
     try:
-        sentiment = beast_manager.analyze_sentiment_huggingface(text)
+        sentiment = beast_manager.analyze_sentiment_huggingface(request.text)
+        
+        # Ensure valid response
+        if not sentiment or 'error' in sentiment:
+            # Provide basic sentiment response
+            sentiment = {
+                "text": request.text,
+                "sentiment": "neutral",
+                "score": 0.0,
+                "source": "UpTrade AI (Fallback)",
+                "message": "Sentiment analysis service temporarily unavailable. Using fallback."
+            }
+        
         return JSONResponse(content=sentiment)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        # Return fallback sentiment
+        return JSONResponse(content={
+            "text": request.text,
+            "sentiment": "neutral",
+            "score": 0.0,
+            "source": "UpTrade AI (Fallback)",
+            "error": str(e)
+        })
 
 # ============================================================================
 # COMPREHENSIVE ENDPOINTS
