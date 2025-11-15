@@ -32,68 +32,82 @@ export default function DashboardPage() {
               {/* Product Grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto mb-12">
                 {/* TradeX Card */}
-                <Link href="/tradex">
-                  <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 cursor-pointer group h-full">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <TrendingUp className="w-8 h-8 text-white" />
+                <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 group h-full">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <TrendingUp className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">
+                    TradeX
+                  </h3>
+                  <p className="text-white/70 mb-6">
+                    Real-time stock comparison and AI-powered analysis. Compare stocks side-by-side with advanced metrics.
+                  </p>
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-center space-x-2 text-sm text-white/60">
+                      <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                      <span>Real-time Comparison</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-purple-400 transition-colors">
-                      TradeX
-                    </h3>
-                    <p className="text-white/70 mb-6">
-                      Real-time stock comparison and AI-powered analysis. Compare stocks side-by-side with advanced metrics.
-                    </p>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2 text-sm text-white/60">
-                        <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                        <span>Real-time Comparison</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-white/60">
-                        <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                        <span>AI Scoring</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-white/60">
-                        <CheckCircle2 className="w-4 h-4 text-purple-400" />
-                        <span>Smart Alerts</span>
-                      </div>
+                    <div className="flex items-center space-x-2 text-sm text-white/60">
+                      <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                      <span>AI Scoring</span>
                     </div>
-                    <div className="mt-6 text-purple-400 font-semibold group-hover:translate-x-2 transition-transform inline-flex items-center">
-                      Launch TradeX →
+                    <div className="flex items-center space-x-2 text-sm text-white/60">
+                      <CheckCircle2 className="w-4 h-4 text-purple-400" />
+                      <span>Smart Alerts</span>
                     </div>
                   </div>
-                </Link>
+                  <div className="flex gap-2">
+                    <Link href="/tradex/tool" className="flex-1">
+                      <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white">
+                        Launch Tool
+                      </Button>
+                    </Link>
+                    <Link href="/tradex">
+                      <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
 
                 {/* VisualX Card */}
-                <Link href="/visualx">
-                  <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 cursor-pointer group h-full">
-                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                      <Activity className="w-8 h-8 text-white" />
+                <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 hover:bg-white/10 hover:border-purple-500/50 transition-all duration-300 group h-full">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                    <Activity className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
+                    VisualX
+                  </h3>
+                  <p className="text-white/70 mb-6">
+                    Real-time sentiment analysis and narrative detection across news, social media, and analyst reports.
+                  </p>
+                  <div className="space-y-2 mb-6">
+                    <div className="flex items-center space-x-2 text-sm text-white/60">
+                      <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                      <span>Live Sentiment</span>
                     </div>
-                    <h3 className="text-2xl font-bold text-white mb-3 group-hover:text-blue-400 transition-colors">
-                      VisualX
-                    </h3>
-                    <p className="text-white/70 mb-6">
-                      Real-time sentiment analysis and narrative detection across news, social media, and analyst reports.
-                    </p>
-                    <div className="space-y-2">
-                      <div className="flex items-center space-x-2 text-sm text-white/60">
-                        <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                        <span>Live Sentiment</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-white/60">
-                        <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                        <span>Narrative Detection</span>
-                      </div>
-                      <div className="flex items-center space-x-2 text-sm text-white/60">
-                        <CheckCircle2 className="w-4 h-4 text-blue-400" />
-                        <span>Social Trends</span>
-                      </div>
+                    <div className="flex items-center space-x-2 text-sm text-white/60">
+                      <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                      <span>Narrative Detection</span>
                     </div>
-                    <div className="mt-6 text-blue-400 font-semibold group-hover:translate-x-2 transition-transform inline-flex items-center">
-                      Launch VisualX →
+                    <div className="flex items-center space-x-2 text-sm text-white/60">
+                      <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                      <span>Social Trends</span>
                     </div>
                   </div>
-                </Link>
+                  <div className="flex gap-2">
+                    <Link href="/visualx/tool" className="flex-1">
+                      <Button className="w-full bg-cyan-600 hover:bg-cyan-700 text-white">
+                        Launch Tool
+                      </Button>
+                    </Link>
+                    <Link href="/visualx">
+                      <Button variant="outline" className="border-white/20 text-white hover:bg-white/10">
+                        Learn More
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
 
                 {/* TradeSphere Card */}
                 <Link href="/tradesphere">
