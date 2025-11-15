@@ -63,34 +63,53 @@ def check_dependencies():
         )
 
 def check_frontend():
-    """Check if React frontend exists and has dependencies"""
-    frontend_path = Path("frontend")
+    """Check if Next.js landing page and dashboard exist and have dependencies"""
+    landing_path = Path("frontend/uptrade-website")
+    dashboard_path = Path("frontend/dashboard")
     
-    if not frontend_path.exists():
-        print_colored("❌ frontend/ directory not found!", RED)
-        return False
+    has_landing = False
+    if landing_path.exists() and (landing_path / "package.json").exists():
+        print_colored("✅ Next.js landing page found", GREEN)
+        has_landing = True
+        
+        # Check if node_modules exists for landing page
+        if not (landing_path / "node_modules").exists():
+            print_colored("📥 Installing npm dependencies for landing page...", YELLOW)
+            result = subprocess.run(
+                ["npm", "install"],
+                cwd=landing_path,
+                capture_output=True,
+                text=True
+            )
+            if result.returncode == 0:
+                print_colored("✅ Landing page dependencies installed", GREEN)
+            else:
+                print_colored("⚠️  npm install had issues, continuing anyway...", YELLOW)
     
-    if not (frontend_path / "package.json").exists():
-        print_colored("❌ frontend/package.json not found!", RED)
-        return False
+    has_dashboard = False
+    if dashboard_path.exists() and (dashboard_path / "package.json").exists():
+        print_colored("✅ Next.js dashboard found", GREEN)
+        has_dashboard = True
+        
+        # Check if node_modules exists for dashboard
+        if not (dashboard_path / "node_modules").exists():
+            print_colored("📥 Installing npm dependencies for dashboard...", YELLOW)
+            result = subprocess.run(
+                ["npm", "install"],
+                cwd=dashboard_path,
+                capture_output=True,
+                text=True
+            )
+            if result.returncode == 0:
+                print_colored("✅ Dashboard dependencies installed", GREEN)
+            else:
+                print_colored("⚠️  npm install had issues, continuing anyway...", YELLOW)
     
-    print_colored("✅ React frontend found", GREEN)
+    if not has_landing and not has_dashboard:
+        print_colored("❌ No frontend found!", RED)
+        return False, False
     
-    # Check if node_modules exists
-    if not (frontend_path / "node_modules").exists():
-        print_colored("📥 Installing npm dependencies...", YELLOW)
-        result = subprocess.run(
-            ["npm", "install"],
-            cwd=frontend_path,
-            capture_output=True,
-            text=True
-        )
-        if result.returncode == 0:
-            print_colored("✅ npm dependencies installed", GREEN)
-        else:
-            print_colored("⚠️  npm install had issues, continuing anyway...", YELLOW)
-    
-    return True
+    return has_landing, has_dashboard
 
 def main():
     print_header()
@@ -101,7 +120,7 @@ def main():
     check_dependencies()
     
     # Check frontend
-    has_frontend = check_frontend()
+    has_landing, has_dashboard = check_frontend()
     
     print("\n" + "="*80)
     print_colored("🔧 Starting servers...", BLUE)
@@ -110,8 +129,10 @@ def main():
     print_colored("  • FastAPI Backend:    http://localhost:8000", GREEN)
     print_colored("  • API Documentation:  http://localhost:8000/docs", GREEN)
     print_colored("  • Interactive API:    http://localhost:8000/redoc", GREEN)
-    if has_frontend:
-        print_colored("  • React Frontend:     http://localhost:5051 (or check logs)", GREEN)
+    if has_landing:
+        print_colored("  • Landing Page:       http://localhost:3000", GREEN)
+    if has_dashboard:
+        print_colored("  • Dashboard:          http://localhost:3001", GREEN)
     print_colored("\n  • WebSocket Endpoints:", GREEN)
     print_colored("    - ws://localhost:8000/ws", GREEN)
     print_colored("    - ws://localhost:8000/ws/live", GREEN)
@@ -142,28 +163,49 @@ def main():
         print_colored("  ✅ FastAPI starting on http://localhost:8000", GREEN)
         time.sleep(3)  # Give backend time to start
         
-        # Start React Frontend
-        if has_frontend:
-            print_colored("\n⚛️  Starting React Frontend...", CYAN)
-            frontend_path = project_root / "frontend"
+        # Start Landing Page
+        if has_landing:
+            print_colored("\n🌐 Starting Landing Page...", CYAN)
+            landing_path = project_root / "frontend" / "uptrade-website"
             
-            react_process = subprocess.Popen(
+            landing_process = subprocess.Popen(
                 ["npm", "run", "dev"],
-                cwd=frontend_path,
+                cwd=landing_path,
                 stdout=subprocess.PIPE,
                 stderr=subprocess.STDOUT,
                 text=True,
                 bufsize=1
             )
-            processes.append(("React", react_process, CYAN))
-            print_colored("  ✅ React starting (check logs for port)", GREEN)
+            processes.append(("Landing", landing_process, CYAN))
+            print_colored("  ✅ Landing page starting on http://localhost:3000", GREEN)
+        
+        # Start Dashboard
+        if has_dashboard:
+            print_colored("\n📊 Starting Dashboard...", MAGENTA)
+            dashboard_path = project_root / "frontend" / "dashboard"
+            
+            dashboard_process = subprocess.Popen(
+                ["npm", "run", "dev"],
+                cwd=dashboard_path,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                bufsize=1
+            )
+            processes.append(("Dashboard", dashboard_process, MAGENTA))
+            print_colored("  ✅ Dashboard starting on http://localhost:3001", GREEN)
         
         print_colored("\n" + "="*80, GREEN)
         print_colored("✨ All servers started!", GREEN)
         print_colored("="*80, GREEN)
         print_colored("\n🌐 Quick Links:", CYAN)
-        print_colored("  • Frontend:   http://localhost:5173", MAGENTA)
-        print_colored("  • API Docs:   http://localhost:8000/docs", BLUE)
+        if has_landing:
+            print_colored("  • Landing Page: http://localhost:3000", MAGENTA)
+            print_colored("  • TradeX:       http://localhost:3000/tradex", MAGENTA)
+            print_colored("  • VisualX:      http://localhost:3000/visualx", MAGENTA)
+        if has_dashboard:
+            print_colored("  • Dashboard:    http://localhost:3001", MAGENTA)
+        print_colored("  • API Docs:     http://localhost:8000/docs", BLUE)
         print_colored("  • API Health: http://localhost:8000/api/health", BLUE)
         print_colored("\n�� Server logs:\n", YELLOW)
         print("="*80 + "\n")
