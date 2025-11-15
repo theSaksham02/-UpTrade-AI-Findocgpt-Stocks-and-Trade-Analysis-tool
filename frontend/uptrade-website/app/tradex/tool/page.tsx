@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Search, X, TrendingUp, TrendingDown, BarChart3, Newspaper, MessageSquare, Activity, DollarSign, Calendar, Home } from 'lucide-react';
+import Aurora from '@/components/Aurora';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -121,18 +122,24 @@ export default function TradeXPage() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-6">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full">
+        <Aurora colorStops={["#6b21a8", "#8b5cf6", "#7c3aed"]} amplitude={1.2} blend={0.6} speed={0.5} />
+      </div>
+      
+      <div className="relative z-10 p-4 md:p-6">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent mb-2 transition-all duration-500 hover:scale-105">
               TradeX - Stock Comparison
             </h1>
-            <p className="text-white/60 text-sm md:text-base">Compare up to 5 stocks with real-time data and sentiment analysis</p>
+            <p className="text-white/60 text-sm md:text-base transition-colors hover:text-white/80">Compare up to 5 stocks with real-time data and sentiment analysis</p>
           </div>
           <Link href="/dashboard">
-            <Button variant="outline" className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10">
+            <Button variant="outline" className="border-purple-500/50 text-purple-400 hover:bg-purple-500/10 transform hover:scale-105 transition-all duration-300">
               <Home className="w-4 h-4 mr-2" />
               Dashboard
             </Button>
@@ -149,7 +156,7 @@ export default function TradeXPage() {
             className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-white/40 h-12"
           />
           {searchResults.length > 0 && (
-            <Card className="absolute top-full mt-2 w-full bg-zinc-900 border-white/10 z-50 max-h-64 overflow-y-auto">
+            <Card className="absolute top-full mt-2 w-full bg-zinc-900/90 backdrop-blur-xl border-white/10 z-50 max-h-64 overflow-y-auto shadow-2xl">
               <CardContent className="p-2">
                 {searchResults.map((result) => (
                   <button
@@ -178,8 +185,8 @@ export default function TradeXPage() {
             return (
               <div
                 key={symbol}
-                className="flex items-center gap-2 bg-zinc-900 border border-purple-500/30 rounded-full px-4 py-2"
-                style={{ borderColor: colors[idx] + '50' }}
+                className="flex items-center gap-2 bg-zinc-900/80 backdrop-blur-xl border border-purple-500/30 rounded-full px-4 py-2 transform hover:scale-105 transition-all duration-300 cursor-pointer hover:shadow-lg"
+                style={{ borderColor: colors[idx] + '50', boxShadow: `0 0 20px ${colors[idx]}20` }}
               >
                 <div className="w-2 h-2 rounded-full" style={{ backgroundColor: colors[idx] }} />
                 <span className="font-semibold text-sm">{symbol}</span>
@@ -230,7 +237,7 @@ export default function TradeXPage() {
           <TabsContent value="overview" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {getPerformanceRank().map(({ symbol, change, quote }, idx) => (
-                <Card key={symbol} className="bg-zinc-900 border-white/10">
+                <Card key={symbol} className="bg-zinc-900/80 backdrop-blur-xl border-white/10 transform hover:scale-105 transition-all duration-300 hover:shadow-xl hover:shadow-purple-500/20 cursor-pointer">
                   <CardHeader className="pb-3">
                     <CardTitle className="flex items-center justify-between text-lg">
                       <div className="flex items-center gap-2">
@@ -280,7 +287,7 @@ export default function TradeXPage() {
 
           {/* Price Chart Tab */}
           <TabsContent value="chart" className="space-y-4">
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-purple-500/30 transition-all duration-300">
               <CardHeader>
                 <div className="flex items-center justify-between flex-wrap gap-2">
                   <CardTitle>Price Comparison</CardTitle>
@@ -330,7 +337,7 @@ export default function TradeXPage() {
             </Card>
 
             {/* Volume Comparison */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-purple-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Volume Comparison (30D)</CardTitle>
               </CardHeader>
@@ -359,7 +366,7 @@ export default function TradeXPage() {
 
           {/* Metrics Tab */}
           <TabsContent value="metrics">
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-purple-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Detailed Metrics Comparison</CardTitle>
               </CardHeader>
@@ -549,6 +556,7 @@ export default function TradeXPage() {
             </div>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   );

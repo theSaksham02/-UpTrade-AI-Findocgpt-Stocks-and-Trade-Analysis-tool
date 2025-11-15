@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Search, TrendingUp, TrendingDown, AlertTriangle, Zap, Calendar, Newspaper, BarChart3, Activity, Target, Home } from 'lucide-react';
+import Aurora from '@/components/Aurora';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -228,18 +229,24 @@ export default function VisualXPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-black text-white p-4 md:p-6">
+    <div className="min-h-screen bg-black text-white overflow-hidden">
+      {/* Aurora Background */}
+      <div className="fixed inset-0 w-full h-full">
+        <Aurora colorStops={["#0891b2", "#06b6d4", "#22d3ee"]} amplitude={1.2} blend={0.6} speed={0.5} />
+      </div>
+      
+      <div className="relative z-10 p-4 md:p-6">
       {/* Header */}
       <div className="max-w-7xl mx-auto mb-6">
         <div className="flex items-center justify-between mb-4">
           <div className="flex-1">
-            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-400 to-cyan-600 bg-clip-text text-transparent mb-2 transition-all duration-500 hover:scale-105">
               VisualX - Deep Market Analysis
             </h1>
-            <p className="text-white/60 text-sm md:text-base">Timeline analysis with news correlation, anomaly detection, and forecasting</p>
+            <p className="text-white/60 text-sm md:text-base transition-colors hover:text-white/80">Timeline analysis with news correlation, anomaly detection, and forecasting</p>
           </div>
           <Link href="/dashboard">
-            <Button variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10">
+            <Button variant="outline" className="border-cyan-500/50 text-cyan-400 hover:bg-cyan-500/10 transform hover:scale-105 transition-all duration-300">
               <Home className="w-4 h-4 mr-2" />
               Dashboard
             </Button>
@@ -256,7 +263,7 @@ export default function VisualXPage() {
             className="pl-10 bg-zinc-900 border-white/10 text-white placeholder:text-white/40 h-12"
           />
           {searchResults.length > 0 && (
-            <Card className="absolute top-full mt-2 w-full bg-zinc-900 border-white/10 z-50 max-h-64 overflow-y-auto">
+            <Card className="absolute top-full mt-2 w-full bg-zinc-900/90 backdrop-blur-xl border-white/10 z-50 max-h-64 overflow-y-auto shadow-2xl">
               <CardContent className="p-2">
                 {searchResults.map((result) => (
                   <button
@@ -275,7 +282,7 @@ export default function VisualXPage() {
 
         {/* Current Stock Badge */}
         <div className="flex items-center gap-2">
-          <Badge className="bg-blue-600 text-white px-4 py-2 text-base">
+          <Badge className="bg-blue-600 text-white px-4 py-2 text-base transform hover:scale-105 transition-all duration-300 cursor-pointer">
             Analyzing: {symbol}
           </Badge>
           <Badge variant="outline" className="border-white/20 text-white/60">
@@ -312,7 +319,7 @@ export default function VisualXPage() {
           {/* Timeline Tab - Gantt-style visualization */}
           <TabsContent value="timeline" className="space-y-4">
             {/* Price Movement with Events */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Market Timeline - Price Movements & Events</CardTitle>
               </CardHeader>
@@ -387,7 +394,7 @@ export default function VisualXPage() {
             </Card>
 
             {/* Event Impact Visualization */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Event Impact Analysis</CardTitle>
               </CardHeader>
@@ -422,7 +429,7 @@ export default function VisualXPage() {
             </Card>
 
             {/* Recent Events Timeline */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Recent Events</CardTitle>
               </CardHeader>
@@ -466,7 +473,7 @@ export default function VisualXPage() {
           {/* Anomalies Tab */}
           <TabsContent value="anomalies" className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-              <Card className="bg-gradient-to-br from-red-500/20 to-red-500/5 border-red-500/30">
+              <Card className="bg-gradient-to-br from-red-500/20 to-red-500/5 border-red-500/30 backdrop-blur-xl transform hover:scale-105 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-red-500/20">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -488,7 +495,7 @@ export default function VisualXPage() {
                   </div>
                 </CardContent>
               </Card>
-              <Card className="bg-gradient-to-br from-blue-500/20 to-blue-500/5 border-blue-500/30">
+              <Card className="bg-gradient-to-br from-blue-500/20 to-blue-500/5 border-blue-500/30 backdrop-blur-xl transform hover:scale-105 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-blue-500/20">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between">
                     <div>
@@ -502,7 +509,7 @@ export default function VisualXPage() {
             </div>
 
             {/* Anomaly Scatter Plot */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Anomaly Distribution</CardTitle>
               </CardHeader>
@@ -553,7 +560,7 @@ export default function VisualXPage() {
             </Card>
 
             {/* Anomaly List */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Detected Anomalies</CardTitle>
               </CardHeader>
@@ -602,7 +609,7 @@ export default function VisualXPage() {
 
           {/* Forecast Tab */}
           <TabsContent value="forecast" className="space-y-4">
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>14-Day Price Forecast</CardTitle>
               </CardHeader>
@@ -671,14 +678,14 @@ export default function VisualXPage() {
             </Card>
 
             {/* Forecast Details */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Forecast Details</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   {forecast.slice(0, 4).map((point, idx) => (
-                    <Card key={idx} className="bg-zinc-800 border-white/10">
+                    <Card key={idx} className="bg-zinc-800/80 backdrop-blur-xl border-white/10 transform hover:scale-105 transition-all duration-300 cursor-pointer hover:border-cyan-500/50">
                       <CardContent className="pt-4">
                         <p className="text-xs text-white/60 mb-1">Day {idx + 1}</p>
                         <p className="text-xl font-bold text-cyan-400">${point.predicted.toFixed(2)}</p>
@@ -734,7 +741,7 @@ export default function VisualXPage() {
 
           {/* Sentiment Analysis Tab */}
           <TabsContent value="sentiment" className="space-y-4">
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Sentiment Trend Analysis</CardTitle>
               </CardHeader>
@@ -767,7 +774,7 @@ export default function VisualXPage() {
 
             {/* Sentiment Distribution */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Card className="bg-gradient-to-br from-green-500/20 to-green-500/5 border-green-500/30">
+              <Card className="bg-gradient-to-br from-green-500/20 to-green-500/5 border-green-500/30 backdrop-blur-xl transform hover:scale-105 transition-all duration-300 cursor-pointer hover:shadow-xl hover:shadow-green-500/20">
                 <CardContent className="pt-6">
                   <div className="flex items-center justify-between mb-4">
                     <div>
@@ -835,7 +842,7 @@ export default function VisualXPage() {
             </div>
 
             {/* Recent News with Sentiment */}
-            <Card className="bg-zinc-900 border-white/10">
+            <Card className="bg-zinc-900/80 backdrop-blur-xl border-white/10 hover:border-cyan-500/30 transition-all duration-300">
               <CardHeader>
                 <CardTitle>Latest News & Sentiment</CardTitle>
               </CardHeader>
@@ -876,6 +883,7 @@ export default function VisualXPage() {
             </Card>
           </TabsContent>
         </Tabs>
+      </div>
       </div>
     </div>
   );
