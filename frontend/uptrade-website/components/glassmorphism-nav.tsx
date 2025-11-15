@@ -120,14 +120,14 @@ export function GlassmorphismNav() {
               </div>
 
               <div className="hidden md:block">
-                <Link href="/dashboard">
+                <a href="http://localhost:3001" target="_blank" rel="noopener noreferrer">
                   <button
                     className="relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium px-8 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group text-lg"
                   >
                     <span className="mr-2">Get Started</span>
                     <ArrowRight size={20} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
-                </Link>
+                </a>
               </div>
 
               <button
@@ -200,8 +200,10 @@ export function GlassmorphismNav() {
                   )
                 )}
                 <div className="h-px bg-white/10 my-2" />
-                <Link 
-                  href="/dashboard" 
+                <a 
+                  href="http://localhost:3001" 
+                  target="_blank"
+                  rel="noopener noreferrer"
                   onClick={() => setIsOpen(false)}
                   className={`relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group transform ${
                     isOpen ? "animate-mobile-menu-item" : ""
@@ -212,7 +214,7 @@ export function GlassmorphismNav() {
                 >
                   <span className="mr-2">Get Started</span>
                   <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
-                </Link>
+                </a>
               </div>
             </div>
           </div>
