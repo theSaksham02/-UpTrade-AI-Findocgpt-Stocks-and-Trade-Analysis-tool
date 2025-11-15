@@ -128,16 +128,16 @@ export default function SentimentAnalysisDashboard() {
         <CardContent>
           <div className="space-y-4">
             {stockSentiments.map((stock) => (
-              <div key={stock.symbol} className="flex items-center justify-between p-4 border rounded-lg">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold">
+              <div key={stock.symbol} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 sm:p-4 border rounded-lg gap-3 sm:gap-0">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-bold flex-shrink-0">
                     {stock.symbol.slice(0, 2)}
                   </div>
-                  <div>
-                    <div className="font-semibold text-lg">{stock.symbol}</div>
-                    <div className="flex gap-2 mt-1">
+                  <div className="min-w-0 flex-1">
+                    <div className="font-semibold text-base sm:text-lg">{stock.symbol}</div>
+                    <div className="flex gap-1.5 sm:gap-2 mt-1 flex-wrap">
                       {stock.sources.map((source) => (
-                        <Badge key={source} variant="outline" className="text-xs">
+                        <Badge key={source} variant="outline" className="text-xs px-1.5 py-0.5">
                           {source}
                         </Badge>
                       ))}
@@ -145,16 +145,16 @@ export default function SentimentAnalysisDashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-6">
+                <div className="flex items-center justify-between sm:justify-end gap-4 sm:gap-6">
                   <div className="text-center">
                     <div className="text-xs text-muted-foreground">Mentions</div>
-                    <div className="text-lg font-semibold">{stock.volume}</div>
+                    <div className="text-base sm:text-lg font-semibold">{stock.volume}</div>
                   </div>
 
                   <div className="text-center">
                     <div className="text-xs text-muted-foreground">Score</div>
                     <div
-                      className={`text-lg font-bold ${
+                      className={`text-base sm:text-lg font-bold ${
                         stock.sentiment === "positive"
                           ? "text-green-500"
                           : stock.sentiment === "negative"
@@ -174,7 +174,7 @@ export default function SentimentAnalysisDashboard() {
                         : stock.sentiment === "negative"
                         ? "bg-red-500 hover:bg-red-600"
                         : "bg-yellow-500 hover:bg-yellow-600"
-                    } text-white`}
+                    } text-white flex-shrink-0 text-xs`}
                   >
                     {stock.sentiment === "positive" ? (
                       <TrendingUp className="h-3 w-3 mr-1" />

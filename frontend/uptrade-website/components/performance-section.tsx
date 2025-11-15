@@ -4,6 +4,7 @@ import { motion } from "framer-motion"
 import { useInView } from "framer-motion"
 import { useRef } from "react"
 import { TrendingUp, DollarSign, Target, Award } from "lucide-react"
+import { AdvancedPerformanceChart } from "./advanced-performance-chart"
 
 const stats = [
   {
@@ -76,36 +77,9 @@ export function PerformanceSection() {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.95 }}
           transition={{ duration: 0.8, delay: 0.4 }}
-          className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-md border border-white/10 rounded-3xl p-12"
+          className="bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 backdrop-blur-md border border-white/10 rounded-3xl p-8 md:p-12"
         >
-          <div className="text-center mb-8">
-            <h3 className="text-2xl md:text-3xl font-bold text-white mb-4">
-              Consistent Growth, Year After Year
-            </h3>
-            <p className="text-white/70 max-w-2xl mx-auto">
-              Our AI-powered strategies have consistently outperformed the market, delivering exceptional returns for our users
-            </p>
-          </div>
-
-          {/* Simple Bar Chart Visualization */}
-          <div className="flex items-end justify-center space-x-4 h-64">
-            {[65, 80, 95, 110, 127].map((height, index) => (
-              <motion.div
-                key={index}
-                initial={{ height: 0 }}
-                animate={isInView ? { height: `${height}%` } : { height: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 + index * 0.1 }}
-                className="relative w-20 bg-gradient-to-t from-blue-500 to-blue-400 rounded-t-lg"
-              >
-                <div className="absolute -top-8 left-1/2 -translate-x-1/2 text-white font-semibold">
-                  +{height}%
-                </div>
-                <div className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-white/60 text-sm whitespace-nowrap">
-                  202{index + 1}
-                </div>
-              </motion.div>
-            ))}
-          </div>
+          <AdvancedPerformanceChart isInView={isInView} />
         </motion.div>
 
         {/* Risk Disclosure */}

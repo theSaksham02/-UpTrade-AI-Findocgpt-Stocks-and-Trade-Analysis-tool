@@ -9,8 +9,8 @@ import Link from "next/link"
 const pricingTiers = [
   {
     name: "Starter",
-    price: "$29",
-    period: "/month",
+    price: "Free",
+    period: "",
     description: "Perfect for beginners exploring AI-powered trading",
     features: [
       "Real-time market data",
@@ -91,7 +91,7 @@ export function PricingSection() {
               }`}
             >
               {tier.popular && (
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center">
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-blue-600 text-white px-4 py-1 rounded-full text-sm font-medium flex items-center z-10 shadow-lg">
                   <Zap className="w-4 h-4 mr-1" />
                   Most Popular
                 </div>

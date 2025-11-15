@@ -241,23 +241,41 @@ async def get_crypto_prices(ids: Optional[str] = None):
 # ============================================================================
 
 @app.get("/api/stocks/search")
-async def search_stocks(query: str):
-    """Search for US stocks by symbol or name"""
+async def search_stocks(query: str = Query(..., min_length=1)):
+    """Search for stocks by symbol or name - REAL DATA ONLY"""
     try:
-        # Use Alpha Vantage for stock search
-        results = beast_manager.search_stocks(query)
-        return JSONResponse(content={"results": results, "query": query})
+        # Try Alpha Vantage first
+        if beast_manager.alpha_vantage_key:
+            results = beast_manager.search_stocks(query)
+            if results:
+                return JSONResponse(content={"results": results, "query": query, "source": "Alpha Vantage"})
+        
+        # Try Finnhub as backup
+        if beast_manager.finnhub_key:
+            results = beast_manager.search_stocks_finnhub(query)
+            if results:
+                return JSONResponse(content={"results": results, "query": query, "source": "Finnhub"})
+        
+        # No API keys configured
+        return JSONResponse(
+            status_code=503,
+            content={
+                "error": "API keys not configured",
+                "message": "Please configure Alpha Vantage or Finnhub API keys in .env file to use stock search",
+                "query": query,
+                "results": []
+            }
+        )
     except Exception as e:
-        # Fallback: return mock data for common stocks
-        mock_results = [
-            {"symbol": "AAPL", "name": "Apple Inc.", "type": "Common Stock"},
-            {"symbol": "MSFT", "name": "Microsoft Corporation", "type": "Common Stock"},
-            {"symbol": "GOOGL", "name": "Alphabet Inc.", "type": "Common Stock"},
-            {"symbol": "TSLA", "name": "Tesla Inc.", "type": "Common Stock"},
-            {"symbol": "AMZN", "name": "Amazon.com Inc.", "type": "Common Stock"},
-        ]
-        filtered = [r for r in mock_results if query.upper() in r["symbol"] or query.lower() in r["name"].lower()]
-        return JSONResponse(content={"results": filtered[:5], "query": query})
+        return JSONResponse(
+            status_code=500,
+            content={
+                "error": str(e),
+                "message": "Stock search temporarily unavailable",
+                "query": query,
+                "results": []
+            }
+        )
 
 @app.post("/api/ai/analyze")
 async def ai_analysis(request: ChatRequest):
@@ -712,7 +730,7 @@ async def internal_error_handler(request, exc):
 
 @app.on_event("startup")
 async def startup_event():
-    """Initialize on startup"""
+    """Initialize on startup and validate API keys"""
     print("\n" + "="*80)
     print("  🦁 BEAST MODE API SERVER STARTING...")
     print("="*80)
@@ -722,7 +740,52 @@ async def startup_event():
     print("  ⚡ Real-Time Data")
     print("\n  📖 Documentation: http://localhost:8000/docs")
     print("  🔗 API Base URL: http://localhost:8000/api")
-    print("\n" + "="*80 + "\n")
+    print("\n" + "="*80)
+    
+    # Validate API keys for MVP
+    import os
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    required_keys = {
+        'ALPHA_VANTAGE_API_KEY': 'Stock quotes and company data (CRITICAL)',
+    }
+    
+    recommended_keys = {
+        'OPENAI_API_KEY': 'AI-powered analysis',
+        'FINNHUB_API_KEY': 'Real-time stock data',
+        'NEWS_API_KEY': 'Financial news',
+        'HUGGINGFACE_API_KEY': 'Sentiment analysis'
+    }
+    
+    missing_required = []
+    missing_recommended = []
+    
+    for key, description in required_keys.items():
+        if not os.getenv(key):
+            missing_required.append(f"{key} - {description}")
+    
+    for key, description in recommended_keys.items():
+        if not os.getenv(key):
+            missing_recommended.append(f"{key} - {description}")
+    
+    if missing_required:
+        print("\n  ❌ CRITICAL: Missing required API keys:")
+        for key in missing_required:
+            print(f"     • {key}")
+        print("\n  ⚠️  Add to .env file for real-time data")
+        print("  📝 See API_KEYS_GUIDE.md for setup\n")
+    
+    if missing_recommended:
+        print("\n  ⚠️  Recommended API keys not configured:")
+        for key in missing_recommended:
+            print(f"     • {key}")
+        print("\n  💡 Add these for enhanced features\n")
+    
+    if not missing_required and not missing_recommended:
+        print("\n  ✅ All API keys configured!\n")
+    
+    print("="*80 + "\n")
 
 @app.on_event("shutdown")
 async def shutdown_event():

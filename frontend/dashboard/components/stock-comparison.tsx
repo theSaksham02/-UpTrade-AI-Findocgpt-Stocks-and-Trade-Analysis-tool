@@ -69,25 +69,25 @@ export default function StockComparisonDashboard() {
           <CardDescription>Enter two stock symbols to compare their performance and metrics</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <div className="flex-1">
               <Input
                 placeholder="Stock 1 (e.g., AAPL)"
                 value={stock1}
                 onChange={(e) => setStock1(e.target.value.toUpperCase())}
-                className="w-full"
+                className="w-full text-sm sm:text-base"
               />
             </div>
-            <div className="text-2xl font-bold text-muted-foreground">VS</div>
+            <div className="text-xl sm:text-2xl font-bold text-muted-foreground text-center sm:text-left">VS</div>
             <div className="flex-1">
               <Input
                 placeholder="Stock 2 (e.g., MSFT)"
                 value={stock2}
                 onChange={(e) => setStock2(e.target.value.toUpperCase())}
-                className="w-full"
+                className="w-full text-sm sm:text-base"
               />
             </div>
-            <Button>
+            <Button className="w-full sm:w-auto">
               <Search className="h-4 w-4 mr-2" />
               Compare
             </Button>
@@ -124,22 +124,22 @@ export default function StockComparisonDashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-              <div>
-                <div className="text-sm text-muted-foreground">Market Cap</div>
-                <div className="font-semibold">${stock1Data.marketCap}T</div>
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 pt-3 sm:pt-4 border-t">
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">Market Cap</div>
+                <div className="text-sm sm:text-base font-semibold truncate">${stock1Data.marketCap}T</div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground">P/E Ratio</div>
-                <div className="font-semibold">{stock1Data.pe}</div>
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">P/E Ratio</div>
+                <div className="text-sm sm:text-base font-semibold truncate">{stock1Data.pe}</div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground">EPS</div>
-                <div className="font-semibold">${stock1Data.eps}</div>
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">EPS</div>
+                <div className="text-sm sm:text-base font-semibold truncate">${stock1Data.eps}</div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Revenue</div>
-                <div className="font-semibold">${stock1Data.revenue}B</div>
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">Revenue</div>
+                <div className="text-sm sm:text-base font-semibold truncate">${stock1Data.revenue}B</div>
               </div>
             </div>
           </CardContent>
@@ -172,22 +172,22 @@ export default function StockComparisonDashboard() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 pt-4 border-t">
-              <div>
-                <div className="text-sm text-muted-foreground">Market Cap</div>
-                <div className="font-semibold">${stock2Data.marketCap}T</div>
+            <div className="grid grid-cols-2 gap-2 sm:gap-4 pt-3 sm:pt-4 border-t">
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">Market Cap</div>
+                <div className="text-sm sm:text-base font-semibold truncate">${stock2Data.marketCap}T</div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground">P/E Ratio</div>
-                <div className="font-semibold">{stock2Data.pe}</div>
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">P/E Ratio</div>
+                <div className="text-sm sm:text-base font-semibold truncate">{stock2Data.pe}</div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground">EPS</div>
-                <div className="font-semibold">${stock2Data.eps}</div>
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">EPS</div>
+                <div className="text-sm sm:text-base font-semibold truncate">${stock2Data.eps}</div>
               </div>
-              <div>
-                <div className="text-sm text-muted-foreground">Revenue</div>
-                <div className="font-semibold">${stock2Data.revenue}B</div>
+              <div className="space-y-1">
+                <div className="text-xs sm:text-sm text-muted-foreground">Revenue</div>
+                <div className="text-sm sm:text-base font-semibold truncate">${stock2Data.revenue}B</div>
               </div>
             </div>
           </CardContent>

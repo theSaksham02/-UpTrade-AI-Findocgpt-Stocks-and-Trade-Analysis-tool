@@ -39,7 +39,7 @@ export default function VisualXLandingPage() {
                   </h1>
                   
                   <p className="text-xl text-white/70 mb-8 max-w-2xl">
-                    VisualX uses advanced AI to detect anomalies, forecast prices, and correlate market movements with news events. See what others miss.
+                    VisualX uses advanced AI to analyze stock price movements by correlating them with breaking news, market sentiment shifts, and statistical anomalies. Understand exactly why stocks moved—whether it was earnings reports, Fed announcements, social media buzz, or unusual trading patterns.
                   </p>
                   
                   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
@@ -85,9 +85,9 @@ export default function VisualXLandingPage() {
                         <Calendar className={`w-6 h-6 text-white transition-transform duration-300 ${hoveredCard === 0 ? 'scale-125' : ''}`} />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">Timeline Analysis</h3>
+                        <h3 className="text-lg font-semibold text-white mb-2">News & Sentiment Correlation</h3>
                         <p className="text-white/60 text-sm">
-                          Gantt-style visualization showing market movements correlated with news events and sentiment shifts.
+                          See exactly which news events (earnings, Fed policy, product launches) caused price spikes or drops. Timeline view shows sentiment scores alongside price movements to reveal cause-and-effect relationships.
                         </p>
                       </div>
                     </div>
@@ -103,9 +103,9 @@ export default function VisualXLandingPage() {
                         <AlertTriangle className={`w-6 h-6 text-white transition-transform duration-300 ${hoveredCard === 1 ? 'scale-125' : ''}`} />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">Anomaly Detection</h3>
+                        <h3 className="text-lg font-semibold text-white mb-2">Why Did It Move? - Anomaly Insights</h3>
                         <p className="text-white/60 text-sm">
-                          AI-powered detection of unusual price movements using statistical analysis and z-score calculations.
+                          AI detects unusual price movements and automatically pulls relevant news, earnings data, and social sentiment from that exact time period. Know if the spike was due to breaking news, analyst upgrades, or market manipulation.
                         </p>
                       </div>
                     </div>
@@ -139,9 +139,9 @@ export default function VisualXLandingPage() {
                         <TrendingUp className={`w-6 h-6 text-white transition-transform duration-300 ${hoveredCard === 3 ? 'scale-125' : ''}`} />
                       </div>
                       <div>
-                        <h3 className="text-lg font-semibold text-white mb-2">Sentiment Trends</h3>
+                        <h3 className="text-lg font-semibold text-white mb-2">Sentiment Impact Score</h3>
                         <p className="text-white/60 text-sm">
-                          Track how news sentiment evolves over time and correlates with price movements.
+                          Quantifies how much news sentiment (positive/negative) influenced the actual price movement. Separate scores for financial news, social media, and analyst reports help identify which source drove the change.
                         </p>
                       </div>
                     </div>
