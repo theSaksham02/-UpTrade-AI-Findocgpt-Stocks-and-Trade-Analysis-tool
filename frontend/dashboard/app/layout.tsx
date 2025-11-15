@@ -1,22 +1,25 @@
+import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
 
-const inter = Inter({ subsets: ["latin"] })
+const inter = Inter({ 
+  subsets: ["latin"],
+  variable: "--font-inter",
+})
 
-export const metadata = {
-  title: "UpTrade Dashboard - AI-Powered Trading Intelligence",
-  description: "Real-time market analysis, stock comparison, and AI-driven insights for smarter trading decisions",
-  generator: 'UpTrade AI'
+export const metadata: Metadata = {
+  title: "UpTrade AI - Trading Intelligence Dashboard",
+  description: "AI-powered trading platform with real-time market analysis, stock comparison, sentiment tracking, and intelligent insights for smarter investment decisions",
 }
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode
-}) {
+}>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={inter.variable}>
       <body className={inter.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}

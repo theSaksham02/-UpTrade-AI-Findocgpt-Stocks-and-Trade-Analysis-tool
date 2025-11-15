@@ -1,0 +1,483 @@
+"use client"
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Search, TrendingUp, TrendingDown, Calendar, Newspaper, BarChart3, Activity } from "lucide-react"
+import { useState, useEffect } from "react"
+import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Area, AreaChart } from "recharts"
+
+interface NewsArticle {
+  title: string
+  description: string
+  url: string
+  publishedAt: string
+  source: string
+  sentiment?: 'positive' | 'negative' | 'neutral'
+}
+
+interface StockData {
+  symbol: string
+  name: string
+  price: number
+  change: number
+  changePercent: number
+  volume: number
+  marketCap: number
+  pe: number
+  high52Week: number
+  low52Week: number
+}
+
+interface HistoricalData {
+  date: string
+  open: number
+  high: number
+  low: number
+  close: number
+  volume: number
+}
+
+export default function StockSearchDashboard() {
+  const [searchQuery, setSearchQuery] = useState("")
+  const [selectedStock, setSelectedStock] = useState<string | null>(null)
+  const [stockData, setStockData] = useState<StockData | null>(null)
+  const [newsArticles, setNewsArticles] = useState<NewsArticle[]>([])
+  const [historicalData, setHistoricalData] = useState<HistoricalData[]>([])
+  const [chartPeriod, setChartPeriod] = useState<"1D" | "1M" | "1Y" | "10Y">("1M")
+  const [loading, setLoading] = useState(false)
+
+  // Mock data generator for demo
+  const generateMockStockData = (symbol: string): StockData => {
+    const basePrice = Math.random() * 500 + 50
+    const change = (Math.random() - 0.5) * 20
+    return {
+      symbol: symbol.toUpperCase(),
+      name: `${symbol.toUpperCase()} Inc.`,
+      price: basePrice,
+      change: change,
+      changePercent: (change / basePrice) * 100,
+      volume: Math.floor(Math.random() * 50000000) + 1000000,
+      marketCap: basePrice * Math.random() * 1000000000,
+      pe: Math.random() * 50 + 5,
+      high52Week: basePrice * 1.3,
+      low52Week: basePrice * 0.7,
+    }
+  }
+
+  const generateMockHistoricalData = (period: string): HistoricalData[] => {
+    const dataPoints = period === "1D" ? 24 : period === "1M" ? 30 : period === "1Y" ? 365 : 3650
+    const basePrice = 100 + Math.random() * 100
+    const data: HistoricalData[] = []
+    
+    for (let i = 0; i < dataPoints; i++) {
+      const date = new Date()
+      if (period === "1D") {
+        date.setHours(date.getHours() - (dataPoints - i))
+      } else {
+        date.setDate(date.getDate() - (dataPoints - i))
+      }
+      
+      const randomChange = (Math.random() - 0.5) * 5
+      const close = basePrice + randomChange + (i * 0.1)
+      data.push({
+        date: period === "1D" ? date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) : date.toLocaleDateString(),
+        open: close - Math.random() * 2,
+        high: close + Math.random() * 3,
+        low: close - Math.random() * 3,
+        close: close,
+        volume: Math.floor(Math.random() * 10000000) + 1000000,
+      })
+    }
+    
+    return data
+  }
+
+  const generateMockNews = (symbol: string): NewsArticle[] => {
+    const sentiments: Array<'positive' | 'negative' | 'neutral'> = ['positive', 'negative', 'neutral']
+    return [
+      {
+        title: `${symbol} Reports Strong Q4 Earnings, Beats Expectations`,
+        description: `${symbol} announced quarterly earnings that exceeded analyst expectations, driving stock price up in after-hours trading.`,
+        url: '#',
+        publishedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        source: 'Financial Times',
+        sentiment: 'positive',
+      },
+      {
+        title: `Analysts Upgrade ${symbol} Stock Rating to "Buy"`,
+        description: `Major investment banks have upgraded their rating on ${symbol}, citing strong fundamentals and market position.`,
+        url: '#',
+        publishedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+        source: 'Bloomberg',
+        sentiment: 'positive',
+      },
+      {
+        title: `${symbol} Announces New Product Launch and Expansion Plans`,
+        description: `The company revealed plans for a major product launch next quarter, along with expansion into new markets.`,
+        url: '#',
+        publishedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+        source: 'Reuters',
+        sentiment: 'positive',
+      },
+      {
+        title: `Market Volatility Affects ${symbol} Trading Volume`,
+        description: `Recent market conditions have led to increased volatility in ${symbol} shares, with higher than usual trading volume.`,
+        url: '#',
+        publishedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(),
+        source: 'CNBC',
+        sentiment: 'neutral',
+      },
+      {
+        title: `${symbol} CEO Discusses Future Strategy in Interview`,
+        description: `In an exclusive interview, the CEO outlined the company's strategic vision and growth targets for the coming year.`,
+        url: '#',
+        publishedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+        source: 'Wall Street Journal',
+        sentiment: 'neutral',
+      },
+    ]
+  }
+
+  const handleSearch = () => {
+    if (!searchQuery.trim()) return
+    
+    setLoading(true)
+    setSelectedStock(searchQuery.toUpperCase())
+    
+    // Simulate API call
+    setTimeout(() => {
+      setStockData(generateMockStockData(searchQuery))
+      setNewsArticles(generateMockNews(searchQuery.toUpperCase()))
+      setHistoricalData(generateMockHistoricalData(chartPeriod))
+      setLoading(false)
+    }, 500)
+  }
+
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      handleSearch()
+    }
+  }
+
+  useEffect(() => {
+    if (selectedStock) {
+      setHistoricalData(generateMockHistoricalData(chartPeriod))
+    }
+  }, [chartPeriod, selectedStock])
+
+  const getSentimentColor = (sentiment?: string) => {
+    switch (sentiment) {
+      case 'positive': return 'text-green-600 bg-green-50 dark:bg-green-950/30'
+      case 'negative': return 'text-red-600 bg-red-50 dark:bg-red-950/30'
+      default: return 'text-gray-600 bg-gray-50 dark:bg-gray-800'
+    }
+  }
+
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString)
+    const now = new Date()
+    const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60))
+    
+    if (diffInHours < 1) return 'Just now'
+    if (diffInHours < 24) return `${diffInHours}h ago`
+    return `${Math.floor(diffInHours / 24)}d ago`
+  }
+
+  return (
+    <div className="space-y-6">
+      {/* Search Header */}
+      <Card className="border-purple-200/30 dark:border-purple-900/30 bg-gradient-to-r from-white to-purple-50/30 dark:from-[#0F0F12] dark:to-purple-950/20">
+        <CardHeader>
+          <CardTitle className="text-2xl flex items-center gap-2">
+            <Search className="w-6 h-6 text-purple-600" />
+            Stock Search & Analysis
+          </CardTitle>
+          <CardDescription>Search any stock by ticker symbol to view detailed charts, news, and historical data</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="flex gap-2">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+              <Input
+                placeholder="Enter stock ticker (e.g., AAPL, MSFT, GOOGL, TSLA...)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyPress={handleKeyPress}
+                className="pl-10 h-12 text-lg border-purple-200 dark:border-purple-900 focus:border-purple-600"
+              />
+            </div>
+            <Button 
+              onClick={handleSearch} 
+              className="h-12 px-8 bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900"
+              disabled={loading}
+            >
+              {loading ? 'Searching...' : 'Search'}
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {selectedStock && stockData && (
+        <>
+          {/* Stock Overview */}
+          <Card className="border-purple-200/30 dark:border-purple-900/30">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-3xl">{stockData.symbol}</CardTitle>
+                  <CardDescription className="text-lg">{stockData.name}</CardDescription>
+                </div>
+                <div className="text-right">
+                  <div className="text-4xl font-bold">${stockData.price.toFixed(2)}</div>
+                  <div className={`text-lg font-semibold flex items-center gap-1 justify-end ${stockData.change >= 0 ? 'text-green-500' : 'text-red-500'}`}>
+                    {stockData.change >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+                    {stockData.change >= 0 ? '+' : ''}{stockData.change.toFixed(2)} ({stockData.changePercent.toFixed(2)}%)
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-[#1F1F23] p-4 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Volume</div>
+                  <div className="text-xl font-bold">{(stockData.volume / 1000000).toFixed(2)}M</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-[#1F1F23] p-4 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">Market Cap</div>
+                  <div className="text-xl font-bold">${(stockData.marketCap / 1000000000).toFixed(2)}B</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-[#1F1F23] p-4 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">P/E Ratio</div>
+                  <div className="text-xl font-bold">{stockData.pe.toFixed(2)}</div>
+                </div>
+                <div className="bg-gradient-to-br from-purple-50 to-white dark:from-purple-950/20 dark:to-[#1F1F23] p-4 rounded-lg">
+                  <div className="text-sm text-gray-600 dark:text-gray-400">52W Range</div>
+                  <div className="text-xl font-bold">${stockData.low52Week.toFixed(0)}-${stockData.high52Week.toFixed(0)}</div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Tabs for Charts, News, Historical Data */}
+          <Tabs defaultValue="charts" className="w-full">
+            <TabsList className="grid w-full grid-cols-3 bg-white/50 dark:bg-[#1F1F23]/50 backdrop-blur-sm">
+              <TabsTrigger value="charts" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Price Charts
+              </TabsTrigger>
+              <TabsTrigger value="news" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <Newspaper className="w-4 h-4 mr-2" />
+                News & Updates
+              </TabsTrigger>
+              <TabsTrigger value="historical" className="data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+                <Calendar className="w-4 h-4 mr-2" />
+                Historical Data
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Charts Tab */}
+            <TabsContent value="charts" className="mt-6">
+              <Card className="border-purple-200/30 dark:border-purple-900/30">
+                <CardHeader>
+                  <div className="flex items-center justify-between">
+                    <CardTitle>Price Chart</CardTitle>
+                    <div className="flex gap-2">
+                      {(["1D", "1M", "1Y", "10Y"] as const).map((period) => (
+                        <Button
+                          key={period}
+                          variant={chartPeriod === period ? "default" : "outline"}
+                          size="sm"
+                          onClick={() => setChartPeriod(period)}
+                          className={chartPeriod === period ? "bg-purple-600 hover:bg-purple-700" : ""}
+                        >
+                          {period}
+                        </Button>
+                      ))}
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <div className="h-[400px] w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={historicalData}>
+                        <defs>
+                          <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#9333ea" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#9333ea" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <XAxis 
+                          dataKey="date" 
+                          stroke="#888888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                        />
+                        <YAxis
+                          stroke="#888888"
+                          fontSize={12}
+                          tickLine={false}
+                          axisLine={false}
+                          tickFormatter={(value) => `$${value.toFixed(0)}`}
+                        />
+                        <Tooltip
+                          content={({ active, payload }) => {
+                            if (active && payload && payload.length) {
+                              return (
+                                <div className="rounded-lg border bg-background p-3 shadow-lg">
+                                  <div className="grid gap-2">
+                                    <div className="flex items-center justify-between gap-4">
+                                      <span className="text-sm text-muted-foreground">{payload[0].payload.date}</span>
+                                    </div>
+                                    <div className="grid gap-1">
+                                      <div className="flex items-center justify-between gap-8">
+                                        <span className="text-sm font-medium">Close:</span>
+                                        <span className="text-sm font-bold">${payload[0].value?.toFixed(2)}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between gap-8">
+                                        <span className="text-sm font-medium">High:</span>
+                                        <span className="text-sm">${payload[0].payload.high.toFixed(2)}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between gap-8">
+                                        <span className="text-sm font-medium">Low:</span>
+                                        <span className="text-sm">${payload[0].payload.low.toFixed(2)}</span>
+                                      </div>
+                                      <div className="flex items-center justify-between gap-8">
+                                        <span className="text-sm font-medium">Volume:</span>
+                                        <span className="text-sm">{(payload[0].payload.volume / 1000000).toFixed(2)}M</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )
+                            }
+                            return null
+                          }}
+                        />
+                        <Area
+                          type="monotone"
+                          dataKey="close"
+                          stroke="#9333ea"
+                          strokeWidth={2}
+                          fillOpacity={1}
+                          fill="url(#colorPrice)"
+                        />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            {/* News Tab */}
+            <TabsContent value="news" className="mt-6">
+              <div className="space-y-4">
+                <Card className="border-purple-200/30 dark:border-purple-900/30">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Newspaper className="w-5 h-5 text-purple-600" />
+                      Latest News for {selectedStock}
+                    </CardTitle>
+                    <CardDescription>Real-time news and updates from major financial sources</CardDescription>
+                  </CardHeader>
+                </Card>
+                
+                {newsArticles.map((article, index) => (
+                  <Card key={index} className="border-purple-200/30 dark:border-purple-900/30 hover:shadow-lg transition-shadow cursor-pointer">
+                    <CardContent className="pt-6">
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-semibold mb-2 hover:text-purple-600 transition-colors">
+                              {article.title}
+                            </h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                              {article.description}
+                            </p>
+                            <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-500">
+                              <span className="flex items-center gap-1">
+                                <Newspaper className="w-4 h-4" />
+                                {article.source}
+                              </span>
+                              <span className="flex items-center gap-1">
+                                <Calendar className="w-4 h-4" />
+                                {formatTimeAgo(article.publishedAt)}
+                              </span>
+                              {article.sentiment && (
+                                <span className={`px-2 py-1 rounded-full text-xs font-medium ${getSentimentColor(article.sentiment)}`}>
+                                  {article.sentiment.toUpperCase()}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            </TabsContent>
+
+            {/* Historical Data Tab */}
+            <TabsContent value="historical" className="mt-6">
+              <Card className="border-purple-200/30 dark:border-purple-900/30">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Activity className="w-5 h-5 text-purple-600" />
+                    Historical Data - {chartPeriod}
+                  </CardTitle>
+                  <CardDescription>Detailed OHLCV (Open, High, Low, Close, Volume) data</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="overflow-x-auto">
+                    <table className="w-full">
+                      <thead>
+                        <tr className="border-b border-purple-200/30 dark:border-purple-900/30">
+                          <th className="text-left p-3 font-semibold">Date</th>
+                          <th className="text-right p-3 font-semibold">Open</th>
+                          <th className="text-right p-3 font-semibold">High</th>
+                          <th className="text-right p-3 font-semibold">Low</th>
+                          <th className="text-right p-3 font-semibold">Close</th>
+                          <th className="text-right p-3 font-semibold">Volume</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {historicalData.slice(0, 20).map((row, index) => (
+                          <tr key={index} className="border-b border-gray-200 dark:border-gray-800 hover:bg-purple-50/30 dark:hover:bg-purple-950/10 transition-colors">
+                            <td className="p-3">{row.date}</td>
+                            <td className="text-right p-3">${row.open.toFixed(2)}</td>
+                            <td className="text-right p-3 text-green-600 dark:text-green-500">${row.high.toFixed(2)}</td>
+                            <td className="text-right p-3 text-red-600 dark:text-red-500">${row.low.toFixed(2)}</td>
+                            <td className="text-right p-3 font-semibold">${row.close.toFixed(2)}</td>
+                            <td className="text-right p-3">{(row.volume / 1000000).toFixed(2)}M</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  <div className="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
+                    Showing {Math.min(20, historicalData.length)} of {historicalData.length} records
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+          </Tabs>
+        </>
+      )}
+
+      {!selectedStock && (
+        <Card className="border-purple-200/30 dark:border-purple-900/30 border-dashed">
+          <CardContent className="pt-12 pb-12 text-center">
+            <Search className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+            <h3 className="text-xl font-semibold mb-2">Search for a Stock</h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
+              Enter a stock ticker symbol above to view detailed charts, latest news, and comprehensive historical data powered by AI insights
+            </p>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  )
+}

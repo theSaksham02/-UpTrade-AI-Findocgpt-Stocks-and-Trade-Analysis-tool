@@ -14,8 +14,8 @@ interface BreadcrumbItem {
 
 export default function TopNav() {
   const breadcrumbs: BreadcrumbItem[] = [
-    { label: "kokonutUI", href: "#" },
-    { label: "dashboard", href: "#" },
+    { label: "UpTrade AI", href: "#" },
+    { label: "Trading Dashboard", href: "#" },
   ]
 
   return (

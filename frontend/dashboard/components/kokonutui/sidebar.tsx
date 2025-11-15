@@ -2,24 +2,24 @@
 
 import {
   BarChart2,
-  Receipt,
-  Building2,
-  CreditCard,
-  Folder,
+  TrendingUp,
+  LineChart,
+  PieChart,
+  Activity,
   Wallet,
-  Users2,
-  Shield,
-  MessagesSquare,
-  Video,
+  BookOpen,
+  Newspaper,
+  Brain,
+  Zap,
   Settings,
   HelpCircle,
   Menu,
+  LayoutDashboard,
+  GitCompare,
+  Search,
 } from "lucide-react"
-
-import { Home } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
-import Image from "next/image"
 
 export default function Sidebar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -67,28 +67,15 @@ export default function Sidebar() {
       >
         <div className="h-full flex flex-col">
           <Link
-            href="https://kokonutui.com/"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/"
             className="h-16 px-6 flex items-center border-b border-gray-200 dark:border-[#1F1F23]"
           >
             <div className="flex items-center gap-3">
-              <Image
-                src="https://kokonutui.com/logo.svg"
-                alt="Acme"
-                width={32}
-                height={32}
-                className="flex-shrink-0 hidden dark:block"
-              />
-              <Image
-                src="https://kokonutui.com/logo-black.svg"
-                alt="Acme"
-                width={32}
-                height={32}
-                className="flex-shrink-0 block dark:hidden"
-              />
-              <span className="text-lg font-semibold hover:cursor-pointer text-gray-900 dark:text-white">
-                KokonutUI
+              <div className="w-8 h-8 bg-gradient-to-br from-purple-600 to-purple-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="h-5 w-5 text-white" />
+              </div>
+              <span className="text-lg font-bold hover:cursor-pointer bg-gradient-to-r from-purple-600 to-purple-800 bg-clip-text text-transparent">
+                UpTrade AI
               </span>
             </div>
           </Link>
@@ -97,57 +84,60 @@ export default function Sidebar() {
             <div className="space-y-6">
               <div>
                 <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Overview
+                  Trading Intelligence
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Home}>
-                    Dashboard
+                  <NavItem href="#" icon={LayoutDashboard}>
+                    Market Overview
                   </NavItem>
-                  <NavItem href="#" icon={BarChart2}>
-                    Analytics
+                  <NavItem href="#" icon={Search}>
+                    Stock Search
                   </NavItem>
-                  <NavItem href="#" icon={Building2}>
-                    Organization
+                  <NavItem href="#" icon={GitCompare}>
+                    Stock Comparison
                   </NavItem>
-                  <NavItem href="#" icon={Folder}>
-                    Projects
+                  <NavItem href="#" icon={Brain}>
+                    Sentiment Analysis
+                  </NavItem>
+                  <NavItem href="#" icon={LineChart}>
+                    Technical Charts
                   </NavItem>
                 </div>
               </div>
 
               <div>
                 <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Finance
+                  Portfolio
                 </div>
                 <div className="space-y-1">
                   <NavItem href="#" icon={Wallet}>
-                    Transactions
+                    My Holdings
                   </NavItem>
-                  <NavItem href="#" icon={Receipt}>
-                    Invoices
+                  <NavItem href="#" icon={Activity}>
+                    Activity Log
                   </NavItem>
-                  <NavItem href="#" icon={CreditCard}>
-                    Payments
+                  <NavItem href="#" icon={PieChart}>
+                    Performance
                   </NavItem>
                 </div>
               </div>
 
               <div>
                 <div className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400">
-                  Team
+                  AI Insights
                 </div>
                 <div className="space-y-1">
-                  <NavItem href="#" icon={Users2}>
-                    Members
+                  <NavItem href="#" icon={Zap}>
+                    AI Recommendations
                   </NavItem>
-                  <NavItem href="#" icon={Shield}>
-                    Permissions
+                  <NavItem href="#" icon={Newspaper}>
+                    Market News
                   </NavItem>
-                  <NavItem href="#" icon={MessagesSquare}>
-                    Chat
+                  <NavItem href="#" icon={BookOpen}>
+                    Research Reports
                   </NavItem>
-                  <NavItem href="#" icon={Video}>
-                    Meetings
+                  <NavItem href="#" icon={BarChart2}>
+                    Market Analytics
                   </NavItem>
                 </div>
               </div>
