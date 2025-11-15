@@ -152,6 +152,18 @@ async def get_batch_quotes(symbols: List[str]):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.get("/api/stock/historical/{symbol}")
+async def get_historical_data(symbol: str, period: str = Query("1M", enum=["1D", "1W", "1M", "3M", "6M", "1Y", "5Y", "10Y", "YTD"])):
+    """
+    Get historical OHLCV data with multi-API failover
+    Uses Alpha Vantage (primary), Polygon (secondary), Finnhub (tertiary)
+    """
+    try:
+        historical = basic_manager.get_historical_data(symbol.upper(), period)
+        return JSONResponse(content=historical)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 # ============================================================================
 # NEWS ENDPOINTS
 # ============================================================================
@@ -385,21 +397,114 @@ async def dashboard_data(symbols: Optional[str] = None):
 
 @app.post("/api/compare/stocks")
 async def compare_stocks(symbols: List[str]):
-    """Compare multiple stocks side-by-side"""
+    """
+    Compare multiple stocks side-by-side with comprehensive data
+    Uses Finnhub + Alpha Vantage + Polygon for quotes
+    Uses FMP for financials and ratings
+    """
     try:
         comparison = {}
         for symbol in symbols:
-            comparison[symbol] = {
-                "quote": basic_manager.get_stock_quote(symbol.upper()),
-                "company": basic_manager.get_company_overview(symbol.upper()),
-                "news_count": len(basic_manager.get_stock_news(symbol.upper(), limit=5))
+            sym = symbol.upper()
+            comparison[sym] = {
+                "quote": basic_manager.get_stock_quote(sym),
+                "company": basic_manager.get_company_overview(sym),
+                "financials": beast_manager.get_company_financials(sym, 'annual'),
+                "rating": beast_manager.get_stock_rating(sym),
+                "news_count": len(basic_manager.get_stock_news(sym, limit=5)),
+                "recent_news": basic_manager.get_stock_news(sym, limit=3)
             }
         
         return JSONResponse(content={
             "symbols": symbols,
             "comparison": comparison,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
+            "sources": {
+                "quotes": "Finnhub + Alpha Vantage + Polygon",
+                "financials": "FMP",
+                "news": "NewsAPI + NewsData + Marketaux + Finnhub"
+            }
         })
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/api/sentiment/{symbol}")
+async def get_aggregated_sentiment(symbol: str):
+    """
+    Get aggregated sentiment analysis for a stock
+    Analyzes news from NewsAPI, NewsData, Marketaux, and Finnhub
+    Uses FinBERT for sentiment scoring
+    """
+    try:
+        sym = symbol.upper()
+        
+        # Get news from all sources
+        news = basic_manager.get_stock_news(sym, limit=20)
+        
+        if not news:
+            return JSONResponse(content={
+                "symbol": sym,
+                "overall": "neutral",
+                "score": 0.0,
+                "distribution": {"positive": 0, "neutral": 0, "negative": 0},
+                "totalArticles": 0,
+                "analyzedArticles": 0,
+                "source": "No news available",
+                "message": "No news articles found for sentiment analysis"
+            })
+        
+        # Analyze sentiment for each article using FinBERT
+        sentiments = []
+        positive_count = 0
+        negative_count = 0
+        neutral_count = 0
+        total_score = 0.0
+        
+        for article in news:
+            text = f"{article.get('title', '')} {article.get('description', '')}"
+            if text.strip():
+                sentiment_result = beast_manager.analyze_sentiment_huggingface(text)
+                if sentiment_result and 'sentiment' in sentiment_result:
+                    sentiments.append(sentiment_result)
+                    
+                    sentiment_label = sentiment_result.get('sentiment', 'neutral').lower()
+                    score = sentiment_result.get('score', 0.0)
+                    
+                    if sentiment_label == 'positive':
+                        positive_count += 1
+                    elif sentiment_label == 'negative':
+                        negative_count += 1
+                    else:
+                        neutral_count += 1
+                    
+                    total_score += score
+        
+        analyzed_count = len(sentiments)
+        avg_score = total_score / analyzed_count if analyzed_count > 0 else 0.0
+        
+        # Determine overall sentiment
+        if avg_score > 0.15:
+            overall = "bullish"
+        elif avg_score < -0.15:
+            overall = "bearish"
+        else:
+            overall = "neutral"
+        
+        return JSONResponse(content={
+            "symbol": sym,
+            "overall": overall,
+            "score": round(avg_score, 4),
+            "distribution": {
+                "positive": round((positive_count / analyzed_count * 100), 2) if analyzed_count > 0 else 0,
+                "neutral": round((neutral_count / analyzed_count * 100), 2) if analyzed_count > 0 else 0,
+                "negative": round((negative_count / analyzed_count * 100), 2) if analyzed_count > 0 else 0
+            },
+            "totalArticles": len(news),
+            "analyzedArticles": analyzed_count,
+            "source": "FinBERT + Multi-Source News (NewsAPI, NewsData, Marketaux, Finnhub)",
+            "news_sources": list(set([article.get('api_source', 'Unknown') for article in news]))
+        })
+    
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

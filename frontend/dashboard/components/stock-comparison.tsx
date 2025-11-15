@@ -3,62 +3,56 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Search, TrendingUp, TrendingDown, BarChart3, Activity } from "lucide-react"
+import { Search, TrendingUp, TrendingDown, BarChart3, Activity, AlertCircle } from "lucide-react"
 import { useState } from "react"
 import { Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis, Bar, BarChart, Legend } from "recharts"
+import { compareStocks, getHistoricalData, type ComparisonData } from "@/lib/api-client"
+import { InteractiveChart } from "./interactive-chart"
 
 export default function StockComparisonDashboard() {
   const [stock1, setStock1] = useState("AAPL")
   const [stock2, setStock2] = useState("MSFT")
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [comparisonData, setComparisonData] = useState<ComparisonData | null>(null)
+  const [historicalData1, setHistoricalData1] = useState<any[]>([])
+  const [historicalData2, setHistoricalData2] = useState<any[]>([])
 
-  // Mock comparison data
-  const comparisonData = {
-    AAPL: {
-      symbol: "AAPL",
-      name: "Apple Inc.",
-      price: 178.45,
-      change: 4.23,
-      changePercent: 2.43,
-      marketCap: 2.8,
-      pe: 28.5,
-      eps: 6.26,
-      revenue: 394.3,
-      netIncome: 99.8,
-      roa: 27.5,
-      roe: 175.3,
-      debtToEquity: 183.9,
-      score: 92,
-    },
-    MSFT: {
-      symbol: "MSFT",
-      name: "Microsoft Corporation",
-      price: 378.91,
-      change: 7.12,
-      changePercent: 1.91,
-      marketCap: 2.9,
-      pe: 32.1,
-      eps: 11.80,
-      revenue: 227.6,
-      netIncome: 88.1,
-      roa: 19.2,
-      roe: 45.6,
-      debtToEquity: 45.2,
-      score: 89,
-    },
+  const handleCompare = async () => {
+    if (!stock1.trim() || !stock2.trim()) return
+    
+    setLoading(true)
+    setError(null)
+    
+    try {
+      const [comparison, hist1, hist2] = await Promise.all([
+        compareStocks([stock1, stock2]),
+        getHistoricalData(stock1, '1M'),
+        getHistoricalData(stock2, '1M')
+      ])
+      
+      setComparisonData(comparison)
+      setHistoricalData1(hist1)
+      setHistoricalData2(hist2)
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : 'Failed to compare stocks'
+      setError(errorMsg)
+      console.error('Comparison error:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const chartData = [
-    { month: "Jan", AAPL: 165, MSFT: 340 },
-    { month: "Feb", AAPL: 170, MSFT: 350 },
-    { month: "Mar", AAPL: 168, MSFT: 355 },
-    { month: "Apr", AAPL: 172, MSFT: 360 },
-    { month: "May", AAPL: 175, MSFT: 370 },
-    { month: "Jun", AAPL: 178, MSFT: 379 },
-  ]
+  const stock1Data = comparisonData?.[stock1.toUpperCase()]
+  const stock2Data = comparisonData?.[stock2.toUpperCase()]
 
-  const stock1Data = comparisonData[stock1 as keyof typeof comparisonData]
-  const stock2Data = comparisonData[stock2 as keyof typeof comparisonData]
+  // Merge historical data for comparison chart
+  const chartData = historicalData1.map((d1, idx) => {
+    const dataPoint: any = { date: d1.date }
+    dataPoint[stock1] = d1.close
+    dataPoint[stock2] = historicalData2[idx]?.close || null
+    return dataPoint
+  })
 
   return (
     <div className="space-y-6">
@@ -87,22 +81,37 @@ export default function StockComparisonDashboard() {
                 className="w-full text-sm sm:text-base"
               />
             </div>
-            <Button className="w-full sm:w-auto">
+            <Button className="w-full sm:w-auto" onClick={handleCompare} disabled={loading}>
               <Search className="h-4 w-4 mr-2" />
-              Compare
+              {loading ? 'Comparing...' : 'Compare'}
             </Button>
           </div>
         </CardContent>
       </Card>
 
+      {/* Error Display */}
+      {error && (
+        <Card className="border-red-500/50 bg-red-50/5">
+          <CardContent className="flex items-center gap-3 p-6">
+            <AlertCircle className="w-8 h-8 text-red-500 flex-shrink-0" />
+            <div>
+              <p className="font-semibold text-red-500">Failed to compare stocks</p>
+              <p className="text-sm text-muted-foreground mt-1">{error}</p>
+              <p className="text-xs text-muted-foreground mt-2">Ensure the backend is running and both symbols are valid.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Stock Cards */}
-      <div className="grid gap-4 md:grid-cols-2">
+      {stock1Data && stock2Data && (
+        <div className="grid gap-4 md:grid-cols-2">
         <Card className="border-2 border-green-500/50 bg-green-50/5 dark:bg-green-950/10">
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">{stock1Data.symbol}</CardTitle>
-                <CardDescription>{stock1Data.name}</CardDescription>
+                <CardTitle className="text-2xl">{stock1}</CardTitle>
+                <CardDescription>{stock1Data.name || 'Stock 1'}</CardDescription>
               </div>
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center text-white font-bold text-xl">
                 
@@ -112,10 +121,10 @@ export default function StockComparisonDashboard() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold">${stock1Data.price}</div>
+                <div className="text-3xl font-bold">${stock1Data.price?.toFixed(2)}</div>
                 <div className="flex items-center gap-2 text-green-500">
                   <TrendingUp className="h-4 w-4" />
-                  +{stock1Data.change} (+{stock1Data.changePercent}%)
+                  +{stock1Data.change?.toFixed(2)} (+{stock1Data.changePercent?.toFixed(2)}%)
                 </div>
               </div>
               <div className="text-right">
@@ -149,8 +158,8 @@ export default function StockComparisonDashboard() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <div>
-                <CardTitle className="text-2xl">{stock2Data.symbol}</CardTitle>
-                <CardDescription>{stock2Data.name}</CardDescription>
+                <CardTitle className="text-2xl">{stock2}</CardTitle>
+                <CardDescription>{stock2Data.name || 'Stock 2'}</CardDescription>
               </div>
               <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-xl">
                 ⊞
@@ -160,10 +169,10 @@ export default function StockComparisonDashboard() {
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-3xl font-bold">${stock2Data.price}</div>
+                <div className="text-3xl font-bold">${stock2Data.price?.toFixed(2)}</div>
                 <div className="flex items-center gap-2 text-blue-500">
                   <TrendingUp className="h-4 w-4" />
-                  +{stock2Data.change} (+{stock2Data.changePercent}%)
+                  +{stock2Data.change?.toFixed(2)} (+{stock2Data.changePercent?.toFixed(2)}%)
                 </div>
               </div>
               <div className="text-right">
@@ -193,6 +202,7 @@ export default function StockComparisonDashboard() {
           </CardContent>
         </Card>
       </div>
+      )}
 
       {/* Price Chart */}
       <Card>
@@ -215,7 +225,8 @@ export default function StockComparisonDashboard() {
       </Card>
 
       {/* Metrics Comparison */}
-      <Card>
+      {stock1Data && stock2Data && (
+        <Card>
         <CardHeader>
           <CardTitle>Financial Metrics Comparison</CardTitle>
           <CardDescription>Key financial indicators side-by-side</CardDescription>
@@ -240,6 +251,7 @@ export default function StockComparisonDashboard() {
           </ResponsiveContainer>
         </CardContent>
       </Card>
+      )}
 
       {/* AI Insight */}
       <Card className="border-2 border-purple-500/50 bg-purple-50/5 dark:bg-purple-950/10">
@@ -251,13 +263,27 @@ export default function StockComparisonDashboard() {
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            <span className="font-semibold text-foreground">Analysis:</span> Both stocks show strong fundamentals
-            with {stock1Data.symbol} demonstrating better value metrics (higher ROA/ROE), while {stock2Data.symbol}{" "}
-            leads in growth potential with lower debt-to-equity ratio. {stock1Data.symbol} scores slightly higher
-            overall at {stock1Data.score}/100 vs {stock2Data.symbol}'s {stock2Data.score}/100.
+            {comparisonData && stock1Data && stock2Data ? (
+              <><span className="font-semibold text-foreground">Real-Time Comparison:</span> {stock1} trades at ${stock1Data.price?.toFixed(2)} with P/E of {stock1Data.pe?.toFixed(2)}, while {stock2} trades at ${stock2Data.price?.toFixed(2)} with P/E of {stock2Data.pe?.toFixed(2)}. Both showing {stock1Data.changePercent > 0 ? 'positive' : 'negative'} momentum. Data updated in real-time from market APIs.</>
+            ) : (
+              <><span className="font-semibold text-foreground">Search stocks above</span> to see real-time comparison data, financial metrics, and AI-powered insights.</>  
+            )}
           </p>
         </CardContent>
       </Card>
+      
+      {/* Empty State */}
+      {!comparisonData && !loading && !error && (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center justify-center py-12">
+            <BarChart3 className="w-16 h-16 text-muted-foreground mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Compare Two Stocks</h3>
+            <p className="text-muted-foreground text-center max-w-md">
+              Enter two stock symbols above and click Compare to see real-time side-by-side analysis.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

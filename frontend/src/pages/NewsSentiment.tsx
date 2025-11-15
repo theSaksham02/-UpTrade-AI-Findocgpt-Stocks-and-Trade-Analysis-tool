@@ -1,14 +1,18 @@
 /**
- * News & Sentiment Analysis Page
+ * News & Sentiment Analysis Page - 100% LIVE DATA with FinBERT
+ * Uses: NewsAPI, FinBERT Sentiment Analysis, Real-time Market Data
  */
 import { useState, useEffect } from 'react';
-import { Search, TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { Search, TrendingUp, TrendingDown, Minus, AlertCircle } from 'lucide-react';
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
 
 export default function NewsSentiment() {
   const [symbol, setSymbol] = useState('AAPL');
   const [news, setNews] = useState<any[]>([]);
   const [sentiment, setSentiment] = useState<any>(null);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     loadData();
@@ -17,96 +21,81 @@ export default function NewsSentiment() {
   const loadData = async (ticker?: string) => {
     const searchSymbol = ticker || symbol;
     setLoading(true);
+    setError(null);
+    
     try {
-      // For now, we'll create mock news data since the API might not have news service
-      const mockNews = generateMockNews(searchSymbol);
-      setNews(mockNews);
+      // Fetch REAL news from backend (NewsAPI integration)
+      const newsResponse = await fetch(`${API_BASE_URL}/api/news/stock/${searchSymbol}`);
+      if (!newsResponse.ok) throw new Error('Failed to fetch news');
+      const newsData = await newsResponse.json();
       
-      // Generate sentiment based on mock data
-      const mockSentiment = generateMockSentiment(searchSymbol);
-      setSentiment(mockSentiment);
+      // Process news with FinBERT sentiment analysis
+      const newsWithSentiment = await Promise.all(
+        (newsData.news || newsData.articles || []).map(async (article: any) => {
+          try {
+            // Use FinBERT for sentiment analysis on each article
+            const sentimentResponse = await fetch(`${API_BASE_URL}/api/ai/sentiment`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ 
+                text: article.title + ' ' + (article.description || ''),
+                symbol: searchSymbol 
+              })
+            });
+            
+            if (sentimentResponse.ok) {
+              const sentimentData = await sentimentResponse.json();
+              return { ...article, sentiment: sentimentData.sentiment, score: sentimentData.score };
+            }
+          } catch (err) {
+            console.error('Sentiment analysis error:', err);
+          }
+          return article;
+        })
+      );
+      
+      setNews(newsWithSentiment);
+      
+      // Aggregate sentiment from all news articles
+      const aggregateSentiment = calculateAggregateSentiment(newsWithSentiment);
+      setSentiment(aggregateSentiment);
+      
     } catch (error) {
       console.error('Failed to load news:', error);
-      // Still show mock data on error
-      const mockNews = generateMockNews(searchSymbol);
-      setNews(mockNews);
-      const mockSentiment = generateMockSentiment(searchSymbol);
-      setSentiment(mockSentiment);
+      setError(error instanceof Error ? error.message : 'Failed to fetch real-time data');
     } finally {
       setLoading(false);
     }
   };
 
+  const calculateAggregateSentiment = (newsArticles: any[]) => {
+    const sentiments = newsArticles.filter(n => n.sentiment);
+    if (sentiments.length === 0) return null;
+    
+    const positive = sentiments.filter(n => n.sentiment === 'positive').length;
+    const negative = sentiments.filter(n => n.sentiment === 'negative').length;
+    const neutral = sentiments.length - positive - negative;
+    
+    const avgScore = sentiments.reduce((acc, n) => acc + (n.score || 0), 0) / sentiments.length;
+    
+    return {
+      ticker: symbol,
+      overall: avgScore > 0.15 ? 'bullish' : avgScore < -0.15 ? 'bearish' : 'neutral',
+      score: avgScore,
+      distribution: {
+        positive: (positive / sentiments.length) * 100,
+        neutral: (neutral / sentiments.length) * 100,
+        negative: (negative / sentiments.length) * 100
+      },
+      totalArticles: newsArticles.length,
+      analyzedArticles: sentiments.length,
+      source: 'FinBERT + NewsAPI (Live)'
+    };
+  };
+
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
     await loadData(symbol);
-  };
-
-  const generateMockNews = (ticker: string) => {
-    const companies: any = {
-      AAPL: 'Apple',
-      MSFT: 'Microsoft',
-      GOOGL: 'Google',
-      TSLA: 'Tesla',
-      AMZN: 'Amazon'
-    };
-    const companyName = companies[ticker] || ticker;
-    
-    return [
-      {
-        title: `${companyName} Reports Strong Q4 Earnings, Beats Expectations`,
-        description: `${companyName} announced quarterly earnings that exceeded analyst expectations, driven by strong product sales and service revenue growth.`,
-        source: 'Financial Times',
-        publishedAt: new Date().toISOString(),
-        sentiment: 'positive',
-        url: '#'
-      },
-      {
-        title: `Analysts Upgrade ${companyName} Stock Rating to Buy`,
-        description: `Multiple Wall Street analysts have upgraded their rating on ${companyName} citing strong fundamentals and market position.`,
-        source: 'Bloomberg',
-        publishedAt: new Date(Date.now() - 86400000).toISOString(),
-        sentiment: 'positive',
-        url: '#'
-      },
-      {
-        title: `${companyName} Faces Regulatory Scrutiny in Europe`,
-        description: `European regulators are investigating ${companyName}'s business practices, potentially leading to new compliance requirements.`,
-        source: 'Reuters',
-        publishedAt: new Date(Date.now() - 172800000).toISOString(),
-        sentiment: 'negative',
-        url: '#'
-      },
-      {
-        title: `${companyName} Announces New Product Launch`,
-        description: `The company unveiled its latest innovation, expected to drive significant revenue growth in the coming quarters.`,
-        source: 'TechCrunch',
-        publishedAt: new Date(Date.now() - 259200000).toISOString(),
-        sentiment: 'positive',
-        url: '#'
-      },
-      {
-        title: `Market Volatility Affects ${companyName} Stock Price`,
-        description: `${ticker} shares experienced fluctuations amid broader market uncertainty and economic concerns.`,
-        source: 'CNBC',
-        publishedAt: new Date(Date.now() - 345600000).toISOString(),
-        sentiment: 'neutral',
-        url: '#'
-      }
-    ];
-  };
-
-  const generateMockSentiment = (ticker: string) => {
-    return {
-      ticker,
-      overall_sentiment: 'positive',
-      sentiment_score: 0.65,
-      positive_percentage: 60,
-      neutral_percentage: 25,
-      negative_percentage: 15,
-      total_articles: 50,
-      last_updated: new Date().toISOString()
-    };
   };
 
   const getSentimentIcon = (sentiment: string) => {
@@ -150,6 +139,26 @@ export default function NewsSentiment() {
         </div>
       </form>
 
+      {/* Error Display */}
+      {error && (
+        <div className="mb-8 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 flex items-start gap-3">
+          <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold text-red-700 dark:text-red-400">Failed to fetch live data</p>
+            <p className="text-sm text-red-600 dark:text-red-300 mt-1">{error}</p>
+            <p className="text-xs text-red-500 dark:text-red-400 mt-2">Ensure backend is running at {API_BASE_URL}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Success Indicator */}
+      {!error && sentiment && (
+        <div className="mb-8 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3 flex items-center gap-2">
+          <Activity className="w-4 h-4 text-green-500" />
+          <span className="text-sm text-green-700 dark:text-green-300">\u2713 Live Data from {sentiment.source} - {sentiment.analyzedArticles} articles analyzed with FinBERT</span>
+        </div>
+      )}
+
       {/* Sentiment Overview */}
       {sentiment && (
         <div className="card-premium mb-8">
@@ -157,22 +166,22 @@ export default function NewsSentiment() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-2">Overall Sentiment</p>
-              <div className={`inline-flex items-center px-4 py-2 rounded-lg border ${getSentimentColor(sentiment.overall_sentiment)}`}>
-                {getSentimentIcon(sentiment.overall_sentiment)}
-                <span className="ml-2 font-semibold capitalize">{sentiment.overall_sentiment}</span>
+              <div className={`inline-flex items-center px-4 py-2 rounded-lg border ${getSentimentColor(sentiment.overall)}`}>
+                {getSentimentIcon(sentiment.overall)}
+                <span className="ml-2 font-semibold capitalize">{sentiment.overall}</span>
               </div>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-2">Positive</p>
-              <p className="text-2xl font-bold text-green-600">{sentiment.positive_percentage}%</p>
+              <p className="text-2xl font-bold text-green-600">{sentiment.distribution.positive.toFixed(1)}%</p>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-2">Neutral</p>
-              <p className="text-2xl font-bold text-gray-600">{sentiment.neutral_percentage}%</p>
+              <p className="text-2xl font-bold text-gray-600">{sentiment.distribution.neutral.toFixed(1)}%</p>
             </div>
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-2">Negative</p>
-              <p className="text-2xl font-bold text-red-600">{sentiment.negative_percentage}%</p>
+              <p className="text-2xl font-bold text-red-600">{sentiment.distribution.negative.toFixed(1)}%</p>
             </div>
           </div>
           <p className="text-xs text-gray-500 mt-4 text-center">

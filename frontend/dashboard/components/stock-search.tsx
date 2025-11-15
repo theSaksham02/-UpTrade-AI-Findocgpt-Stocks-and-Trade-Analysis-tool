@@ -17,7 +17,7 @@ import {
   type NewsArticle
 } from "@/lib/api-client"
 
-type ChartPeriod = "1D" | "1W" | "1M" | "3M" | "1Y" | "5Y"
+type ChartPeriod = "1D" | "1M" | "1Y" | "10Y"
 
 export default function StockSearchRealTime() {
   const [searchQuery, setSearchQuery] = useState("")
@@ -81,8 +81,8 @@ export default function StockSearchRealTime() {
     }
   }
 
-  const priceChange = stockData ? stockData.price - stockData.previousClose : 0
-  const priceChangePercent = stockData ? ((priceChange / stockData.previousClose) * 100) : 0
+  const priceChange = stockData ? stockData.change : 0
+  const priceChangePercent = stockData ? stockData.changePercent : 0
   const isPositive = priceChange >= 0
 
   return (
@@ -134,7 +134,7 @@ export default function StockSearchRealTime() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-2xl">{selectedStock}</CardTitle>
-                  <CardDescription>{stockData.companyName}</CardDescription>
+                  <CardDescription>{stockData.name}</CardDescription>
                 </div>
                 <div className="text-right">
                   <div className="text-3xl font-bold">${stockData.price.toFixed(2)}</div>
@@ -163,7 +163,7 @@ export default function StockSearchRealTime() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">P/E Ratio</p>
-                  <p className="text-lg font-semibold">{stockData.peRatio?.toFixed(2) || 'N/A'}</p>
+                  <p className="text-lg font-semibold">{stockData.pe?.toFixed(2) || 'N/A'}</p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">52W High/Low</p>
@@ -181,7 +181,7 @@ export default function StockSearchRealTime() {
               <div className="flex items-center justify-between">
                 <CardTitle>Price Chart - Real-Time Data</CardTitle>
                 <div className="flex gap-2">
-                  {(["1D", "1W", "1M", "3M", "1Y", "5Y"] as ChartPeriod[]).map((period) => (
+                  {(["1D", "1M", "1Y", "10Y"] as ChartPeriod[]).map((period) => (
                     <Button
                       key={period}
                       variant={chartPeriod === period ? "default" : "outline"}
@@ -232,7 +232,7 @@ export default function StockSearchRealTime() {
                             {article.title}
                           </h3>
                           <p className="text-sm text-muted-foreground mt-1">
-                            {article.description || article.summary}
+                            {article.description}
                           </p>
                           <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                             <span>{article.source}</span>

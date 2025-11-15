@@ -118,8 +118,8 @@ class EnhancedAPIManager:
                 self._set_cache(cache_key, quote)
                 return quote
         
-        # Final fallback to mock data
-        return self._get_mock_stock_quote(symbol)
+        # NO MOCK DATA - Return error if all APIs fail
+        raise Exception(f"No stock data available for {symbol}. Please configure Alpha Vantage, Finnhub, or Polygon API keys.")
     
     def _get_finnhub_quote(self, symbol: str) -> Optional[Dict[str, Any]]:
         """Get stock quote from Finnhub"""
@@ -226,13 +226,14 @@ class EnhancedAPIManager:
                 return overview
         
         # Fallback to Alpha Vantage
-        if self.alpha_vantage_key:
+        if self.alpha_vantage_key and self.alpha_vantage_key != 'demo':
             overview = self._get_alphavantage_company(symbol)
             if overview:
                 self._set_cache(cache_key, overview)
                 return overview
         
-        return self._get_mock_company_overview(symbol)
+        # NO MOCK DATA - Raise error if all APIs fail
+        raise Exception(f"No company data available for {symbol}. Please configure Finnhub or Alpha Vantage API keys.")
     
     def _get_finnhub_company(self, symbol: str) -> Optional[Dict[str, Any]]:
         """Get company info from Finnhub"""
@@ -326,9 +327,10 @@ class EnhancedAPIManager:
             articles = self._get_newsdata_news(query, limit // 3)
             all_articles.extend(articles)
         
-        # If no articles from APIs, use mock data
+        # NO MOCK DATA - Return empty if all news APIs fail
         if not all_articles:
-            all_articles = self._get_mock_news(query, limit)
+            logger.warning(f"⚠️ No news articles found for '{query}' - all news APIs returned empty")
+            return []
         
         # Sort by date and limit
         all_articles.sort(key=lambda x: x.get('published_at', ''), reverse=True)
@@ -498,76 +500,223 @@ class EnhancedAPIManager:
     # MOCK DATA METHODS (Fallback)
     # ========================================================================
     
-    def _get_mock_stock_quote(self, symbol: str) -> Dict[str, Any]:
-        """Generate mock stock quote"""
-        import random
-        base_price = 150.0
-        return {
-            'symbol': symbol,
-            'price': round(base_price + random.uniform(-10, 10), 2),
-            'change': round(random.uniform(-5, 5), 2),
-            'change_percent': f"{round(random.uniform(-3, 3), 2)}%",
-            'volume': random.randint(1000000, 10000000),
-            'latest_trading_day': datetime.now().strftime('%Y-%m-%d'),
-            'open': round(base_price + random.uniform(-5, 5), 2),
-            'high': round(base_price + random.uniform(0, 8), 2),
-            'low': round(base_price - random.uniform(0, 8), 2),
-            'previous_close': round(base_price, 2),
-            'source': 'Mock Data'
-        }
+    # ========================================================================
+    # HISTORICAL DATA METHODS (Multi-API Support)
+    # ========================================================================
     
-    def _get_mock_company_overview(self, symbol: str) -> Dict[str, Any]:
-        """Generate mock company overview"""
-        return {
-            'symbol': symbol,
-            'name': f'{symbol} Inc.',
-            'description': f'Leading technology company in the {symbol} sector.',
-            'sector': 'Technology',
-            'industry': 'Software',
-            'market_cap': '1500000000000',
-            'pe_ratio': '25.5',
-            'dividend_yield': '0.0145',
-            'eps': '6.25',
-            '52_week_high': '180.50',
-            '52_week_low': '120.30',
-            'source': 'Mock Data'
-        }
+    def get_historical_data(self, symbol: str, period: str = '1M') -> Dict[str, Any]:
+        """
+        Get historical OHLCV data with multi-API failover
+        Priority: Alpha Vantage -> Polygon -> Finnhub
+        
+        Periods: 1D, 1W, 1M, 3M, 6M, 1Y, 5Y, 10Y, YTD
+        """
+        cache_key = self._get_cache_key('historical', {'symbol': symbol, 'period': period})
+        cached = self._get_from_cache(cache_key)
+        if cached:
+            return cached
+        
+        # Try Alpha Vantage first (best for historical data)
+        if self.alpha_vantage_key and self.alpha_vantage_key != 'demo':
+            data = self._get_alphavantage_historical(symbol, period)
+            if data:
+                self._set_cache(cache_key, data)
+                return data
+        
+        # Fallback to Polygon
+        if self.polygon_key:
+            data = self._get_polygon_historical(symbol, period)
+            if data:
+                self._set_cache(cache_key, data)
+                return data
+        
+        # Fallback to Finnhub
+        if self.finnhub_key:
+            data = self._get_finnhub_historical(symbol, period)
+            if data:
+                self._set_cache(cache_key, data)
+                return data
+        
+        raise Exception(f"No historical data available for {symbol}. Please configure Alpha Vantage, Polygon, or Finnhub API keys.")
     
-    def _get_mock_news(self, query: str, limit: int) -> List[Dict[str, Any]]:
-        """Generate mock news data"""
-        mock_articles = [
-            {
-                'title': f'Tech Stocks Rally on Strong Earnings Reports',
-                'description': 'Major technology companies reported better-than-expected quarterly results.',
-                'content': 'Technology stocks surged today as major companies including Apple, Microsoft, and Google parent Alphabet reported strong quarterly earnings...',
-                'source': 'Financial Times',
-                'url': 'https://example.com/tech-rally',
-                'published_at': datetime.now().isoformat(),
-                'image_url': '',
-                'api_source': 'Mock Data'
-            },
-            {
-                'title': f'Federal Reserve Signals Interest Rate Decision',
-                'description': 'Central bank officials discuss monetary policy outlook.',
-                'content': 'The Federal Reserve indicated it may maintain current interest rates as inflation shows signs of cooling...',
-                'source': 'Bloomberg',
-                'url': 'https://example.com/fed-rates',
-                'published_at': (datetime.now() - timedelta(hours=2)).isoformat(),
-                'image_url': '',
-                'api_source': 'Mock Data'
-            },
-            {
-                'title': f'Energy Sector Sees Volatility Amid Global Tensions',
-                'description': 'Oil prices fluctuate on geopolitical developments.',
-                'content': 'Energy stocks experienced volatility today as oil prices reacted to international developments and supply concerns...',
-                'source': 'Reuters',
-                'url': 'https://example.com/energy-volatility',
-                'published_at': (datetime.now() - timedelta(hours=5)).isoformat(),
-                'image_url': '',
-                'api_source': 'Mock Data'
+    def _get_alphavantage_historical(self, symbol: str, period: str) -> Optional[Dict[str, Any]]:
+        """Get historical data from Alpha Vantage"""
+        try:
+            self._rate_limit('alphavantage')
+            
+            # Determine function based on period
+            if period in ['1D', '1W']:
+                function = 'TIME_SERIES_INTRADAY'
+                interval = '5min'
+            else:
+                function = 'TIME_SERIES_DAILY'
+                interval = None
+            
+            url = 'https://www.alphavantage.co/query'
+            params = {
+                'function': function,
+                'symbol': symbol,
+                'apikey': self.alpha_vantage_key,
+                'outputsize': 'full' if period in ['5Y', '10Y'] else 'compact'
             }
-        ]
-        return mock_articles[:limit]
+            
+            if interval:
+                params['interval'] = interval
+            
+            response = requests.get(url, params=params, timeout=15)
+            response.raise_for_status()
+            data = response.json()
+            
+            # Parse the time series data
+            time_series_key = next((k for k in data.keys() if 'Time Series' in k), None)
+            if not time_series_key:
+                return None
+            
+            time_series = data[time_series_key]
+            historical_data = []
+            
+            for date_str, values in time_series.items():
+                historical_data.append({
+                    'date': date_str,
+                    'open': float(values.get('1. open', 0)),
+                    'high': float(values.get('2. high', 0)),
+                    'low': float(values.get('3. low', 0)),
+                    'close': float(values.get('4. close', 0)),
+                    'volume': int(values.get('5. volume', 0))
+                })
+            
+            # Filter by period
+            historical_data = self._filter_by_period(historical_data, period)
+            
+            logger.info(f"✅ Fetched {len(historical_data)} historical data points for {symbol} from Alpha Vantage")
+            return {
+                'symbol': symbol,
+                'period': period,
+                'data': historical_data,
+                'source': 'Alpha Vantage'
+            }
+            
+        except Exception as e:
+            logger.error(f"❌ Alpha Vantage historical error for {symbol}: {e}")
+            return None
+    
+    def _get_polygon_historical(self, symbol: str, period: str) -> Optional[Dict[str, Any]]:
+        """Get historical data from Polygon"""
+        try:
+            self._rate_limit('polygon')
+            
+            # Calculate date range based on period
+            end_date = datetime.now()
+            period_map = {
+                '1D': 1, '1W': 7, '1M': 30, '3M': 90,
+                '6M': 180, '1Y': 365, '5Y': 1825, '10Y': 3650
+            }
+            days = period_map.get(period, 30)
+            start_date = end_date - timedelta(days=days)
+            
+            url = f'https://api.polygon.io/v2/aggs/ticker/{symbol}/range/1/day/{start_date.strftime("%Y-%m-%d")}/{end_date.strftime("%Y-%m-%d")}'
+            params = {
+                'apiKey': self.polygon_key,
+                'adjusted': 'true',
+                'sort': 'asc'
+            }
+            
+            response = requests.get(url, params=params, timeout=15)
+            response.raise_for_status()
+            data = response.json()
+            
+            if data.get('results'):
+                historical_data = []
+                for result in data['results']:
+                    historical_data.append({
+                        'date': datetime.fromtimestamp(result['t'] / 1000).strftime('%Y-%m-%d'),
+                        'open': float(result.get('o', 0)),
+                        'high': float(result.get('h', 0)),
+                        'low': float(result.get('l', 0)),
+                        'close': float(result.get('c', 0)),
+                        'volume': int(result.get('v', 0))
+                    })
+                
+                logger.info(f"✅ Fetched {len(historical_data)} historical data points for {symbol} from Polygon")
+                return {
+                    'symbol': symbol,
+                    'period': period,
+                    'data': historical_data,
+                    'source': 'Polygon'
+                }
+        
+        except Exception as e:
+            logger.error(f"❌ Polygon historical error for {symbol}: {e}")
+            return None
+    
+    def _get_finnhub_historical(self, symbol: str, period: str) -> Optional[Dict[str, Any]]:
+        """Get historical data from Finnhub"""
+        try:
+            self._rate_limit('finnhub')
+            
+            # Calculate timestamps
+            end_date = datetime.now()
+            period_map = {
+                '1D': 1, '1W': 7, '1M': 30, '3M': 90,
+                '6M': 180, '1Y': 365, '5Y': 1825, '10Y': 3650
+            }
+            days = period_map.get(period, 30)
+            start_date = end_date - timedelta(days=days)
+            
+            url = 'https://finnhub.io/api/v1/stock/candle'
+            params = {
+                'symbol': symbol,
+                'resolution': 'D',
+                'from': int(start_date.timestamp()),
+                'to': int(end_date.timestamp()),
+                'token': self.finnhub_key
+            }
+            
+            response = requests.get(url, params=params, timeout=15)
+            response.raise_for_status()
+            data = response.json()
+            
+            if data.get('s') == 'ok' and data.get('t'):
+                historical_data = []
+                for i in range(len(data['t'])):
+                    historical_data.append({
+                        'date': datetime.fromtimestamp(data['t'][i]).strftime('%Y-%m-%d'),
+                        'open': float(data['o'][i]),
+                        'high': float(data['h'][i]),
+                        'low': float(data['l'][i]),
+                        'close': float(data['c'][i]),
+                        'volume': int(data['v'][i])
+                    })
+                
+                logger.info(f"✅ Fetched {len(historical_data)} historical data points for {symbol} from Finnhub")
+                return {
+                    'symbol': symbol,
+                    'period': period,
+                    'data': historical_data,
+                    'source': 'Finnhub'
+                }
+        
+        except Exception as e:
+            logger.error(f"❌ Finnhub historical error for {symbol}: {e}")
+            return None
+    
+    def _filter_by_period(self, data: List[Dict], period: str) -> List[Dict]:
+        """Filter historical data by period"""
+        if not data:
+            return []
+        
+        period_map = {
+            '1D': 1, '1W': 7, '1M': 30, '3M': 90,
+            '6M': 180, '1Y': 365, 'YTD': None, '5Y': 1825, '10Y': 3650
+        }
+        
+        days = period_map.get(period)
+        if days is None:  # YTD
+            current_year = datetime.now().year
+            return [d for d in data if datetime.strptime(d['date'].split()[0], '%Y-%m-%d').year == current_year]
+        
+        cutoff_date = datetime.now() - timedelta(days=days)
+        return [d for d in data if datetime.strptime(d['date'].split()[0] if ' ' in d['date'] else d['date'], '%Y-%m-%d') >= cutoff_date]
     
     # ========================================================================
     # UTILITY METHODS
