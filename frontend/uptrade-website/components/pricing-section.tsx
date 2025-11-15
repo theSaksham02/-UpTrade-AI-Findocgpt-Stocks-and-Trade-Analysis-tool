@@ -1,10 +1,10 @@
 "use client"
 
-import { motion } from "framer-motion"
-import { useInView } from "framer-motion"
-import { useRef } from "react"
+import { motion, useInView } from "framer-motion"
 import { Check, Zap } from "lucide-react"
+import { useRef } from "react"
 import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 const pricingTiers = [
   {
@@ -117,15 +117,17 @@ export function PricingSection() {
                     </li>
                   ))}
                 </ul>
-                <Button
-                  className={`w-full py-6 text-lg font-medium rounded-xl transition-all duration-300 ${
-                    tier.popular
-                      ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
-                      : "bg-white/10 hover:bg-white/20 text-white border border-white/20"
-                  }`}
-                >
-                  {tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
-                </Button>
+                <Link href={tier.name === "Enterprise" ? "#contact" : "/dashboard"}>
+                  <Button
+                    className={`w-full py-6 text-lg font-medium rounded-xl transition-all duration-300 ${
+                      tier.popular
+                        ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white"
+                        : "bg-white/10 hover:bg-white/20 text-white border border-white/20"
+                    }`}
+                  >
+                    {tier.name === "Enterprise" ? "Contact Sales" : "Get Started"}
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           ))}
