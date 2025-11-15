@@ -5,9 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "KokonutUI Dashboard",
-  description: "A modern dashboard with theme switching",
-    generator: 'v0.app'
+  title: "UpTrade Dashboard - AI-Powered Trading Intelligence",
+  description: "Real-time market analysis, stock comparison, and AI-driven insights for smarter trading decisions",
+  generator: 'UpTrade AI'
 }
 
 export default function RootLayout({
