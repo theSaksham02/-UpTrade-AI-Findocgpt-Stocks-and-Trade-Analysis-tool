@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 
 export default function VisualX() {
   const navigate = useNavigate();
-  const { data: sentimentData, loading, error, refetch } = useNewsSentiment('stock market tech', 10);
+  const { data: sentimentData, loading, refetch } = useNewsSentiment('stock market tech', 10);
   const [liveSentimentScore, setLiveSentimentScore] = useState(0);
 
   // Update live sentiment score when data changes
@@ -44,18 +44,20 @@ export default function VisualX() {
           </div>
           <div className="hidden md:flex items-center gap-9">
             <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/')}>Home</a>
-            <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>Dashboard</a>
             <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/tradex')}>TradeX</a>
-            <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/portfolio')}>TradeSphere</a>
+            <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/tradesphere')}>TradeSphere</a>
           </div>
           <div className="hidden md:flex gap-2">
             <button 
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/#waitlist')}
               className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-accent-purple text-white text-sm font-bold leading-normal tracking-[0.015em] hover:brightness-110 transition-all duration-300"
             >
-              <span className="truncate">Experience visualX Now</span>
+              <span className="truncate">Join Waitlist</span>
             </button>
-            <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent border border-white text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors">
+            <button 
+              onClick={() => navigate('/')}
+              className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent border border-white text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors"
+            >
               <span className="truncate">Learn More</span>
             </button>
           </div>
@@ -104,16 +106,16 @@ export default function VisualX() {
             </h2>
             <div className="mt-4 flex flex-wrap gap-3 justify-center">
               <button 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/#waitlist')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-accent-purple text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 transition-all duration-300"
               >
-                <span className="truncate">Experience visualX Now</span>
+                <span className="truncate">Join Waitlist - Get Early Access</span>
               </button>
               <button 
                 onClick={() => navigate('/')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-white text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors"
               >
-                <span className="truncate">Learn More About Uptrade's AI</span>
+                <span className="truncate">Learn More</span>
               </button>
             </div>
           </div>
@@ -297,16 +299,16 @@ export default function VisualX() {
             </p>
             <div className="mt-8 flex flex-wrap gap-3 justify-center">
               <button 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/#waitlist')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-accent-purple text-white text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 transition-all duration-300"
               >
-                <span className="truncate">Experience visualX Now</span>
+                <span className="truncate">Join Waitlist - Get Early Access</span>
               </button>
               <button 
                 onClick={() => navigate('/')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-white text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors"
               >
-                <span className="truncate">Learn More About Uptrade's AI</span>
+                <span className="truncate">Learn More</span>
               </button>
             </div>
           </div>

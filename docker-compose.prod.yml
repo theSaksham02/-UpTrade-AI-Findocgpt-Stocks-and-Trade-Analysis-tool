@@ -1,0 +1,72 @@
+version: '3.8'
+
+services:
+  # FastAPI Backend with Full Deck MVP
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    container_name: uptrade-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      - ENVIRONMENT=production
+      - HOST=0.0.0.0
+      - PORT=8000
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/docs"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - uptrade-network
+    volumes:
+      - ./logs:/app/logs
+      - ./vectorstore_cache:/app/vectorstore_cache
+
+  # Next.js Dashboard
+  dashboard:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+    container_name: uptrade-dashboard
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:8000
+      - NODE_ENV=production
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - uptrade-network
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: uptrade-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.prod.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - backend
+      - dashboard
+    restart: unless-stopped
+    networks:
+      - uptrade-network
+
+networks:
+  uptrade-network:
+    driver: bridge
+
+volumes:
+  logs:
+  vectorstore_cache:

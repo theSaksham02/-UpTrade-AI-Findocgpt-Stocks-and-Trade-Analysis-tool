@@ -109,10 +109,10 @@ export function useStockQuote(symbol: string, autoFetch = true): UseApiResult<St
     
     try {
       const response = await apiClient.getStockQuote(symbol);
-      if (response.error) {
+      if (response.data) {
+        setData(response.data as StockQuote);
+      } else if (response.error) {
         setError(response.error);
-      } else {
-        setData(response.data);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch stock quote');

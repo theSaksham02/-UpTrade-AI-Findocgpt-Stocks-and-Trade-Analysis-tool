@@ -11,7 +11,7 @@ import { InteractiveChart } from "./interactive-chart"
 import { 
   getStockQuote, 
   getHistoricalData, 
-  getStockNews,
+  getFinancialNews,
   type StockQuote,
   type HistoricalDataPoint,
   type NewsArticle
@@ -40,17 +40,30 @@ export default function StockSearchRealTime() {
       // Fetch all data in parallel for faster loading
       const [quote, news, historical] = await Promise.all([
         getStockQuote(searchQuery),
-        getStockNews(searchQuery),
+        getFinancialNews(searchQuery, 10),
         getHistoricalData(searchQuery, chartPeriod)
       ])
 
       setStockData(quote)
       setNewsArticles(news)
       setHistoricalData(historical)
+      setError(null) // Clear any previous errors on success
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch real-time stock data'
-      setError(errorMessage)
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch stock data'
+      
+      // Provide user-friendly error messages
+      if (errorMessage.includes('500')) {
+        setError(`Unable to fetch data for ${searchQuery.toUpperCase()}. The stock symbol may be invalid or the data source is temporarily unavailable. Try: AAPL, MSFT, GOOGL, TSLA`)
+      } else if (errorMessage.includes('timed out')) {
+        setError(`Request timed out for ${searchQuery.toUpperCase()}. Please check your connection and try again.`)
+      } else if (errorMessage.includes('404')) {
+        setError(`Stock symbol ${searchQuery.toUpperCase()} not found. Please verify the symbol and try again.`)
+      } else {
+        setError(`Error fetching ${searchQuery.toUpperCase()}: ${errorMessage}`)
+      }
+      
       console.error('Stock search error:', err)
+      // Don't clear stock data on error - keep showing previous stock if available
     } finally {
       setLoading(false)
     }
@@ -81,8 +94,8 @@ export default function StockSearchRealTime() {
     }
   }
 
-  const priceChange = stockData ? stockData.change : 0
-  const priceChangePercent = stockData ? stockData.changePercent : 0
+  const priceChange = stockData?.change ?? 0
+  const priceChangePercent = stockData?.changePercent ?? 0
   const isPositive = priceChange >= 0
 
   return (
@@ -110,18 +123,35 @@ export default function StockSearchRealTime() {
           </div>
           
           {/* Error Display */}
-          {error && (
-            <Card className="mt-4 border-red-500/50 bg-red-50/5">
-              <CardContent className="p-4 flex items-center gap-2 text-red-500">
-                <AlertCircle className="w-5 h-5" />
-                <div>
-                  <p className="font-semibold">Error fetching data</p>
-                  <p className="text-sm">{error}</p>
-                  <p className="text-xs mt-1">Make sure the backend server is running and API keys are configured.</p>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+      {error && (
+        <Card className="border-red-500/50 bg-red-50/5">
+          <CardContent className="flex items-start gap-3 p-6">
+            <AlertCircle className="w-6 h-6 text-red-500 flex-shrink-0 mt-0.5" />
+            <div className="flex-1">
+              <p className="font-semibold text-red-500">Failed to fetch stock data</p>
+              <p className="text-sm text-muted-foreground mt-1">{error}</p>
+              <div className="mt-3 flex gap-2">
+                <Button 
+                  size="sm" 
+                  variant="outline" 
+                  onClick={() => selectedStock && (setSearchQuery(selectedStock), handleSearch())}
+                  className="text-xs"
+                >
+                  Retry
+                </Button>
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  onClick={() => setError(null)}
+                  className="text-xs"
+                >
+                  Dismiss
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
         </CardContent>
       </Card>
 
@@ -134,41 +164,41 @@ export default function StockSearchRealTime() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="text-2xl">{selectedStock}</CardTitle>
-                  <CardDescription>{stockData.name}</CardDescription>
+                  <CardDescription>{stockData?.name ?? selectedStock}</CardDescription>
                 </div>
                 <div className="text-right">
-                  <div className="text-3xl font-bold">${stockData.price.toFixed(2)}</div>
+                  <div className="text-3xl font-bold">${stockData?.price?.toFixed(2) ?? '0.00'}</div>
                   <div className={`flex items-center gap-1 ${isPositive ? 'text-green-500' : 'text-red-500'}`}>
                     {isPositive ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
                     <span className="font-semibold">
-                      {isPositive ? '+' : ''}{priceChange.toFixed(2)} ({isPositive ? '+' : ''}{priceChangePercent.toFixed(2)}%)
+                      {isPositive ? '+' : ''}{priceChange?.toFixed(2) ?? '0.00'} ({isPositive ? '+' : ''}{priceChangePercent?.toFixed(2) ?? '0.00'}%)
                     </span>
                   </div>
                 </div>
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Market Cap</p>
                   <p className="text-lg font-semibold">
-                    ${(stockData.marketCap / 1e9).toFixed(2)}B
+                    ${((stockData?.marketCap ?? 0) / 1e9).toFixed(2)}B
                   </p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">Volume</p>
                   <p className="text-lg font-semibold">
-                    {(stockData.volume / 1e6).toFixed(2)}M
+                    {((stockData?.volume ?? 0) / 1e6).toFixed(2)}M
                   </p>
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm text-muted-foreground">P/E Ratio</p>
-                  <p className="text-lg font-semibold">{stockData.pe?.toFixed(2) || 'N/A'}</p>
+                  <p className="text-lg font-semibold">{stockData?.pe?.toFixed(2) ?? 'N/A'}</p>
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">52W High/Low</p>
+                  <p className="text-sm text-muted-foreground">52W Range</p>
                   <p className="text-lg font-semibold">
-                    ${stockData.high52Week?.toFixed(2) || 'N/A'} / ${stockData.low52Week?.toFixed(2) || 'N/A'}
+                    ${stockData?.low52Week?.toFixed(0) ?? '0'} - ${stockData?.high52Week?.toFixed(0) ?? '0'}
                   </p>
                 </div>
               </div>

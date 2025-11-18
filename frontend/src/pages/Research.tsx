@@ -3,9 +3,9 @@
  * 100% LIVE DATA from SEC EDGAR API via backend
  */
 import { useState } from 'react';
-import { Search, FileText, Download, Calendar, AlertCircle } from 'lucide-react';
+import { Search, FileText, Download, Calendar } from 'lucide-react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 export default function Research() {
   const [symbol, setSymbol] = useState('AAPL');
@@ -98,6 +98,13 @@ export default function Research() {
           </button>
         </div>
       </form>
+
+      {/* Error Display */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8">
+          <p className="text-red-800 text-sm">{error}</p>
+        </div>
+      )}
 
       {/* Filing Types Info */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-6 mb-8">

@@ -56,19 +56,21 @@ export default function TradeX() {
           </div>
           <div className="hidden md:flex items-center gap-9">
             <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/')}>Home</a>
-            <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/dashboard')}>Dashboard</a>
             <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/visualx')}>VisualX</a>
-            <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/portfolio')}>TradeSphere</a>
+            <a className="text-white/80 hover:text-white text-sm font-medium leading-normal transition-colors cursor-pointer" onClick={() => navigate('/tradesphere')}>TradeSphere</a>
           </div>
           <div className="hidden md:flex gap-2">
             <button 
-              onClick={() => navigate('/dashboard')}
+              onClick={() => navigate('/#waitlist')}
               className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gradient-purple text-white text-sm font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
             >
-              <span className="truncate">Start Comparing</span>
+              <span className="truncate">Join Waitlist</span>
             </button>
-            <button className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent border border-white text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors">
-              <span className="truncate">Explore Pro</span>
+            <button 
+              onClick={() => navigate('/')}
+              className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-transparent border border-white text-white text-sm font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors"
+            >
+              <span className="truncate">Learn More</span>
             </button>
           </div>
           <div className="md:hidden">
@@ -95,16 +97,16 @@ export default function TradeX() {
             </div>
             <div className="mt-8 flex flex-wrap gap-3 justify-center">
               <button 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/#waitlist')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-gradient-purple text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
               >
-                <span className="truncate">Start Comparing with TradeX</span>
+                <span className="truncate">Join Waitlist - Get Early Access</span>
               </button>
               <button 
                 onClick={() => navigate('/')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-white text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors"
               >
-                <span className="truncate">Explore Uptrade Pro</span>
+                <span className="truncate">Learn More</span>
               </button>
             </div>
           </div>
@@ -428,16 +430,16 @@ export default function TradeX() {
           <div className="max-w-2xl mx-auto">
             <div className="mt-8 flex flex-wrap gap-3 justify-center">
               <button 
-                onClick={() => navigate('/dashboard')}
+                onClick={() => navigate('/#waitlist')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-[#8B5CF6] text-white text-base font-bold leading-normal tracking-[0.015em] hover:opacity-90 transition-opacity"
               >
-                <span className="truncate">Start Comparing with TradeX</span>
+                <span className="truncate">Join Waitlist - Get Early Access</span>
               </button>
               <button 
                 onClick={() => navigate('/')}
                 className="flex min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-5 bg-transparent border border-white text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-white/10 transition-colors"
               >
-                <span className="truncate">Explore Uptrade Pro</span>
+                <span className="truncate">Learn More</span>
               </button>
             </div>
           </div>

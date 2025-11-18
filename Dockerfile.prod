@@ -1,0 +1,47 @@
+# Production Dockerfile for UpTrade AI Backend
+FROM python:3.11-slim
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    g++ \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements first (for better caching)
+COPY requirements.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application files
+COPY beast_fastapi_server.py .
+COPY beast_api_manager.py .
+COPY sentiment_analyzer.py .
+COPY config.py .
+COPY ai_models.py .
+COPY qa_system.py .
+COPY forecasting_model.py .
+COPY analysis.py .
+COPY anomaly_detection.py .
+COPY investment_strategy.py .
+
+# Create necessary directories
+RUN mkdir -p logs vectorstore_cache data
+
+# Copy data files if they exist (using shell to handle missing directories)
+RUN bash -c 'if [ -d "data" ]; then cp -r data/* ./data/ 2>/dev/null || true; fi'
+RUN bash -c 'if [ -d "vectorstore_cache" ]; then cp -r vectorstore_cache/* ./vectorstore_cache/ 2>/dev/null || true; fi'
+
+# Expose port
+EXPOSE 8000
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
+    CMD curl -f http://localhost:8000/docs || exit 1
+
+# Run the application
+CMD ["python", "beast_fastapi_server.py"]
