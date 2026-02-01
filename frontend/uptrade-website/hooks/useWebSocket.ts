@@ -102,9 +102,10 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
 
     // Subscribe to symbol
     const subscribe = useCallback((request: SubscriptionRequest) => {
+        const { type, ...rest } = request
         sendMessage({
             type: 'subscribe',
-            ...request,
+            ...rest,
         })
     }, [sendMessage])
 
