@@ -5,14 +5,8 @@ import { Menu, X, ArrowRight, TrendingUp } from "lucide-react"
 import Link from "next/link"
 
 const navigation = [
-  { name: "Features", href: "#features" },
-  { name: "Pricing", href: "#pricing" },
-  { name: "Markets", href: "/markets" },
-  { name: "Charts", href: "/charts" },
-  { name: "Engine", href: "/engine" },
-  { name: "TradeX", href: "/tradex" },
-  { name: "VisualX", href: "/visualx" },
-  { name: "API", href: "/api-dev" },
+  { name: "Product", href: "#features" },
+  { name: "Compare", href: "#comparison" },
 ]
 
 export function GlassmorphismNav() {
@@ -122,12 +116,12 @@ export function GlassmorphismNav() {
               </div>
 
               <div className="hidden md:block">
-                <Link href="/dashboard">
+                <Link href="/app">
                   <button
                     className="relative text-white font-medium px-8 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group text-lg hover:brightness-110"
                     style={{ backgroundColor: 'var(--tv-blue)' }}
                   >
-                    <span className="mr-2">Get Started</span>
+                    <span className="mr-2">Launch Platform</span>
                     <ArrowRight size={20} className="transition-transform duration-300 group-hover:translate-x-1" />
                   </button>
                 </Link>
@@ -198,7 +192,7 @@ export function GlassmorphismNav() {
                 )}
                 <div className="h-px bg-white/10 my-2" />
                 <Link
-                  href="/dashboard"
+                  href="/app"
                   onClick={() => setIsOpen(false)}
                   className={`relative text-white font-medium px-6 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group transform hover:brightness-110 ${isOpen ? "animate-mobile-menu-item" : ""
                     }`}
@@ -207,7 +201,7 @@ export function GlassmorphismNav() {
                     animationDelay: isOpen ? `${navigation.length * 80 + 150}ms` : "0ms",
                   }}
                 >
-                  <span className="mr-2">Get Started</span>
+                  <span className="mr-2">Launch Platform</span>
                   <ArrowRight size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
                 </Link>
               </div>

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { createChart, IChartApi, CandlestickData, HistogramData, Time, CandlestickSeries, HistogramSeries } from 'lightweight-charts'
+import { ShortcutsOverlay } from './shortcuts-overlay'
 
 // ============================================================
 // UNIFIED TRADING DASHBOARD - TradingView/Bloomberg Style
@@ -201,6 +202,35 @@ const WATCHLIST_DATA = [
     { symbol: 'AMZN', name: 'Amazon', price: 172.45, change: 2.15, pct: 1.26 },
 ]
 
+// Animated Price Cell Component
+function PriceCell({ value, className }: { value: number | string, className?: string }) {
+    const [prevValue, setPrevValue] = useState(value)
+    const [flash, setFlash] = useState<'green' | 'red' | null>(null)
+    const valueNum = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value
+
+    useEffect(() => {
+        const currentNum = typeof value === 'string' ? parseFloat(value.replace(/,/g, '')) : value
+        const prevNum = typeof prevValue === 'string' ? parseFloat(prevValue.replace(/,/g, '')) : prevValue
+
+        if (currentNum > prevNum) {
+            setFlash('green')
+            const timer = setTimeout(() => setFlash(null), 600)
+            return () => clearTimeout(timer)
+        } else if (currentNum < prevNum) {
+            setFlash('red')
+            const timer = setTimeout(() => setFlash(null), 600)
+            return () => clearTimeout(timer)
+        }
+        setPrevValue(value)
+    }, [value]) // eslint-disable-line react-hooks/exhaustive-deps
+
+    return (
+        <td className={`${className} ${flash === 'green' ? 'animate-flash-green' : flash === 'red' ? 'animate-flash-red' : ''} transition-colors duration-300 rounded-sm`}>
+            {value}
+        </td>
+    )
+}
+
 function WatchlistSidebar({
     symbols,
     onSelectSymbol
@@ -209,8 +239,35 @@ function WatchlistSidebar({
     onSelectSymbol: (symbol: string) => void
 }) {
     const [filter, setFilter] = useState('')
+    const [data, setData] = useState(WATCHLIST_DATA)
 
-    const filtered = WATCHLIST_DATA.filter(w =>
+    // Simulate live data updates
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setData(prevData => prevData.map(item => {
+                if (Math.random() > 0.7) return item // 70% chance to not update
+
+                const volatility = item.price * 0.0005 // 0.05% fluctuation
+                const change = (Math.random() - 0.5) * volatility
+                const newPrice = item.price + change
+
+                // Update change & pct based on new price vs original day open (approximated)
+                const openPrice = item.price / (1 + item.pct / 100)
+                const newChange = newPrice - openPrice
+                const newPct = (newChange / openPrice) * 100
+
+                return {
+                    ...item,
+                    price: newPrice,
+                    change: newChange,
+                    pct: newPct
+                }
+            }))
+        }, 1000)
+        return () => clearInterval(interval)
+    }, [])
+
+    const filtered = data.filter(w =>
         w.symbol.toLowerCase().includes(filter.toLowerCase()) ||
         w.name.toLowerCase().includes(filter.toLowerCase())
     )
@@ -251,9 +308,10 @@ function WatchlistSidebar({
                                     <td className="p-2">
                                         <div className="text-white font-medium">{item.symbol}</div>
                                     </td>
-                                    <td className="p-2 text-right font-mono text-white">
-                                        {item.symbol === 'BTCUSD' ? item.price.toLocaleString() : item.price.toFixed(2)}
-                                    </td>
+                                    <PriceCell
+                                        value={item.symbol === 'BTCUSD' ? item.price.toLocaleString(undefined, { maximumFractionDigits: 2 }) : item.price.toFixed(2)}
+                                        className="p-2 text-right font-mono text-white"
+                                    />
                                     <td className={`p-2 text-right font-mono ${item.pct >= 0 ? 'text-[#089981]' : 'text-[#f23645]'}`}>
                                         {item.pct >= 0 ? '+' : ''}{item.pct.toFixed(2)}%
                                     </td>
@@ -384,7 +442,7 @@ function ChartCard({ symbol, isActive, onRemove, onMaximize }: ChartCardProps) {
                 </div>
 
                 <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button onClick={onMaximize} className="p-1 hover:bg-[#2a2e39] rounded text-[#868993] hover:text-white">
+                    <button onClick={onMaximize} className="p-1 hover:bg-[#2a2e39] rounded text-[#868993] hover:text-white hover-lift">
                         <Icons.Maximize />
                     </button>
                     <button onClick={onRemove} className="p-1 hover:bg-[#2a2e39] rounded text-[#868993] hover:text-white">
@@ -454,7 +512,7 @@ function TradeXPanel({ symbols }: { symbols: string[] }) {
                         <option>Lower P/E</option>
                         <option>Higher Volume</option>
                     </select>
-                    <button className="px-3 py-2 bg-[#2962FF] text-white rounded text-xs hover:bg-[#1e53e5]">
+                    <button className="px-3 py-2 bg-[#2962FF] text-white rounded text-xs hover:bg-[#1e53e5] hover-lift">
                         Search
                     </button>
                 </div>
@@ -550,7 +608,7 @@ function TradeSpherePanel() {
                 </div>
             </div>
 
-            <button className="w-full py-2 bg-[#2962FF] text-white rounded text-sm font-medium hover:bg-[#1e53e5]">
+            <button className="w-full py-2 bg-[#2962FF] text-white rounded text-sm font-medium hover:bg-[#1e53e5] hover-lift">
                 Run Backtest
             </button>
 
@@ -651,6 +709,7 @@ export default function TradingDashboard({ defaultPanel = 'tradex' }: TradingDas
 
     return (
         <div className="h-screen flex flex-col bg-[#0b0e14] pt-12">
+            <ShortcutsOverlay />
             <TradingHeader onSearch={handleSymbolSelect} />
 
             <div className="flex flex-1 overflow-hidden">

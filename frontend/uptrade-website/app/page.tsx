@@ -73,7 +73,7 @@ export default function LandingPage() {
         </section>
 
         {/* COMPARISON TABLE */}
-        <section className="py-20 px-4 bg-[#0b0e14]">
+        <section id="comparison" className="py-20 px-4 bg-[#0b0e14]">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-3xl font-bold text-white text-center mb-12">Stop Paying for Legacy Terminals</h2>
 
@@ -161,7 +161,7 @@ export default function LandingPage() {
         </section>
 
         {/* COPY STRATEGY SECTIONS */}
-        <section className="py-20 px-4">
+        <section id="features" className="py-20 px-4">
           <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
             <div>
               <h3 className="text-[#f23645] font-bold tracking-wider uppercase text-sm mb-2">VisualX Engine</h3>

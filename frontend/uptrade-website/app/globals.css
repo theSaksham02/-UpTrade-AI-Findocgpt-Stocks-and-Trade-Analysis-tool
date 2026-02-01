@@ -140,10 +140,12 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   html,
   body {
     overflow-x: hidden;
   }
+
   body {
     @apply bg-background text-foreground;
   }
@@ -202,6 +204,7 @@
     transform: translateY(-0.5rem);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -213,6 +216,7 @@
     transform: translateY(0.5rem);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -224,6 +228,7 @@
     transform: translateX(-0.5rem);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -235,6 +240,7 @@
     transform: translateX(0.5rem);
     opacity: 0;
   }
+
   to {
     transform: translateX(0);
     opacity: 1;
@@ -246,6 +252,7 @@
     transform: translateY(-100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -257,6 +264,7 @@
     transform: translateY(100%);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;
@@ -268,6 +276,7 @@
     transform: translateY(0);
     opacity: 1;
   }
+
   to {
     transform: translateY(0.5rem);
     opacity: 0;
@@ -279,6 +288,7 @@
     transform: translateX(0);
     opacity: 1;
   }
+
   to {
     transform: translateX(100%);
     opacity: 0;
@@ -290,6 +300,7 @@
   0% {
     transform: translateX(100%);
   }
+
   100% {
     transform: translateX(-100%);
   }
@@ -304,6 +315,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -313,6 +325,7 @@
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
@@ -332,6 +345,7 @@
     opacity: 0;
     transform: translateX(-50%) translateY(-20px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -343,6 +357,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -354,6 +369,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -365,6 +381,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -376,6 +393,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -387,6 +405,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -398,6 +417,7 @@
     opacity: 0;
     transform: translateY(15px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -446,6 +466,7 @@
     opacity: 0;
     transform: translateY(-15px) translateX(-10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0) translateX(0);
@@ -463,6 +484,7 @@
     opacity: 0;
     transform: translateY(10px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -481,6 +503,7 @@
     opacity: 0;
     transform: translateY(15px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -501,6 +524,7 @@
     transform: scale(1);
     opacity: 1;
   }
+
   100% {
     transform: scale(1.5);
     opacity: 0;
@@ -513,19 +537,23 @@
 
 /* Adding floating animation for background particles */
 @keyframes float {
+
   0%,
   100% {
     transform: translateY(0px) translateX(0px);
     opacity: 0.3;
   }
+
   25% {
     transform: translateY(-10px) translateX(5px);
     opacity: 0.6;
   }
+
   50% {
     transform: translateY(-5px) translateX(-3px);
     opacity: 0.4;
   }
+
   75% {
     transform: translateY(-15px) translateX(2px);
     opacity: 0.7;
@@ -542,6 +570,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -554,11 +583,13 @@
 
 /* Adding gradient animations for animated header component */
 @keyframes gradient-background-1 {
+
   0%,
   16.667%,
   100% {
     opacity: 1;
   }
+
   33.333%,
   83.333% {
     opacity: 0;
@@ -566,11 +597,13 @@
 }
 
 @keyframes gradient-foreground-1 {
+
   0%,
   16.667%,
   100% {
     opacity: 1;
   }
+
   33.333%,
   83.333% {
     opacity: 0;
@@ -578,39 +611,47 @@
 }
 
 @keyframes gradient-background-2 {
+
   0%,
   100% {
     opacity: 0;
   }
+
   33.333%,
   50% {
     opacity: 1;
   }
+
   66.667% {
     opacity: 0;
   }
 }
 
 @keyframes gradient-foreground-2 {
+
   0%,
   100% {
     opacity: 0;
   }
+
   33.333%,
   50% {
     opacity: 1;
   }
+
   66.667% {
     opacity: 0;
   }
 }
 
 @keyframes gradient-background-3 {
+
   0%,
   50%,
   100% {
     opacity: 0;
   }
+
   66.667%,
   83.333% {
     opacity: 1;
@@ -618,11 +659,13 @@
 }
 
 @keyframes gradient-foreground-3 {
+
   0%,
   50%,
   100% {
     opacity: 0;
   }
+
   66.667%,
   83.333% {
     opacity: 1;
@@ -655,11 +698,13 @@
 
 /* Adding pulse-glow animation for the stat highlight */
 @keyframes pulse-glow {
+
   0%,
   100% {
     opacity: 1;
     filter: drop-shadow(0 0 8px rgba(251, 146, 60, 0.5));
   }
+
   50% {
     opacity: 0.9;
     filter: drop-shadow(0 0 16px rgba(251, 146, 60, 0.8));
@@ -672,30 +717,36 @@
 
 /* Adding floating animations for AI Team section cards */
 @keyframes float-slow {
+
   0%,
   100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-10px);
   }
 }
 
 @keyframes float-medium {
+
   0%,
   100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-15px);
   }
 }
 
 @keyframes float-fast {
+
   0%,
   100% {
     transform: translateY(0px);
   }
+
   50% {
     transform: translateY(-20px);
   }
@@ -715,19 +766,23 @@
 
 /* Adding delayed float animation for background orbs */
 @keyframes float-delayed {
+
   0%,
   100% {
     transform: translateY(0px) translateX(0px);
     opacity: 0.3;
   }
+
   25% {
     transform: translateY(10px) translateX(-5px);
     opacity: 0.6;
   }
+
   50% {
     transform: translateY(5px) translateX(3px);
     opacity: 0.4;
   }
+
   75% {
     transform: translateY(15px) translateX(-2px);
     opacity: 0.7;
@@ -741,10 +796,12 @@
 
 /* Adding slow pulse animation for icon backgrounds */
 @keyframes pulse-slow {
+
   0%,
   100% {
     opacity: 0.2;
   }
+
   50% {
     opacity: 0.4;
   }
@@ -760,6 +817,7 @@
     opacity: 0;
     transform: translateX(-20px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -771,6 +829,7 @@
     opacity: 0;
     transform: translateX(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateX(0);
@@ -782,6 +841,7 @@
     opacity: 0;
     transform: scale(0.8);
   }
+
   100% {
     opacity: 1;
     transform: scale(1);
@@ -789,13 +849,57 @@
 }
 
 @keyframes bounce-subtle {
+
   0%,
   100% {
     transform: translateY(0);
   }
+
   50% {
     transform: translateY(-5px);
   }
+}
+
+/* Price Tick Animations */
+@keyframes flashGreen {
+  0% {
+    background-color: rgba(8, 153, 129, 0.4);
+    color: white;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+@keyframes flashRed {
+  0% {
+    background-color: rgba(242, 54, 69, 0.4);
+    color: white;
+  }
+
+  100% {
+    background-color: transparent;
+  }
+}
+
+.animate-flash-green {
+  animation: flashGreen 0.6s ease-out;
+}
+
+.animate-flash-red {
+  animation: flashRed 0.6s ease-out;
+}
+
+/* Magnetic Button Effect */
+.hover-lift:hover {
+  transform: translateY(-1px);
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-scale:hover {
+  transform: scale(1.02);
+  transition: transform 0.1s;
 }
 
 .animate-slide-in-left {
@@ -836,9 +940,11 @@
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -854,6 +960,7 @@
     opacity: 0;
     transform: translateY(15px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -877,6 +984,7 @@
   0% {
     stroke-dashoffset: 600;
   }
+
   100% {
     stroke-dashoffset: 0;
   }
@@ -888,6 +996,7 @@
     opacity: 0;
     transform: translateY(30px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
