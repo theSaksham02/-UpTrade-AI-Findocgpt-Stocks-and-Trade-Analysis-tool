@@ -89,7 +89,7 @@ export default function FeaturesPage() {
     const isInView = useInView(ref, { once: true });
 
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             {/* LandingHeader handled by layout */}
 
             {/* Hero */}
@@ -126,7 +126,7 @@ export default function FeaturesPage() {
                     {features.map((section, sectionIdx) => (
                         <div key={section.category}>
                             <div className="flex items-center gap-4 mb-12">
-                                <div className="w-12 h-12 bg-[#1e222d] rounded-xl flex items-center justify-center border border-[#2a2e39]">
+                                <div className="w-12 h-12 bg-[#1e222d]/40 backdrop-blur-md rounded-xl flex items-center justify-center border border-[#2a2e39]/50">
                                     <section.icon className="w-6 h-6 text-[#2962FF]" />
                                 </div>
                                 <h2 className="text-3xl font-bold text-white">{section.category}</h2>
@@ -167,14 +167,14 @@ export default function FeaturesPage() {
             </section>
 
             {/* Architecture Diagram */}
-            <section className="py-24 px-6 bg-[#131722] border-y border-[#2a2e39]">
+            <section className="py-24 px-6 bg-[#131722]/20 backdrop-blur-sm border-y border-[#2a2e39]/30">
                 <div className="max-w-5xl mx-auto">
                     <h2 className="text-3xl font-bold text-white text-center mb-12">System Architecture</h2>
 
-                    <div className="bg-[#0b0e14] rounded-xl p-8 border border-[#2a2e39] font-mono text-sm">
+                    <div className="bg-[#0b0e14]/40 backdrop-blur-md rounded-xl p-8 border border-[#2a2e39]/50 font-mono text-sm">
                         <div className="grid grid-cols-4 gap-4 text-center">
                             <div className="space-y-2">
-                                <div className="bg-[#1e222d] rounded p-3 text-[#2962FF]">Sources</div>
+                                <div className="bg-[#1e222d]/60 backdrop-blur-sm rounded p-3 text-[#2962FF]">Sources</div>
                                 <div className="text-[#868993] text-xs space-y-1">
                                     <div>Polygon.io</div>
                                     <div>Finnhub</div>
@@ -185,7 +185,7 @@ export default function FeaturesPage() {
                             </div>
 
                             <div className="space-y-2">
-                                <div className="bg-[#1e222d] rounded p-3 text-[#089981]">Ingestion</div>
+                                <div className="bg-[#1e222d]/60 backdrop-blur-sm rounded p-3 text-[#089981]">Ingestion</div>
                                 <div className="text-[#868993] text-xs space-y-1">
                                     <div>Kafka Topics</div>
                                     <div>Redis Streams</div>

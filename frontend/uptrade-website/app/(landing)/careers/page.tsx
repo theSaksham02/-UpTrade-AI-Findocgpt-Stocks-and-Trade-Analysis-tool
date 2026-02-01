@@ -50,7 +50,7 @@ const benefits = [
 
 export default function CareersPage() {
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
 
             <section className="pt-32 pb-20 px-6 border-b border-[#2a2e39]">
@@ -95,7 +95,7 @@ export default function CareersPage() {
                 </div>
             </section>
 
-            <section className="py-24 px-6 bg-[#131722] border-y border-[#2a2e39]">
+            <section className="py-24 px-6 bg-[#131722]/20 backdrop-blur-sm border-y border-[#2a2e39]/30">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold text-white mb-8 text-center">Benefits</h2>
                     <div className="grid md:grid-cols-3 gap-4">

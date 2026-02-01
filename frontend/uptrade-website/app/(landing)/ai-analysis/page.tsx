@@ -39,7 +39,7 @@ const models = [
 
 export default function AIAnalysisPage() {
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
 
             <section className="pt-32 pb-20 px-6 border-b border-[#2a2e39]">
@@ -91,14 +91,14 @@ export default function AIAnalysisPage() {
             </section>
 
             {/* Feature Attribution Example */}
-            <section className="py-24 px-6 bg-[#131722] border-y border-[#2a2e39]">
+            <section className="py-24 px-6 bg-[#131722]/20 backdrop-blur-sm border-y border-[#2a2e39]/30">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-2xl font-bold text-white mb-8">Explainable Predictions</h2>
                     <p className="text-[#868993] mb-8">
                         Every PAS score includes SHAP values showing which factors drove the prediction.
                     </p>
 
-                    <div className="bg-[#0b0e14] rounded-xl border border-[#2a2e39] p-6">
+                    <div className="bg-[#0b0e14]/40 backdrop-blur-md rounded-xl border border-[#2a2e39]/50 p-6">
                         <div className="text-sm text-[#868993] mb-4">AAPL Prediction Breakdown (PAS: 87.4)</div>
 
                         {[

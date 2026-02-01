@@ -40,13 +40,13 @@ export default function PressPage() {
                     <h2 className="text-2xl font-bold text-white mb-8">Brand Assets</h2>
                     <div className="grid md:grid-cols-4 gap-6">
                         {logos.map((logo) => (
-                            <div key={logo.name} className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6 text-center">
+                            <div key={logo.name} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 text-center">
                                 <div className="w-16 h-16 bg-[#2962FF] rounded-lg mx-auto mb-4" />
                                 <div className="text-white text-sm font-medium mb-1">{logo.name}</div>
                                 <div className="text-[#868993] text-xs mb-4">{logo.size}</div>
-                                <button className="text-[#2962FF] text-sm flex items-center justify-center gap-1 mx-auto">
+                                <a href={logo.url} download className="text-[#2962FF] text-sm flex items-center justify-center gap-1 mx-auto hover:underline cursor-pointer">
                                     <Download className="w-4 h-4" /> Download
-                                </button>
+                                </a>
                             </div>
                         ))}
                     </div>
@@ -57,7 +57,7 @@ export default function PressPage() {
                     <h2 className="text-2xl font-bold text-white mb-8">Brand Colors</h2>
                     <div className="grid md:grid-cols-2 gap-4">
                         {brandColors.map((color) => (
-                            <div key={color.name} className="flex items-center gap-4 bg-[#131722] border border-[#2a2e39] rounded-xl p-4">
+                            <div key={color.name} className="flex items-center gap-4 bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-4">
                                 <div className="w-16 h-16 rounded-lg" style={{ backgroundColor: color.hex }} />
                                 <div>
                                     <div className="text-white font-medium">{color.name}</div>

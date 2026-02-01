@@ -39,7 +39,7 @@ ws.onmessage = (event) => {
 };`;
 
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
             {/* Hero */}
             <section className="pt-32 pb-24 px-6 border-b border-[#2a2e39]">
@@ -90,7 +90,7 @@ ws.onmessage = (event) => {
                                 { icon: Webhook, title: 'WebSocket', desc: 'Real-time streaming for live sentiment and alerts' },
                                 { icon: Code, title: 'Python SDK', desc: 'pip install uptrade-api' },
                             ].map((item) => (
-                                <div key={item.title} className="flex items-start gap-4 p-4 bg-[#131722] rounded-lg border border-[#2a2e39]">
+                                <div key={item.title} className="flex items-start gap-4 p-4 bg-[#131722]/40 backdrop-blur-md rounded-lg border border-[#2a2e39]/50">
                                     <item.icon className="w-5 h-5 text-[#2962FF] mt-0.5" />
                                     <div>
                                         <h3 className="text-white font-medium">{item.title}</h3>
@@ -102,7 +102,7 @@ ws.onmessage = (event) => {
                     </div>
 
                     {/* Right: Interactive Code */}
-                    <div className="bg-[#131722] rounded-xl border border-[#2a2e39] overflow-hidden">
+                    <div className="bg-[#131722]/40 backdrop-blur-md rounded-xl border border-[#2a2e39]/50 overflow-hidden">
                         {/* Tabs */}
                         <div className="flex border-b border-[#2a2e39]">
                             <button
@@ -124,7 +124,7 @@ ws.onmessage = (event) => {
                         </div>
 
                         {/* Code */}
-                        <div className="relative p-6 bg-[#0b0e14]">
+                        <div className="relative p-6 bg-[#0b0e14]/40 backdrop-blur-md">
                             <button
                                 onClick={() => {
                                     navigator.clipboard.writeText(activeTab === 'rest' ? codeExample : wsExample);
@@ -145,7 +145,7 @@ ws.onmessage = (event) => {
             </section>
 
             {/* Pricing Tiers */}
-            <section className="py-24 px-6 border-t border-[#2a2e39] bg-[#131722]">
+            <section className="py-24 px-6 border-t border-[#2a2e39]/30 bg-[#131722]/20 backdrop-blur-sm">
                 <div className="max-w-6xl mx-auto">
                     <h2 className="text-3xl font-bold text-white text-center mb-12">API Pricing</h2>
 
@@ -176,7 +176,7 @@ ws.onmessage = (event) => {
                         ].map((tier) => (
                             <div
                                 key={tier.name}
-                                className={`bg-[#0b0e14] rounded-xl p-6 border ${tier.popular ? 'border-[#2962FF]' : 'border-[#2a2e39]'
+                                className={`bg-[#0b0e14]/40 backdrop-blur-md rounded-xl p-6 border ${tier.popular ? 'border-[#2962FF]' : 'border-[#2a2e39]/50'
                                     }`}
                             >
                                 {tier.popular && (
