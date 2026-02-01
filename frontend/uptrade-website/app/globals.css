@@ -1055,3 +1055,16 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+/* Glow effects */
+.glow-blue {
+  box-shadow: 0 0 60px 20px rgba(41, 98, 255, 0.3);
+}
+
+/* Glassmorphism utilities - Updated for V2 */
+.glass-v2 {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
