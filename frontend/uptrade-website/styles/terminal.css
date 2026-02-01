@@ -1,0 +1,354 @@
+/* Terminal Dashboard Styles
+ * Bloomberg/TradingView-style utilitarian design
+ * Dense data, 1px borders, no shadows
+ */
+
+/* CSS Variables */
+:root {
+    --term-bg: #0b0e14;
+    --term-surface: #131722;
+    --term-panel: #1a1e2e;
+    --term-border: #2a2e39;
+    --term-border-light: #363a45;
+    --term-text: #e1e4e8;
+    --term-text-dim: #868993;
+    --term-green: #26a69a;
+    --term-red: #ef5350;
+    --term-yellow: #ffd54f;
+    --term-blue: #2962ff;
+    --font-mono: 'SF Mono', 'Monaco', 'Inconsolata', 'Roboto Mono', monospace;
+}
+
+/* Root container */
+.terminal-root {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--term-bg);
+    color: var(--term-text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+/* Scanline overlay */
+.scanline-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 9999;
+    background: repeating-linear-gradient(0deg,
+            rgba(0, 0, 0, 0.02) 0px,
+            rgba(0, 0, 0, 0.02) 1px,
+            transparent 1px,
+            transparent 2px);
+    opacity: 0.5;
+}
+
+/* Top bar */
+.terminal-topbar {
+    height: 36px;
+    background: var(--term-surface);
+    border-bottom: 1px solid var(--term-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 12px;
+    flex-shrink: 0;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--term-text);
+    letter-spacing: -0.02em;
+}
+
+.logo-tag {
+    font-size: 9px;
+    color: var(--term-text-dim);
+    letter-spacing: 0.1em;
+    padding: 2px 4px;
+    border: 1px solid var(--term-border);
+    border-radius: 2px;
+}
+
+.topbar-center {
+    flex: 1;
+    max-width: 320px;
+    margin: 0 24px;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--term-bg);
+    border: 1px solid var(--term-border);
+    border-radius: 3px;
+    padding: 4px 10px;
+}
+
+.search-box input {
+    background: transparent;
+    border: none;
+    color: var(--term-text);
+    font-size: 12px;
+    outline: none;
+    width: 100%;
+}
+
+.search-box input::placeholder {
+    color: var(--term-text-dim);
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--term-green);
+    letter-spacing: 0.05em;
+}
+
+.status-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--term-green);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.clock {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--term-text-dim);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Main layout */
+.terminal-main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+}
+
+.terminal-left {
+    width: 200px;
+    border-right: 1px solid var(--term-border);
+    flex-shrink: 0;
+}
+
+.terminal-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.terminal-right {
+    width: 240px;
+    border-left: 1px solid var(--term-border-light);
+    flex-shrink: 0;
+}
+
+/* Panel styles */
+.terminal-panel {
+    background: var(--term-surface);
+    display: flex;
+    flex-direction: column;
+}
+
+.terminal-header {
+    height: 28px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--term-border);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--term-text-dim);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* Table styles */
+.terminal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+}
+
+.terminal-table th {
+    text-align: left;
+    padding: 6px 8px;
+    font-size: 10px;
+    font-weight: 500;
+    color: var(--term-text-dim);
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--term-border);
+    background: rgba(0, 0, 0, 0.15);
+}
+
+.terminal-table td {
+    padding: 6px 8px;
+    border-bottom: 1px solid #1e222d;
+    font-variant-numeric: tabular-nums;
+}
+
+.terminal-table tr {
+    cursor: pointer;
+    transition: background 0.1s;
+}
+
+.terminal-table tr:hover {
+    background: rgba(41, 98, 255, 0.08);
+}
+
+.terminal-table tr.selected {
+    background: rgba(41, 98, 255, 0.15);
+}
+
+/* Chart grid */
+.chart-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1px;
+    background: var(--term-border);
+    min-height: 0;
+}
+
+.chart-cell {
+    background: var(--term-surface);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.chart-header {
+    height: 28px;
+    padding: 0 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--term-border);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.chart-symbol {
+    font-weight: 600;
+    font-size: 12px;
+    color: var(--term-text);
+}
+
+/* Terminal log section */
+.terminal-log-section {
+    height: 140px;
+    border-top: 1px solid var(--term-border);
+    flex-shrink: 0;
+}
+
+.terminal-log {
+    padding: 6px 10px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    line-height: 1.6;
+    overflow: auto;
+    flex: 1;
+}
+
+.log-line {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* TradeX row */
+.tradex-row {
+    padding: 10px 10px 10px 12px;
+    border-bottom: 1px solid var(--term-border);
+}
+
+.tradex-row:hover {
+    background: rgba(41, 98, 255, 0.05);
+}
+
+/* Factor bars */
+.factor-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--term-text-dim);
+}
+
+.factor-bar span {
+    width: 22px;
+    font-size: 9px;
+    letter-spacing: 0.05em;
+}
+
+.bar-track {
+    flex: 1;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.3s ease;
+}
+
+/* Utilities */
+.text-mono {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.text-dim {
+    color: var(--term-text-dim);
+}
+
+.text-up {
+    color: var(--term-green);
+}
+
+.text-down {
+    color: var(--term-red);
+}
