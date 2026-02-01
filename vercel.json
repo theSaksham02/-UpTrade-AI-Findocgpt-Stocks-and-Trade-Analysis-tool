@@ -33,11 +33,7 @@
     "ALPHA_VANTAGE_KEY": "@alpha-vantage-key",
     "FINNHUB_KEY": "@finnhub-key"
   },
-  "functions": {
-    "api_server.py": {
-      "memory": 3008,
-      "maxDuration": 60
-    }
-  },
-  "regions": ["iad1"]
+  "regions": [
+    "iad1"
+  ]
 }
