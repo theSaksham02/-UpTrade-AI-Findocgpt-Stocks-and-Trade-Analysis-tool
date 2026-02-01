@@ -317,7 +317,7 @@ export default function AboutPage() {
                             <img
                                 src="/images/character.png"
                                 alt="Uptrade AI Bot"
-                                className="w-full h-full object-contain drop-shadow-[0_0_50px_rgba(41,98,255,0.3)]"
+                                className="w-full h-full object-contain mix-blend-screen drop-shadow-[0_0_50px_rgba(41,98,255,0.3)]"
                             />
                         </motion.div>
 
