@@ -1,0 +1,16 @@
+{
+    "name": "uptrade-server",
+    "version": "1.0.0",
+    "description": "Uptrade WebSocket Server - Real-time market data and sentiment engine",
+    "main": "websocket-server.js",
+    "scripts": {
+        "start": "node websocket-server.js",
+        "dev": "nodemon websocket-server.js"
+    },
+    "dependencies": {
+        "ws": "^8.16.0"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.2"
+    }
+}

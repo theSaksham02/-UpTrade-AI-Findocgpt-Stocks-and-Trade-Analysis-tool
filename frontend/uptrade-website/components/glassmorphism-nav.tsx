@@ -9,6 +9,7 @@ const navigation = [
   { name: "Pricing", href: "#pricing" },
   { name: "Markets", href: "/markets" },
   { name: "Charts", href: "/charts" },
+  { name: "Engine", href: "/engine" },
   { name: "TradeX", href: "/tradex" },
   { name: "VisualX", href: "/visualx" },
   { name: "API", href: "/api-dev" },
