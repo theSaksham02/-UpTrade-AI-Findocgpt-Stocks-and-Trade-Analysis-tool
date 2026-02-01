@@ -19,7 +19,7 @@ export default function TradeXPage() {
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
 
   return (
-    <div ref={containerRef} className="bg-[#0b0e14] min-h-screen">
+    <div ref={containerRef} className="bg-transparent min-h-screen">
       <LandingHeader />
       {/* Hero Section with Parallax */}
       <section className="relative h-[90vh] flex items-center overflow-hidden pt-20">
