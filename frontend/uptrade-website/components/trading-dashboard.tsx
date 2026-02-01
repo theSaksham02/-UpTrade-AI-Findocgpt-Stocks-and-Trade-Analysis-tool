@@ -624,9 +624,13 @@ function ChartToolbar({
 // ============================================================
 // MAIN TRADING DASHBOARD
 // ============================================================
-export default function TradingDashboard() {
+interface TradingDashboardProps {
+    defaultPanel?: 'tradex' | 'visualx' | 'tradesphere'
+}
+
+export default function TradingDashboard({ defaultPanel = 'tradex' }: TradingDashboardProps) {
     const [symbols, setSymbols] = useState(['AAPL', 'TSLA', 'SPY', 'BTCUSD'])
-    const [activePanel, setActivePanel] = useState<'tradex' | 'visualx' | 'tradesphere'>('tradex')
+    const [activePanel, setActivePanel] = useState<'tradex' | 'visualx' | 'tradesphere'>(defaultPanel)
     const [layout, setLayout] = useState<'2x2' | 'single'>('2x2')
     const [activeChart, setActiveChart] = useState(0)
 
@@ -663,8 +667,8 @@ export default function TradingDashboard() {
 
                     {/* Chart Grid */}
                     <div className={`flex-1 bg-[#2a2e39] ${layout === '2x2'
-                            ? 'grid grid-cols-2 grid-rows-2 gap-px'
-                            : 'flex'
+                        ? 'grid grid-cols-2 grid-rows-2 gap-px'
+                        : 'flex'
                         }`}>
                         {layout === '2x2' ? (
                             symbols.slice(0, 4).map((sym, i) => (
