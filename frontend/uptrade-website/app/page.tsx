@@ -31,18 +31,11 @@ export default function HomePage() {
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-  // Interpolate between black and purple based on scroll
-  const backgroundColor = scrollProgress < 0.4 
-    ? `rgb(0, 0, 0)` // Black for first 40%
-    : scrollProgress < 0.7
-    ? `rgb(${Math.floor(46 * (scrollProgress - 0.4) / 0.3)}, ${Math.floor(16 * (scrollProgress - 0.4) / 0.3)}, ${Math.floor(60 * (scrollProgress - 0.4) / 0.3)})` // Transition to purple
-    : `rgb(46, 16, 60)` // Dark purple (#2e103c)
-
   return (
-    <div className="min-h-screen overflow-hidden" style={{ backgroundColor, transition: 'background-color 0.3s ease' }}>
+    <div className="min-h-screen overflow-hidden" style={{ backgroundColor: '#131722' }}>
       <main className="min-h-screen relative overflow-hidden">
-        <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: 1 - scrollProgress * 0.7 }}>
-          <Aurora colorStops={["#6b21a8", "#8b5cf6", "#7c3aed"]} amplitude={1.2} blend={0.6} speed={0.8} />
+        <div className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: Math.max(0.3, 1 - scrollProgress * 0.7) }}>
+          <Aurora colorStops={["#2962FF", "#089981", "#1e222d"]} amplitude={0.8} blend={0.4} speed={0.5} />
         </div>
         <div className="relative z-10">
           <GlassmorphismNav />

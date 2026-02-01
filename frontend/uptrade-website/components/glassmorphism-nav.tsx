@@ -5,11 +5,12 @@ import { Menu, X, ArrowRight, TrendingUp } from "lucide-react"
 import Link from "next/link"
 
 const navigation = [
+  { name: "Features", href: "#features" },
+  { name: "Pricing", href: "#pricing" },
+  { name: "Markets", href: "/markets" },
   { name: "TradeX", href: "/tradex" },
   { name: "VisualX", href: "/visualx" },
-  { name: "TradeSphere", href: "/tradesphere" },
-  { name: "Research", href: "/research" },
-  { name: "API & Dev", href: "/api-dev" },
+  { name: "API", href: "/api-dev" },
 ]
 
 export function GlassmorphismNav() {
@@ -77,22 +78,21 @@ export function GlassmorphismNav() {
   return (
     <>
       <nav
-        className={`fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${
-          isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 md:-translate-y-24 opacity-0"
-        } ${hasLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
+        className={`fixed top-4 md:top-8 left-1/2 -translate-x-1/2 z-50 transition-all duration-500 ${isVisible ? "translate-y-0 opacity-100" : "-translate-y-20 md:-translate-y-24 opacity-0"
+          } ${hasLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}`}
         style={{
           transition: hasLoaded ? "all 0.5s ease-out" : "opacity 0.8s ease-out, transform 0.8s ease-out",
         }}
       >
         <div className="w-[90vw] max-w-md md:max-w-6xl mx-auto">
-          <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-6 py-4 md:px-8 md:py-4">
+          <div className="backdrop-blur-md border rounded-full px-6 py-4 md:px-8 md:py-4" style={{ backgroundColor: 'rgba(30, 34, 45, 0.8)', borderColor: 'var(--tv-border)' }}>
             <div className="flex items-center justify-between">
               <Link
                 href="/"
                 className="flex items-center hover:scale-105 transition-transform duration-200 cursor-pointer"
               >
                 <div className="flex items-center space-x-2">
-                  <TrendingUp className="w-10 h-10 md:w-12 md:h-12 text-purple-400" />
+                  <TrendingUp className="w-10 h-10 md:w-12 md:h-12" style={{ color: 'var(--tv-blue)' }} />
                   <span className="text-white font-bold text-2xl md:text-3xl">UpTrade</span>
                 </div>
               </Link>
@@ -122,7 +122,8 @@ export function GlassmorphismNav() {
               <div className="hidden md:block">
                 <Link href="/dashboard">
                   <button
-                    className="relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium px-8 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group text-lg"
+                    className="relative text-white font-medium px-8 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group text-lg hover:brightness-110"
+                    style={{ backgroundColor: 'var(--tv-blue)' }}
                   >
                     <span className="mr-2">Get Started</span>
                     <ArrowRight size={20} className="transition-transform duration-300 group-hover:translate-x-1" />
@@ -137,15 +138,13 @@ export function GlassmorphismNav() {
                 <div className="relative w-6 h-6">
                   <Menu
                     size={24}
-                    className={`absolute inset-0 transition-all duration-300 ${
-                      isOpen ? "opacity-0 rotate-180 scale-75" : "opacity-100 rotate-0 scale-100"
-                    }`}
+                    className={`absolute inset-0 transition-all duration-300 ${isOpen ? "opacity-0 rotate-180 scale-75" : "opacity-100 rotate-0 scale-100"
+                      }`}
                   />
                   <X
                     size={24}
-                    className={`absolute inset-0 transition-all duration-300 ${
-                      isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-180 scale-75"
-                    }`}
+                    className={`absolute inset-0 transition-all duration-300 ${isOpen ? "opacity-100 rotate-0 scale-100" : "opacity-0 -rotate-180 scale-75"
+                      }`}
                   />
                 </div>
               </button>
@@ -155,17 +154,15 @@ export function GlassmorphismNav() {
 
         <div className="md:hidden relative">
           <div
-            className={`fixed inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300 ${
-              isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
+            className={`fixed inset-0 bg-black/20 backdrop-blur-sm transition-all duration-300 ${isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
+              }`}
             onClick={() => setIsOpen(false)}
             style={{ top: "0", left: "0", right: "0", bottom: "0", zIndex: -1 }}
           />
 
           <div
-            className={`mt-2 w-[90vw] max-w-xs mx-auto transition-all duration-500 ease-out transform-gpu ${
-              isOpen ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-8 scale-95 pointer-events-none"
-            }`}
+            className={`mt-2 w-[90vw] max-w-xs mx-auto transition-all duration-500 ease-out transform-gpu ${isOpen ? "opacity-100 translate-y-0 scale-100" : "opacity-0 -translate-y-8 scale-95 pointer-events-none"
+              }`}
           >
             <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-4 shadow-2xl">
               <div className="flex flex-col space-y-1">
@@ -174,9 +171,8 @@ export function GlassmorphismNav() {
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`text-white/80 hover:text-white hover:bg-white/10 rounded-lg px-3 py-3 text-left transition-all duration-300 font-medium cursor-pointer transform hover:scale-[1.02] hover:translate-x-1 ${
-                        isOpen ? "animate-mobile-menu-item" : ""
-                      }`}
+                      className={`text-white/80 hover:text-white hover:bg-white/10 rounded-lg px-3 py-3 text-left transition-all duration-300 font-medium cursor-pointer transform hover:scale-[1.02] hover:translate-x-1 ${isOpen ? "animate-mobile-menu-item" : ""
+                        }`}
                       style={{
                         animationDelay: isOpen ? `${index * 80 + 100}ms` : "0ms",
                       }}
@@ -188,9 +184,8 @@ export function GlassmorphismNav() {
                     <button
                       key={item.name}
                       onClick={() => scrollToSection(item.href)}
-                      className={`text-white/80 hover:text-white hover:bg-white/10 rounded-lg px-3 py-3 text-left transition-all duration-300 font-medium cursor-pointer transform hover:scale-[1.02] hover:translate-x-1 ${
-                        isOpen ? "animate-mobile-menu-item" : ""
-                      }`}
+                      className={`text-white/80 hover:text-white hover:bg-white/10 rounded-lg px-3 py-3 text-left transition-all duration-300 font-medium cursor-pointer transform hover:scale-[1.02] hover:translate-x-1 ${isOpen ? "animate-mobile-menu-item" : ""
+                        }`}
                       style={{
                         animationDelay: isOpen ? `${index * 80 + 100}ms` : "0ms",
                       }}
@@ -200,13 +195,13 @@ export function GlassmorphismNav() {
                   )
                 )}
                 <div className="h-px bg-white/10 my-2" />
-                <Link 
+                <Link
                   href="/dashboard"
                   onClick={() => setIsOpen(false)}
-                  className={`relative bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-medium px-6 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group transform ${
-                    isOpen ? "animate-mobile-menu-item" : ""
-                  }`}
+                  className={`relative text-white font-medium px-6 py-3 rounded-full flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer group transform hover:brightness-110 ${isOpen ? "animate-mobile-menu-item" : ""
+                    }`}
                   style={{
+                    backgroundColor: 'var(--tv-blue)',
                     animationDelay: isOpen ? `${navigation.length * 80 + 150}ms` : "0ms",
                   }}
                 >

@@ -2,6 +2,26 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* TradingView Color Palette */
+:root {
+  /* TradingView Dark Theme Colors */
+  --tv-bg-dark: #131722;
+  --tv-bg-darker: #0b0e14;
+  --tv-surface: #1e222d;
+  --tv-surface-hover: #2a2e39;
+  --tv-border: #363a45;
+  --tv-border-light: #2f333c;
+  --tv-blue: #2962FF;
+  --tv-blue-hover: #3578ff;
+  --tv-green: #089981;
+  --tv-green-bg: rgba(8, 153, 129, 0.2);
+  --tv-red: #f23645;
+  --tv-text: #d1d4dc;
+  --tv-text-primary: #ffffff;
+  --tv-text-muted: #787b86;
+  --tv-text-secondary: #868993;
+}
+
 :root {
   --background: oklch(0.05 0 0);
   --foreground: oklch(0.98 0 0);

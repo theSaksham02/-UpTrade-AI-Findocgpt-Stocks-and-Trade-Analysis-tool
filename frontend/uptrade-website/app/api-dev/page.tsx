@@ -1,103 +1,144 @@
+'use client'
+
 import { GlassmorphismNav } from "@/components/glassmorphism-nav"
-import Aurora from "@/components/Aurora"
 import { Footer } from "@/components/footer"
 import { Code, Terminal, Zap, Lock, ArrowRight, CheckCircle2, Layers, GitBranch, Database, Cloud } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useState } from "react"
 
 export default function APIDevPage() {
+  const [activeTab, setActiveTab] = useState('python')
+
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
-      <main className="min-h-screen relative overflow-hidden">
-        <div className="fixed inset-0 w-full h-full">
-          <Aurora colorStops={["#6b21a8", "#8b5cf6", "#7c3aed"]} amplitude={1.2} blend={0.6} speed={0.8} />
-        </div>
-        <div className="relative z-10">
-          <GlassmorphismNav />
-          
-          {/* Hero Section */}
-          <section className="min-h-screen flex items-center justify-center px-4 py-20 relative">
-            <div className="max-w-7xl mx-auto text-center">
-              <div className="inline-flex items-center px-4 py-2 rounded-full bg-purple-500/20 backdrop-blur-md border border-purple-500/30 text-purple-300 text-sm font-medium mb-8">
-                <Code className="w-4 h-4 mr-2" />
-                Developer-First API Platform
-              </div>
-              
-              <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold text-white mb-6">
-                Build with
-                <br />
-                <span className="text-purple-400">UpTrade APIs</span>
-              </h1>
-              
-              <p className="text-xl text-white/70 mb-12 max-w-3xl mx-auto">
-                Access market data, AI analysis, sentiment feeds, and more. RESTful APIs with WebSocket support for real-time data. Built for developers who demand speed and reliability.
-              </p>
-              
-              <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
-                <Link href="/dashboard">
-                  <Button className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-full px-8 py-6 text-lg">
-                    Get API Key
-                    <ArrowRight className="ml-2 w-5 h-5" />
-                  </Button>
-                </Link>
-                <Button variant="outline" className="rounded-full px-8 py-6 text-lg border-2 border-white/30 text-white hover:bg-white/10">
-                  View Docs
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--tv-bg-dark)' }}>
+      <GlassmorphismNav />
+
+      <main className="pt-24 pb-16">
+        {/* Hero Section */}
+        <section className="min-h-[80vh] flex items-center justify-center px-4 relative">
+          {/* Background gradient */}
+          <div
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: 'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(41, 98, 255, 0.15) 0%, transparent 50%)',
+            }}
+          />
+
+          <div className="max-w-7xl mx-auto text-center relative z-10">
+            <div
+              className="inline-flex items-center px-4 py-2 rounded-lg text-sm font-medium mb-8"
+              style={{
+                backgroundColor: 'var(--tv-surface)',
+                border: '1px solid var(--tv-border)',
+                color: 'var(--tv-blue)'
+              }}
+            >
+              <Code className="w-4 h-4 mr-2" />
+              Developer-First API Platform
+            </div>
+
+            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6">
+              <span style={{ color: 'var(--tv-text-primary)' }}>Build with</span>
+              <br />
+              <span
+                className="bg-clip-text text-transparent"
+                style={{ backgroundImage: 'linear-gradient(135deg, #2962FF, #00C853)' }}
+              >
+                UpTrade APIs
+              </span>
+            </h1>
+
+            <p className="text-xl mb-12 max-w-3xl mx-auto" style={{ color: 'var(--tv-text-muted)' }}>
+              Access market data, AI analysis, sentiment feeds, and more. RESTful APIs with WebSocket support for real-time data. Built for developers who demand speed and reliability.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16">
+              <Link href="/dashboard">
+                <Button
+                  className="text-white rounded-lg px-8 py-6 text-lg transition-all duration-300 hover:scale-105 hover:brightness-110"
+                  style={{ backgroundColor: 'var(--tv-blue)' }}
+                >
+                  Get API Key
+                  <ArrowRight className="ml-2 w-5 h-5" />
                 </Button>
-              </div>
-              
-              {/* Key Features Grid */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-20">
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
-                  <CheckCircle2 className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <div className="text-white/80 text-sm">RESTful API</div>
+              </Link>
+              <Button
+                variant="outline"
+                className="rounded-lg px-8 py-6 text-lg"
+                style={{
+                  borderColor: 'var(--tv-border)',
+                  color: 'var(--tv-text)',
+                  backgroundColor: 'transparent'
+                }}
+              >
+                View Docs
+              </Button>
+            </div>
+
+            {/* Key Features Grid */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto mb-20">
+              {[
+                { label: "RESTful API" },
+                { label: "WebSockets" },
+                { label: "99.9% Uptime" },
+                { label: "Low Latency" },
+              ].map((item, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-lg p-4"
+                  style={{ backgroundColor: 'var(--tv-surface)', border: '1px solid var(--tv-border)' }}
+                >
+                  <CheckCircle2 className="w-6 h-6 mx-auto mb-2" style={{ color: 'var(--tv-blue)' }} />
+                  <div className="text-sm" style={{ color: 'var(--tv-text)' }}>{item.label}</div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
-                  <CheckCircle2 className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <div className="text-white/80 text-sm">WebSockets</div>
+              ))}
+            </div>
+
+            {/* Code Example Section */}
+            <div className="max-w-5xl mx-auto">
+              <div
+                className="rounded-2xl p-8 md:p-12 text-left"
+                style={{ backgroundColor: 'var(--tv-surface)', border: '1px solid var(--tv-border)' }}
+              >
+                <div className="mb-8">
+                  <h3 className="text-2xl font-bold mb-2" style={{ color: 'var(--tv-text-primary)' }}>Quick Start Code Example</h3>
+                  <p style={{ color: 'var(--tv-text-muted)' }}>Get started in minutes with our simple API</p>
                 </div>
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
-                  <CheckCircle2 className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <div className="text-white/80 text-sm">99.9% Uptime</div>
-                </div>
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-xl p-4">
-                  <CheckCircle2 className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                  <div className="text-white/80 text-sm">Low Latency</div>
-                </div>
-              </div>
-              
-              {/* Code Example Section */}
-              <div className="max-w-5xl mx-auto">
-                <div className="bg-white/5 backdrop-blur-xl border border-white/20 rounded-3xl p-8 md:p-12">
-                  <div className="mb-8">
-                    <h3 className="text-2xl font-bold text-white mb-2">Quick Start Code Example</h3>
-                    <p className="text-white/60">Get started in minutes with our simple API</p>
-                  </div>
-                  
-                  {/* Tabs */}
-                  <div className="flex space-x-2 mb-6 border-b border-white/10">
-                    <button className="px-4 py-2 text-purple-400 border-b-2 border-purple-400 font-medium">
-                      Python
+
+                {/* Tabs */}
+                <div className="flex space-x-2 mb-6 border-b" style={{ borderColor: 'var(--tv-border)' }}>
+                  {['python', 'javascript', 'curl'].map(tab => (
+                    <button
+                      key={tab}
+                      onClick={() => setActiveTab(tab)}
+                      className="px-4 py-2 font-medium capitalize relative"
+                      style={{
+                        color: activeTab === tab ? 'var(--tv-blue)' : 'var(--tv-text-muted)',
+                      }}
+                    >
+                      {tab}
+                      {activeTab === tab && (
+                        <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: 'var(--tv-blue)' }} />
+                      )}
                     </button>
-                    <button className="px-4 py-2 text-white/50 hover:text-white/70 font-medium">
-                      JavaScript
-                    </button>
-                    <button className="px-4 py-2 text-white/50 hover:text-white/70 font-medium">
-                      cURL
-                    </button>
-                  </div>
-                  
-                  {/* Code Block */}
-                  <div className="bg-slate-900/80 backdrop-blur-sm rounded-2xl p-6 border border-white/10 text-left overflow-x-auto">
-                    <pre className="text-sm text-gray-300 font-mono leading-relaxed">
-                      <code>
-{`import uptrade
+                  ))}
+                </div>
+
+                {/* Code Block */}
+                <div
+                  className="rounded-xl p-6 overflow-x-auto"
+                  style={{ backgroundColor: 'var(--tv-bg-dark)', border: '1px solid var(--tv-border)' }}
+                >
+                  <pre className="text-sm font-mono leading-relaxed" style={{ color: 'var(--tv-text)' }}>
+                    <code>{`import uptrade
 
 # Initialize client
 client = uptrade.Client(api_key="your_api_key")
 
 # Get real-time stock data
 stock = client.stocks.get("AAPL")
-print(f"Price: $` + `{stock.price}")
+print(f"Price: \${stock.price}")
 print(f"AI Score: {stock.ai_score}")
 
 # Get sentiment analysis
@@ -109,20 +150,22 @@ print(f"Sentiment: {sentiment.score}")
 def on_update(data):
     print(f"Live update: {data.price}")
 
-client.stream.start()`}
-                      </code>
-                    </pre>
+client.stream.start()`}</code>
+                  </pre>
+                </div>
+
+                {/* Response Example */}
+                <div className="mt-6">
+                  <div className="text-sm mb-3 flex items-center space-x-2" style={{ color: 'var(--tv-text-muted)' }}>
+                    <Terminal className="w-4 h-4" />
+                    <span>API Response:</span>
                   </div>
-                  
-                  {/* Response Example */}
-                  <div className="mt-6">
-                    <div className="text-white/60 text-sm mb-3 flex items-center space-x-2">
-                      <Terminal className="w-4 h-4" />
-                      <span>API Response:</span>
-                    </div>
-                    <div className="bg-slate-900/80 backdrop-blur-sm rounded-xl p-4 border border-green-500/30">
-                      <pre className="text-sm text-green-400 font-mono">
-                        <code>{`{
+                  <div
+                    className="rounded-xl p-4"
+                    style={{ backgroundColor: 'var(--tv-bg-dark)', border: '1px solid var(--tv-green)' }}
+                  >
+                    <pre className="text-sm font-mono" style={{ color: 'var(--tv-green)' }}>
+                      <code>{`{
   "symbol": "AAPL",
   "price": 189.52,
   "change": +2.34,
@@ -133,204 +176,136 @@ client.stream.start()`}
     "label": "bullish",
     "confidence": 0.92
   },
-  "status": "success",
-  "timestamp": "2024-01-15T10:30:00Z"
+  "status": "success"
 }`}</code>
-                      </pre>
-                    </div>
+                    </pre>
                   </div>
                 </div>
               </div>
             </div>
-          </section>
-          
-          {/* Features Section */}
-          <section className="py-20 px-4">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-4xl font-bold text-white text-center mb-12">
-                Enterprise-Grade Infrastructure
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
-                  <Zap className="w-12 h-12 text-purple-400 mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-3">Lightning Fast</h3>
-                  <p className="text-white/70">
-                    Average response time under 50ms. Optimized endpoints with CDN distribution for global low latency.
-                  </p>
+          </div>
+        </section>
+
+        {/* Features Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-12" style={{ color: 'var(--tv-text-primary)' }}>
+              Enterprise-Grade Infrastructure
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { icon: Zap, title: "Lightning Fast", desc: "Average response time under 50ms. Optimized endpoints with CDN distribution for global low latency.", color: 'var(--tv-blue)' },
+                { icon: Lock, title: "Secure & Reliable", desc: "Bank-grade encryption, SOC 2 compliant infrastructure, and 99.9% uptime SLA guarantee.", color: 'var(--tv-green)' },
+                { icon: Layers, title: "Scalable", desc: "From prototype to production. Scale from 100 to 10M requests per day without configuration changes.", color: 'var(--tv-blue)' },
+              ].map((feature, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-lg p-8"
+                  style={{ backgroundColor: 'var(--tv-surface)', border: '1px solid var(--tv-border)' }}
+                >
+                  <feature.icon className="w-12 h-12 mb-4" style={{ color: feature.color }} />
+                  <h3 className="text-xl font-bold mb-3" style={{ color: 'var(--tv-text-primary)' }}>{feature.title}</h3>
+                  <p style={{ color: 'var(--tv-text-muted)' }}>{feature.desc}</p>
                 </div>
-                
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
-                  <Lock className="w-12 h-12 text-green-400 mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-3">Secure & Reliable</h3>
-                  <p className="text-white/70">
-                    Bank-grade encryption, SOC 2 compliant infrastructure, and 99.9% uptime SLA guarantee.
-                  </p>
-                </div>
-                
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
-                  <Layers className="w-12 h-12 text-blue-400 mb-4" />
-                  <h3 className="text-xl font-bold text-white mb-3">Scalable</h3>
-                  <p className="text-white/70">
-                    From prototype to production. Scale from 100 to 10M requests per day without configuration changes.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
-          </section>
-          
-          {/* API Endpoints Section */}
-          <section className="py-20 px-4">
-            <div className="max-w-7xl mx-auto">
-              <h2 className="text-4xl font-bold text-white text-center mb-12">
-                Available API Endpoints
-              </h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
-                <div className="bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30 rounded-2xl p-6">
+          </div>
+        </section>
+
+        {/* API Endpoints Section */}
+        <section className="py-20 px-4">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl font-bold text-center mb-12" style={{ color: 'var(--tv-text-primary)' }}>
+              Available API Endpoints
+            </h2>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-6xl mx-auto">
+              {[
+                { icon: Database, title: "Market Data API", desc: "Real-time and historical stock data", items: ["Live quotes & prices", "Historical OHLCV data", "Intraday tick data", "Market hours & status"], color: 'var(--tv-blue)' },
+                { icon: GitBranch, title: "AI Analysis API", desc: "Machine learning powered insights", items: ["AI-generated scores", "Price predictions", "Anomaly detection", "Pattern recognition"], color: 'var(--tv-green)' },
+                { icon: Cloud, title: "Sentiment API", desc: "Social & news sentiment analysis", items: ["Real-time sentiment scores", "News impact analysis", "Social media trends", "Narrative detection"], color: 'var(--tv-blue)' },
+                { icon: Terminal, title: "Document API", desc: "Q&A and document processing", items: ["Document upload & storage", "Natural language queries", "Citation extraction", "Batch processing"], color: '#ff9800' },
+              ].map((endpoint, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-xl p-6"
+                  style={{
+                    backgroundColor: 'var(--tv-surface)',
+                    border: `1px solid ${endpoint.color}`,
+                  }}
+                >
                   <div className="flex items-start justify-between mb-4">
                     <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Market Data API</h3>
-                      <p className="text-white/70 text-sm">Real-time and historical stock data</p>
+                      <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--tv-text-primary)' }}>{endpoint.title}</h3>
+                      <p className="text-sm" style={{ color: 'var(--tv-text-muted)' }}>{endpoint.desc}</p>
                     </div>
-                    <Database className="w-8 h-8 text-purple-400" />
+                    <endpoint.icon className="w-8 h-8" style={{ color: endpoint.color }} />
                   </div>
                   <div className="space-y-2">
-                    <div className="text-sm text-white/60">• Live quotes & prices</div>
-                    <div className="text-sm text-white/60">• Historical OHLCV data</div>
-                    <div className="text-sm text-white/60">• Intraday tick data</div>
-                    <div className="text-sm text-white/60">• Market hours & status</div>
+                    {endpoint.items.map((item, i) => (
+                      <div key={i} className="text-sm" style={{ color: 'var(--tv-text-secondary)' }}>• {item}</div>
+                    ))}
                   </div>
                 </div>
-                
-                <div className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border border-blue-500/30 rounded-2xl p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2">AI Analysis API</h3>
-                      <p className="text-white/70 text-sm">Machine learning powered insights</p>
-                    </div>
-                    <GitBranch className="w-8 h-8 text-blue-400" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-sm text-white/60">• AI-generated scores</div>
-                    <div className="text-sm text-white/60">• Price predictions</div>
-                    <div className="text-sm text-white/60">• Anomaly detection</div>
-                    <div className="text-sm text-white/60">• Pattern recognition</div>
-                  </div>
-                </div>
-                
-                <div className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border border-green-500/30 rounded-2xl p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Sentiment API</h3>
-                      <p className="text-white/70 text-sm">Social & news sentiment analysis</p>
-                    </div>
-                    <Cloud className="w-8 h-8 text-green-400" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-sm text-white/60">• Real-time sentiment scores</div>
-                    <div className="text-sm text-white/60">• News impact analysis</div>
-                    <div className="text-sm text-white/60">• Social media trends</div>
-                    <div className="text-sm text-white/60">• Narrative detection</div>
-                  </div>
-                </div>
-                
-                <div className="bg-gradient-to-br from-orange-500/10 to-red-500/10 border border-orange-500/30 rounded-2xl p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div>
-                      <h3 className="text-xl font-bold text-white mb-2">Document API</h3>
-                      <p className="text-white/70 text-sm">Q&A and document processing</p>
-                    </div>
-                    <Terminal className="w-8 h-8 text-orange-400" />
-                  </div>
-                  <div className="space-y-2">
-                    <div className="text-sm text-white/60">• Document upload & storage</div>
-                    <div className="text-sm text-white/60">• Natural language queries</div>
-                    <div className="text-sm text-white/60">• Citation extraction</div>
-                    <div className="text-sm text-white/60">• Batch processing</div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          </section>
-          
-          {/* Pricing for Developers */}
-          <section className="py-20 px-4">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl font-bold text-white mb-6">
-                Developer-Friendly Pricing
-              </h2>
-              <p className="text-xl text-white/70 mb-12">
-                Start free, scale as you grow. No hidden fees.
-              </p>
-              
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">Free Tier</h3>
-                  <div className="text-3xl font-bold text-purple-400 mb-4">$0</div>
+          </div>
+        </section>
+
+        {/* Pricing for Developers */}
+        <section className="py-20 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-4xl font-bold mb-6" style={{ color: 'var(--tv-text-primary)' }}>
+              Developer-Friendly Pricing
+            </h2>
+            <p className="text-xl mb-12" style={{ color: 'var(--tv-text-muted)' }}>
+              Start free, scale as you grow. No hidden fees.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { name: "Free Tier", price: "$0", features: ["1,000 requests/day", "All endpoints", "Community support"] },
+                { name: "Pro", price: "$99", period: "/mo", features: ["100,000 requests/day", "WebSocket access", "Priority support"], popular: true },
+                { name: "Enterprise", price: "Custom", features: ["Unlimited requests", "Dedicated support", "Custom SLA"] },
+              ].map((tier, idx) => (
+                <div
+                  key={idx}
+                  className="rounded-2xl p-6 relative"
+                  style={{
+                    backgroundColor: 'var(--tv-surface)',
+                    border: tier.popular ? '2px solid var(--tv-blue)' : '1px solid var(--tv-border)',
+                  }}
+                >
+                  {tier.popular && (
+                    <div
+                      className="absolute -top-3 left-1/2 transform -translate-x-1/2 px-3 py-1 rounded-full text-xs font-bold text-white"
+                      style={{ backgroundColor: 'var(--tv-blue)' }}
+                    >
+                      POPULAR
+                    </div>
+                  )}
+                  <h3 className="text-xl font-bold mb-2" style={{ color: 'var(--tv-text-primary)' }}>{tier.name}</h3>
+                  <div className="text-3xl font-bold mb-4" style={{ color: 'var(--tv-blue)' }}>
+                    {tier.price}
+                    {tier.period && <span className="text-lg" style={{ color: 'var(--tv-text-muted)' }}>{tier.period}</span>}
+                  </div>
                   <div className="space-y-2 text-left">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">1,000 requests/day</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">All endpoints</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">Community support</span>
-                    </div>
+                    {tier.features.map((feature, i) => (
+                      <div key={i} className="flex items-center space-x-2">
+                        <CheckCircle2 className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--tv-blue)' }} />
+                        <span className="text-sm" style={{ color: 'var(--tv-text-muted)' }}>{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
-                
-                <div className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-2 border-purple-500/50 rounded-2xl p-6 relative">
-                  <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                    POPULAR
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">Pro</h3>
-                  <div className="text-3xl font-bold text-purple-400 mb-4">$99<span className="text-lg text-white/60">/mo</span></div>
-                  <div className="space-y-2 text-left">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">100,000 requests/day</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">WebSocket access</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">Priority support</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-6">
-                  <h3 className="text-xl font-bold text-white mb-2">Enterprise</h3>
-                  <div className="text-3xl font-bold text-purple-400 mb-4">Custom</div>
-                  <div className="space-y-2 text-left">
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">Unlimited requests</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">Dedicated support</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <CheckCircle2 className="w-4 h-4 text-purple-400 flex-shrink-0" />
-                      <span className="text-white/70 text-sm">Custom SLA</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-          </section>
-          
-          <Footer />
-        </div>
+          </div>
+        </section>
       </main>
+
+      <Footer />
     </div>
   )
 }
