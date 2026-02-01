@@ -1,8 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { GlassmorphismNav } from '@/components/glassmorphism-nav'
-import { Footer } from '@/components/footer'
+// Header and Footer handled by layout
 import { Hero } from './sections/Hero'
 // Placeholder imports for now
 import { FeaturesGrid } from './sections/FeaturesGrid'
@@ -34,7 +33,7 @@ export function LandingPage() {
             </div>
 
             <div className="relative z-10">
-                <GlassmorphismNav />
+                {/* Header handled by layout */}
 
                 <main>
                     <Hero />
@@ -49,7 +48,7 @@ export function LandingPage() {
                     <CTA />
                 </main>
 
-                <Footer />
+                {/* Footer handled by layout */}
             </div>
         </div>
     )

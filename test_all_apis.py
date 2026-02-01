@@ -3,7 +3,7 @@ Comprehensive API Integration Test Suite
 Tests all configured APIs and displays results
 """
 
-from api_integrations_enhanced import get_enhanced_api_manager
+from beast_api_manager import get_beast_manager
 import json
 from datetime import datetime
 
@@ -16,21 +16,26 @@ def print_section(title):
 def test_api_health():
     """Test API configuration health"""
     print_section("🏥 API HEALTH CHECK")
-    manager = get_enhanced_api_manager()
-    health = manager.get_api_health()
+    manager = get_beast_manager()
+    health = manager.get_system_health()
     
     print(f"Timestamp: {health['timestamp']}")
-    print(f"Cache Size: {health['cache_size']} items")
+    if 'statistics' in health:
+        print(f"Cache Size: {health['statistics'].get('cache_size', 0)} items")
+    else:
+        print(f"Cache Size: {len(manager.cache)} items")
     print("\nAPI Status:")
     
-    for api_name, status in health['apis'].items():
-        status_icon = "✅" if status['configured'] else "❌"
-        print(f"  {status_icon} {api_name.upper()}: {status['status']}")
+    for category, apis in health['apis'].items():
+        print(f"  📂 {category}:")
+        for api_name, configured in apis.items():
+            status_icon = "✅" if configured else "❌"
+            print(f"    {status_icon} {api_name}: {'Configured' if configured else 'Missing'}")
 
 def test_stock_quote():
     """Test stock quote retrieval"""
     print_section("📊 STOCK QUOTE TEST")
-    manager = get_enhanced_api_manager()
+    manager = get_beast_manager()
     
     test_symbols = ['AAPL', 'MSFT', 'GOOGL']
     
@@ -53,7 +58,7 @@ def test_stock_quote():
 def test_company_overview():
     """Test company overview retrieval"""
     print_section("🏢 COMPANY OVERVIEW TEST")
-    manager = get_enhanced_api_manager()
+    manager = get_beast_manager()
     
     symbol = 'AAPL'
     print(f"🔍 Testing company overview for {symbol}...")
@@ -78,7 +83,7 @@ def test_company_overview():
 def test_financial_news():
     """Test financial news retrieval"""
     print_section("📰 FINANCIAL NEWS TEST")
-    manager = get_enhanced_api_manager()
+    manager = get_beast_manager()
     
     queries = ['stock market', 'AAPL']
     
@@ -110,7 +115,7 @@ def test_financial_news():
 def test_stock_news():
     """Test stock-specific news"""
     print_section("📈 STOCK-SPECIFIC NEWS TEST")
-    manager = get_enhanced_api_manager()
+    manager = get_beast_manager()
     
     symbol = 'AAPL'
     print(f"🔍 Testing news for {symbol}...")
@@ -136,7 +141,7 @@ def test_stock_news():
 def test_cache_performance():
     """Test caching performance"""
     print_section("⚡ CACHE PERFORMANCE TEST")
-    manager = get_enhanced_api_manager()
+    manager = get_beast_manager()
     
     import time
     
@@ -165,25 +170,29 @@ def test_cache_performance():
 def generate_summary_report():
     """Generate final summary report"""
     print_section("📊 SUMMARY REPORT")
-    manager = get_enhanced_api_manager()
+    manager = get_beast_manager()
     health = manager.get_api_health()
     
-    configured_apis = sum(1 for api in health['apis'].values() if api['configured'])
-    total_apis = len(health['apis'])
+    stats = health['statistics']
+    
+    configured_apis = stats['configured_apis']
+    total_apis = stats['total_apis']
     
     print(f"Total APIs Configured: {configured_apis}/{total_apis}")
-    print(f"Configuration Percentage: {(configured_apis/total_apis)*100:.1f}%")
-    print(f"Cache Items: {health['cache_size']}")
+    print(f"Configuration Percentage: {stats['configuration_percentage']:.1f}%")
+    print(f"Cache Items: {stats['cache_size']}")
     
     print("\n✅ Configured APIs:")
-    for api_name, status in health['apis'].items():
-        if status['configured']:
-            print(f"  • {api_name.upper()}")
+    for category, apis in health['apis'].items():
+        for api_name, configured in apis.items():
+            if configured:
+                print(f"  • {api_name} ({category})")
     
     print("\n❌ Not Configured:")
-    for api_name, status in health['apis'].items():
-        if not status['configured']:
-            print(f"  • {api_name.upper()}")
+    for category, apis in health['apis'].items():
+        for api_name, configured in apis.items():
+            if not configured:
+                print(f"  • {api_name} ({category})")
     
     print("\n" + "="*80)
     print("💡 RECOMMENDATIONS:")

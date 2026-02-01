@@ -173,7 +173,7 @@ npm run preview
 │
 ├── beast_fastapi_server.py   # Main FastAPI server
 ├── beast_api_manager.py      # API integration manager
-├── api_integrations_enhanced.py  # Enhanced APIs
+
 ├── config.py                 # API keys configuration
 ├── run.py                    # Unified launcher
 ├── start.sh                  # Quick start script

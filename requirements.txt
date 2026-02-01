@@ -78,3 +78,9 @@ aiofiles>=23.2.1
 # Storage >= 5GB free space (for model caching)
 # GPU: Optional (CUDA) for faster inference
 # ============================================================================
+fastapi
+websockets
+redis
+transformers
+torch
+numpy

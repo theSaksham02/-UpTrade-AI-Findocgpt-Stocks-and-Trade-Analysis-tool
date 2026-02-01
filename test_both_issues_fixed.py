@@ -69,8 +69,7 @@ The WebSocket connection errors you're seeing are NORMAL and EXPECTED:
     # Test stock quote
     print("📊 Testing Stock Quote...")
     try:
-        from api_integrations_enhanced import EnhancedAPIManager
-        api_manager = EnhancedAPIManager()
+        api_manager = manager
         quote = api_manager.get_stock_quote('AAPL')
         if quote and quote.get('price'):
             print(f"   ✅ AAPL: ${quote['price']} ({quote.get('change_percent', 'N/A')}%)")

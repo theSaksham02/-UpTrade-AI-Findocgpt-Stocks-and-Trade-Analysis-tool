@@ -14,7 +14,7 @@ import asyncio
 import json
 
 from beast_api_manager import get_beast_manager
-from api_integrations_enhanced import get_enhanced_api_manager
+# from api_integrations_enhanced import get_enhanced_api_manager
 
 # ============================================================================
 # REQUEST/RESPONSE MODELS
@@ -50,7 +50,7 @@ app.add_middleware(
 
 # Initialize managers
 beast_manager = get_beast_manager()
-basic_manager = get_enhanced_api_manager()
+basic_manager = beast_manager
 
 # ============================================================================
 # HEALTH & STATUS ENDPOINTS
