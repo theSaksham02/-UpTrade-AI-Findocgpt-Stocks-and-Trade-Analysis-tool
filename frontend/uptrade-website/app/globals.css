@@ -1006,14 +1006,18 @@
 .animate-fade-in-section {
   animation: fade-in-section 1s ease-out forwards;
   opacity: 0;
-}/* Adding animated background gradient */
+}
+
+/* Adding animated background gradient */
 @keyframes gradient-xy {
   0% {
     background-position: 0% 50%;
   }
+
   50% {
     background-position: 100% 50%;
   }
+
   100% {
     background-position: 0% 50%;
   }
@@ -1022,4 +1026,32 @@
 .animate-gradient-xy {
   background-size: 400% 400%;
   animation: gradient-xy 15s ease infinite;
+}
+
+/* 3D Transform Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* Gradient Text */
+.text-gradient {
+  background: linear-gradient(135deg, #2962FF 0%, #089981 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Glassmorphism for cards */
+.glass {
+  background: rgba(19, 23, 34, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
