@@ -25,18 +25,22 @@ app.add_middleware(
 
 # Import and include routers
 from api.tradex_router import router as tradex_router
+from api.vector_router import router as vector_router
+
 app.include_router(tradex_router)
+app.include_router(vector_router)
 
 
 @app.get("/")
 async def root():
     return {
         "name": "Uptrade API",
-        "version": "1.0.0",
+        "version": "2.0.0",
         "endpoints": {
             "tradex": "/tradex",
+            "vectors": "/vectors",
             "docs": "/docs",
-            "health": "/tradex/health"
+            "health": "/health"
         }
     }
 
