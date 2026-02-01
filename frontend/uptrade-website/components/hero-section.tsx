@@ -6,7 +6,7 @@ import { ArrowRight, Play, TrendingUp, BarChart3, Zap } from "lucide-react"
 
 export function HeroSection() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-24 pb-16 relative overflow-hidden">
+    <section className="min-h-screen flex flex-col items-center justify-center px-4 pt-32 pb-16 relative overflow-hidden">
       {/* Background gradient overlay */}
       <div
         className="absolute inset-0 pointer-events-none"
@@ -17,7 +17,7 @@ export function HeroSection() {
 
       <div className="max-w-5xl mx-auto text-center relative z-10">
         {/* Main Headline - TradingView Style */}
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 animate-fade-in-heading">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6 animate-fade-in-heading">
           <span style={{ color: 'var(--tv-text-primary)' }}>Look First</span>
           <span className="mx-3 md:mx-4" style={{ color: 'var(--tv-text-muted)' }}>/</span>
           <span
@@ -30,7 +30,7 @@ export function HeroSection() {
 
         {/* Subheading */}
         <p
-          className="text-lg sm:text-xl md:text-2xl max-w-2xl mx-auto mb-10 animate-fade-in-subheading"
+          className="text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-10 animate-fade-in-subheading"
           style={{ color: 'var(--tv-text-secondary)' }}
         >
           The best trades require research, then commitment. Join millions of traders using AI-powered analysis.
@@ -41,7 +41,7 @@ export function HeroSection() {
           <Link href="/dashboard">
             <Button
               size="lg"
-              className="rounded-full px-10 py-7 text-lg font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer"
+              className="rounded-full px-8 py-5 text-base font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer"
               style={{
                 backgroundColor: 'white',
                 color: '#131722',

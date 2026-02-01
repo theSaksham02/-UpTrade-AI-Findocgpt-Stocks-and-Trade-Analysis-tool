@@ -8,6 +8,7 @@ const navigation = [
   { name: "Features", href: "#features" },
   { name: "Pricing", href: "#pricing" },
   { name: "Markets", href: "/markets" },
+  { name: "Charts", href: "/charts" },
   { name: "TradeX", href: "/tradex" },
   { name: "VisualX", href: "/visualx" },
   { name: "API", href: "/api-dev" },

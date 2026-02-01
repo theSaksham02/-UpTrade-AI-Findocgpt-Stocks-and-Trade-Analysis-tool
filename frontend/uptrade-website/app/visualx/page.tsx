@@ -14,7 +14,7 @@ export default function VisualXLandingPage() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--tv-bg-dark)' }}>
       <GlassmorphismNav />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-32 pb-16">
         {/* Hero Section */}
         <section className="min-h-[80vh] flex items-center justify-center px-4 relative">
           {/* Background gradient */}
@@ -41,7 +41,7 @@ export default function VisualXLandingPage() {
                   Deep Market Intelligence
                 </div>
 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
                   <span style={{ color: 'var(--tv-text-primary)' }}>Visualize Market</span>
                   <br />
                   <span
@@ -52,7 +52,7 @@ export default function VisualXLandingPage() {
                   </span>
                 </h1>
 
-                <p className="text-xl mb-8 max-w-2xl" style={{ color: 'var(--tv-text-muted)' }}>
+                <p className="text-lg mb-8 max-w-2xl" style={{ color: 'var(--tv-text-muted)' }}>
                   VisualX uses advanced AI to analyze stock price movements by correlating them with breaking news, market sentiment, and statistical anomalies. Understand exactly why stocks moved.
                 </p>
 

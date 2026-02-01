@@ -14,7 +14,7 @@ export default function TradeXLandingPage() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--tv-bg-dark)' }}>
       <GlassmorphismNav />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-32 pb-16">
         {/* Hero Section */}
         <section className="min-h-[80vh] flex items-center justify-center px-4 relative">
           {/* Background gradient */}
@@ -41,7 +41,7 @@ export default function TradeXLandingPage() {
                   Multi-Factor Stock Comparison
                 </div>
 
-                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
                   <span style={{ color: 'var(--tv-text-primary)' }}>Compare Stocks</span>
                   <br />
                   <span
@@ -52,7 +52,7 @@ export default function TradeXLandingPage() {
                   </span>
                 </h1>
 
-                <p className="text-xl mb-8 max-w-2xl" style={{ color: 'var(--tv-text-muted)' }}>
+                <p className="text-lg mb-8 max-w-2xl" style={{ color: 'var(--tv-text-muted)' }}>
                   TradeX analyzes 100+ metrics across multiple stocks instantly. Compare fundamentals, technicals, sentiment, and more in one powerful view.
                 </p>
 

@@ -14,7 +14,7 @@ export default function APIDevPage() {
     <div className="min-h-screen" style={{ backgroundColor: 'var(--tv-bg-dark)' }}>
       <GlassmorphismNav />
 
-      <main className="pt-24 pb-16">
+      <main className="pt-32 pb-16">
         {/* Hero Section */}
         <section className="min-h-[80vh] flex items-center justify-center px-4 relative">
           {/* Background gradient */}
@@ -38,7 +38,7 @@ export default function APIDevPage() {
               Developer-First API Platform
             </div>
 
-            <h1 className="text-4xl md:text-5xl lg:text-7xl font-bold mb-6">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
               <span style={{ color: 'var(--tv-text-primary)' }}>Build with</span>
               <br />
               <span
@@ -49,7 +49,7 @@ export default function APIDevPage() {
               </span>
             </h1>
 
-            <p className="text-xl mb-12 max-w-3xl mx-auto" style={{ color: 'var(--tv-text-muted)' }}>
+            <p className="text-lg mb-12 max-w-3xl mx-auto" style={{ color: 'var(--tv-text-muted)' }}>
               Access market data, AI analysis, sentiment feeds, and more. RESTful APIs with WebSocket support for real-time data. Built for developers who demand speed and reliability.
             </p>
 
