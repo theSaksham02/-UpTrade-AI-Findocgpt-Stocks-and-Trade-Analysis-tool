@@ -115,7 +115,7 @@ export default function TradeXPage() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.2 }}
-                    className="bg-[#1e222d] rounded-lg p-4 border border-[#2a2e39]"
+                    className="bg-[#1e222d]/40 backdrop-blur-md rounded-lg p-4 border border-[#2a2e39]/50"
                   >
                     <div className="flex items-center justify-between mb-3">
                       <div className="flex items-center gap-3">
@@ -206,7 +206,7 @@ export default function TradeXPage() {
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1 }}
-                className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6 hover:border-[#363a45] transition-colors"
+                className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 hover:border-[#363a45] transition-colors"
                 viewport={{ once: true }}
               >
                 <div

@@ -69,7 +69,7 @@ const dataFees = [
 
 export default function PricingPage() {
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
 
             <section className="pt-32 pb-20 px-6 text-center border-b border-[#2a2e39]">
@@ -138,8 +138,8 @@ export default function PricingPage() {
                         Exchange-mandated fees passed through at cost. Required for real-time US equity data.
                     </p>
 
-                    <div className="bg-[#0b0e14]/40 backdrop-blur-md rounded-xl border border-[#2a2e39]/50 overflow-hidden">
-                        <div className="grid grid-cols-3 gap-4 px-6 py-3 border-b border-[#2a2e39] bg-[#1e222d] text-sm font-medium text-[#868993]">
+                    <div className="bg-transparent backdrop-blur-md rounded-xl border border-[#2a2e39]/50 overflow-hidden">
+                        <div className="grid grid-cols-3 gap-4 px-6 py-3 border-b border-[#2a2e39]/50 bg-[#1e222d]/40 backdrop-blur-md text-sm font-medium text-[#868993]">
                             <div>Exchange</div>
                             <div>Monthly Fee</div>
                             <div>Notes</div>

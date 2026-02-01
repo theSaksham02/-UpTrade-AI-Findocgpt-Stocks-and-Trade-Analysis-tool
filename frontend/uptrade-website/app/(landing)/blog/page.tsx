@@ -88,9 +88,6 @@ export default function BlogPage() {
                     ))}
                 </div>
             </section>
-        </></>
-
-// Footer removed (handled by layout)
-        </div >
+        </div>
     );
 };
