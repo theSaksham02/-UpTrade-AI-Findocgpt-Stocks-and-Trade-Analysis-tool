@@ -2,7 +2,7 @@
 
 import { Calendar, Clock, ArrowRight } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const posts = [
     {
@@ -45,10 +45,10 @@ const posts = [
 
 export default function BlogPage() {
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
 
-            <section className="pt-32 pb-20 px-6 border-b border-[#2a2e39]">
+            <section className="pt-32 pb-20 px-6 border-b border-[#2a2e39]/30">
                 <div className="max-w-5xl mx-auto">
                     <h1 className="text-5xl font-bold text-white mb-6">Engineering & Research</h1>
                     <p className="text-xl text-[#868993]">
@@ -60,7 +60,7 @@ export default function BlogPage() {
             <section className="py-24 px-6">
                 <div className="max-w-5xl mx-auto grid gap-8">
                     {posts.map((post) => (
-                        <article key={post.slug} className="bg-[#131722] border border-[#2a2e39] rounded-xl p-8 hover:border-[#363a45] transition-colors group cursor-pointer">
+                        <article key={post.slug} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-8 hover:border-[#363a45] transition-colors group cursor-pointer">
                             <div className="flex items-center gap-4 text-sm text-[#868993] mb-4">
                                 <span className="text-[#2962FF] font-medium">{post.category}</span>
                                 <span>·</span>
@@ -88,8 +88,9 @@ export default function BlogPage() {
                     ))}
                 </div>
             </section>
+        </></>
 
-            <Footer />
-        </div>
+// Footer removed (handled by layout)
+        </div >
     );
 };

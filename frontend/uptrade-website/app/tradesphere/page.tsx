@@ -8,14 +8,14 @@ import Link from "next/link"
 
 export default function TradeSpherePage() {
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
+    <div className="min-h-screen bg-transparent overflow-hidden">
       <main className="min-h-screen relative overflow-hidden">
         <div className="fixed inset-0 w-full h-full">
           <Aurora colorStops={["#6b21a8", "#8b5cf6", "#7c3aed"]} amplitude={1.2} blend={0.6} speed={0.8} />
         </div>
         <div className="relative z-10">
           <GlassmorphismNav />
-          
+
           {/* Hero Section */}
           <section className="min-h-screen flex items-center justify-center px-4 py-20 relative">
             <div className="max-w-7xl mx-auto">
@@ -26,17 +26,17 @@ export default function TradeSpherePage() {
                     <PieChart className="w-4 h-4 mr-2" />
                     Portfolio Management & Backtesting
                   </div>
-                  
+
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                     Optimize Your
                     <br />
                     <span className="text-purple-400">Portfolio Strategy</span>
                   </h1>
-                  
+
                   <p className="text-xl text-white/70 mb-8 max-w-2xl">
                     Track positions, run scenarios, optimize allocations. TradeSphere gives you institutional-grade portfolio management tools.
                   </p>
-                  
+
                   <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
                     <Link href="/dashboard">
                       <Button className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-full px-8 py-6 text-lg">
@@ -48,7 +48,7 @@ export default function TradeSpherePage() {
                       View Features
                     </Button>
                   </div>
-                  
+
                   {/* Key Features */}
                   <div className="grid grid-cols-2 gap-4 max-w-md mx-auto lg:mx-0">
                     <div className="flex items-center space-x-2">
@@ -69,7 +69,7 @@ export default function TradeSpherePage() {
                     </div>
                   </div>
                 </div>
-                
+
                 {/* Right Column - Phone Mockup */}
                 <div className="flex justify-center">
                   <PhoneMockup
@@ -93,7 +93,7 @@ export default function TradeSpherePage() {
                           <span className="opacity-90">(+5.29%)</span>
                         </div>
                       </div>
-                      
+
                       {/* Top Holdings */}
                       <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
                         <div className="flex items-center space-x-2 mb-3">
@@ -116,7 +116,7 @@ export default function TradeSpherePage() {
                               <div className="text-xs text-green-600">+8.2%</div>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <div className="w-8 h-8 rounded-lg bg-green-500 flex items-center justify-center text-white text-xs font-bold">
@@ -132,7 +132,7 @@ export default function TradeSpherePage() {
                               <div className="text-xs text-green-600">+12.5%</div>
                             </div>
                           </div>
-                          
+
                           <div className="flex items-center justify-between">
                             <div className="flex items-center space-x-2">
                               <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-white text-xs font-bold">
@@ -150,7 +150,7 @@ export default function TradeSpherePage() {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Allocation Breakdown */}
                       <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-200">
                         <div className="flex items-center space-x-2 mb-3">
@@ -187,7 +187,7 @@ export default function TradeSpherePage() {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* Backtest Results */}
                       <div className="bg-indigo-50 rounded-xl p-3 border border-indigo-200">
                         <div className="flex items-start space-x-2 mb-2">
@@ -218,7 +218,7 @@ export default function TradeSpherePage() {
                           </div>
                         </div>
                       </div>
-                      
+
                       {/* AI Recommendation */}
                       <div className="bg-purple-100 rounded-xl p-3 border border-purple-200">
                         <div className="flex items-start space-x-2">
@@ -234,14 +234,14 @@ export default function TradeSpherePage() {
               </div>
             </div>
           </section>
-          
+
           {/* Features Section */}
           <section className="py-20 px-4">
             <div className="max-w-7xl mx-auto">
               <h2 className="text-4xl font-bold text-white text-center mb-12">
                 Professional Portfolio Tools
               </h2>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
                   <Target className="w-12 h-12 text-purple-400 mb-4" />
@@ -250,7 +250,7 @@ export default function TradeSpherePage() {
                     AI-powered portfolio optimization across sectors, risk levels, and asset classes.
                   </p>
                 </div>
-                
+
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
                   <BarChart3 className="w-12 h-12 text-indigo-400 mb-4" />
                   <h3 className="text-xl font-bold text-white mb-3">Advanced Backtesting</h3>
@@ -258,7 +258,7 @@ export default function TradeSpherePage() {
                     Test strategies against historical data with customizable scenarios and risk parameters.
                   </p>
                 </div>
-                
+
                 <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
                   <Layers className="w-12 h-12 text-blue-400 mb-4" />
                   <h3 className="text-xl font-bold text-white mb-3">Real-time Tracking</h3>
@@ -269,7 +269,7 @@ export default function TradeSpherePage() {
               </div>
             </div>
           </section>
-          
+
           <Footer />
         </div>
       </main>

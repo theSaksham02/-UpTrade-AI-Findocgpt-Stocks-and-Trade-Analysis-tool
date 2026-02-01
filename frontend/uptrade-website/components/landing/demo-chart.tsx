@@ -92,7 +92,7 @@ export function DemoChart() {
     }, [lastPrice])
 
     return (
-        <div className="relative rounded-lg overflow-hidden border border-[#2a2e39] bg-[#131722] shadow-2xl">
+        <div className="relative rounded-lg overflow-hidden border border-[#2a2e39]/50 bg-[#131722]/30 backdrop-blur-sm shadow-2xl">
             {/* Alert Overlay */}
             <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-[#f23645]/10 border border-[#f23645]/50 text-[#f23645] px-4 py-2 rounded-md animate-pulse">
                 <span className="relative flex h-3 w-3">

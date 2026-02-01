@@ -3,7 +3,7 @@
 import { AlertTriangle, Bell } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 export default function VisualXPage() {
   return (
@@ -60,14 +60,13 @@ export default function VisualXPage() {
 
           {/* Live Divergence Alert Mockup */}
           <div className="relative">
-            <div className="bg-[#131722] border border-[#2a2e39] rounded-2xl p-6">
-              <div className="flex items-center justify-between mb-6">
-                <span className="text-white font-bold">TSLA - 1D Chart</span>
-                <span className="text-[#868993] text-xs font-mono">VisualX Active</span>
-              </div>
-
+            <div className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-2xl p-6">
               {/* Chart with Divergence Marker */}
-              <div className="relative bg-[#0b0e14] rounded-lg p-4 h-64">
+              <div className="relative bg-[#0b0e14]/40 backdrop-blur-md rounded-lg p-4 h-64">
+                <div className="flex items-center justify-between mb-6">
+                  <span className="text-white font-bold">TSLA - 1D Chart</span>
+                  <span className="text-[#868993] text-xs font-mono">VisualX Active</span>
+                </div>
                 <svg viewBox="0 0 400 200" className="w-full h-full">
                   {/* Price line (stable) */}
                   <path
@@ -150,7 +149,7 @@ export default function VisualXPage() {
           </div>
         </div>
       </section>
-      <Footer />
+// Footer removed (handled by layout)
     </div>
   );
 };

@@ -130,7 +130,7 @@ function TradingHeader({ onSearch }: { onSearch: (query: string) => void }) {
     }, [])
 
     return (
-        <header className="h-12 bg-[#131722] border-b border-[#2a2e39] flex items-center px-4 justify-between fixed w-full top-0 z-50">
+        <header className="h-12 bg-[#131722]/60 backdrop-blur-md border-b border-[#2a2e39]/50 flex items-center px-4 justify-between fixed w-full top-0 z-50">
             {/* LEFT: Logo + Symbol Search */}
             <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
@@ -273,7 +273,7 @@ function WatchlistSidebar({
     )
 
     return (
-        <aside className="w-48 bg-[#131722] border-r border-[#2a2e39] flex flex-col">
+        <aside className="w-48 bg-[#131722]/50 backdrop-blur-md border-r border-[#2a2e39]/50 flex flex-col">
             <div className="p-2 border-b border-[#2a2e39]">
                 <div className="flex items-center bg-[#1e222d] border border-[#363a45] rounded px-2 py-1">
                     <span className="text-[#868993] mr-1"><Icons.Search /></span>
@@ -428,7 +428,7 @@ function ChartCard({ symbol, isActive, onRemove, onMaximize }: ChartCardProps) {
     const isUp = lastPrice.pct >= 0
 
     return (
-        <div className={`bg-[#131722] relative group flex flex-col ${isActive ? 'ring-1 ring-[#2962FF] ring-inset' : ''}`}>
+        <div className={`bg-[#131722]/40 backdrop-blur-sm relative group flex flex-col ${isActive ? 'ring-1 ring-[#2962FF] ring-inset' : ''}`}>
             {/* Chart Header */}
             <div className="h-8 flex items-center justify-between px-3 border-b border-[#2a2e39]">
                 <div className="flex items-center gap-3">
@@ -634,7 +634,7 @@ function ChartToolbar({
     const symbolData = WATCHLIST_DATA.find(w => w.symbol === activeSymbol) || WATCHLIST_DATA[0]
 
     return (
-        <div className="h-10 bg-[#131722] border-b border-[#2a2e39] flex items-center px-4 justify-between">
+        <div className="h-10 bg-[#131722]/60 backdrop-blur-md border-b border-[#2a2e39]/50 flex items-center px-4 justify-between">
             <div className="flex items-center gap-4">
                 <span className="text-white font-bold text-lg">{symbolData.symbol}</span>
                 <span className="text-[#868993] text-sm">{symbolData.name}</span>
@@ -751,7 +751,7 @@ export default function TradingDashboard({ defaultPanel = 'tradex' }: TradingDas
                 </main>
 
                 {/* Right: Engine Panels */}
-                <aside className="w-72 bg-[#131722] border-l border-[#2a2e39] flex flex-col">
+                <aside className="w-72 bg-[#131722]/50 backdrop-blur-md border-l border-[#2a2e39]/50 flex flex-col">
                     {/* Panel Tabs */}
                     <div className="flex border-b border-[#2a2e39]">
                         {[

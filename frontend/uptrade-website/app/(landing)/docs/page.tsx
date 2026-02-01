@@ -2,7 +2,7 @@
 
 import { Search, Book, Code, Zap, Terminal } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const docs = [
     {
@@ -49,7 +49,7 @@ const docs = [
 
 export default function DocsPage() {
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
 
             <section className="pt-32 pb-20 px-6 text-center border-b border-[#2a2e39]">
@@ -61,7 +61,7 @@ export default function DocsPage() {
                     <input
                         type="text"
                         placeholder="Search documentation..."
-                        className="w-full bg-[#131722] border border-[#2a2e39] rounded-xl py-4 pl-12 pr-4 text-white placeholder-[#868993] focus:border-[#2962FF] outline-none"
+                        className="w-full bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl py-4 pl-12 pr-4 text-white placeholder-[#868993] focus:border-[#2962FF] outline-none"
                     />
                 </div>
             </section>
@@ -69,7 +69,7 @@ export default function DocsPage() {
             <section className="py-24 px-6">
                 <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-8">
                     {docs.map((section) => (
-                        <div key={section.category} className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6">
+                        <div key={section.category} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6">
                             <div className="flex items-center gap-3 mb-6">
                                 <section.icon className="w-6 h-6 text-[#2962FF]" />
                                 <h2 className="text-xl font-bold text-white">{section.category}</h2>
@@ -94,7 +94,7 @@ export default function DocsPage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

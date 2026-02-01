@@ -2,7 +2,7 @@
 
 export const AboutUs = () => {
     return (
-        <section className="py-24 px-6 bg-[#0b0e14] border-t border-[#2a2e39]">
+        <section className="py-24 px-6 bg-transparent border-t border-white/5">
             <div className="max-w-7xl mx-auto grid md:grid-cols-2 gap-16 items-center">
                 <div>
                     <h2 className="text-3xl font-bold text-white mb-6">About UpTrade</h2>

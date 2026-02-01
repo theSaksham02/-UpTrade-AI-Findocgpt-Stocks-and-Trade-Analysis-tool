@@ -2,7 +2,7 @@
 
 import { Download, ExternalLink, Mail } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const logos = [
     { name: 'Logo Dark (PNG)', size: '24 KB', url: '/press/logo-dark.png' },
@@ -77,7 +77,7 @@ export default function PressPage() {
                             <a
                                 key={article.title}
                                 href={article.url}
-                                className="flex items-center justify-between bg-[#131722] border border-[#2a2e39] rounded-xl p-6 hover:border-[#363a45] transition-colors"
+                                className="flex items-center justify-between bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 hover:border-[#363a45] transition-colors"
                             >
                                 <div>
                                     <div className="text-[#2962FF] text-sm font-medium mb-1">{article.outlet}</div>
@@ -100,7 +100,7 @@ export default function PressPage() {
                 </section>
             </div>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

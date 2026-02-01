@@ -139,7 +139,7 @@ export default function FeaturesPage() {
                                         initial={{ opacity: 0, y: 20 }}
                                         animate={isInView ? { opacity: 1, y: 0 } : {}}
                                         transition={{ delay: idx * 0.1 + sectionIdx * 0.2 }}
-                                        className="group bg-[#131722] border border-[#2a2e39] rounded-xl p-6 hover:border-[#363a45] transition-colors"
+                                        className="group bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 hover:border-[#363a45] transition-colors"
                                     >
                                         <h3 className="text-lg font-bold text-white mb-3 group-hover:text-[#2962FF] transition-colors">
                                             {item.title}

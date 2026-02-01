@@ -5,7 +5,7 @@ import { ArrowRight } from 'lucide-react';
 
 export const CTA = () => {
     return (
-        <section className="py-24 px-6 bg-gradient-to-b from-[#0b0e14] to-[#131722]">
+        <section className="py-24 px-6 bg-transparent">
             <div className="max-w-4xl mx-auto text-center">
                 <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
                     Ready to start trading smarter?

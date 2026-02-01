@@ -6,6 +6,7 @@ import { PageTransition } from "@/components/page-transition"
 import { NavigationTransition } from "@/components/navigation-transition"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { Inter, Roboto_Mono } from "next/font/google"
+import Aurora from "@/components/Aurora"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -33,13 +34,18 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" className="dark">
-      <body className={`font-sans antialiased ${inter.variable} ${robotoMono.variable}`}>
-        <Suspense fallback={null}>
-          <NavigationTransition />
-          <PageTransition>{children}</PageTransition>
-        </Suspense>
-        <SpeedInsights />
+    <html lang="en" className="dark h-full">
+      <body className={`font-sans antialiased ${inter.variable} ${robotoMono.variable} min-h-screen relative bg-black selection:bg-blue-500/30`}>
+        <div className="fixed inset-0 w-full h-full z-0 pointer-events-none">
+          <Aurora colorStops={["#0066FF", "#00FF99", "#00CC88"]} amplitude={1.0} blend={0.5} speed={0.5} />
+        </div>
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <Suspense fallback={null}>
+            <NavigationTransition />
+            <PageTransition>{children}</PageTransition>
+          </Suspense>
+          <SpeedInsights />
+        </div>
       </body>
     </html>
   )

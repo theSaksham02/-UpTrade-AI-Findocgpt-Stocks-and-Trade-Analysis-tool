@@ -2,7 +2,7 @@
 
 import { Check, X, HelpCircle } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const plans = [
     {
@@ -84,7 +84,7 @@ export default function PricingPage() {
                     {plans.map((plan) => (
                         <div
                             key={plan.name}
-                            className={`bg-[#131722] rounded-xl border ${plan.popular ? 'border-[#2962FF]' : 'border-[#2a2e39]'
+                            className={`bg-[#131722]/40 backdrop-blur-md rounded-xl border ${plan.popular ? 'border-[#2962FF]' : 'border-[#2a2e39]/50'
                                 } p-6 flex flex-col`}
                         >
                             {plan.popular && (
@@ -116,8 +116,8 @@ export default function PricingPage() {
 
                             <button
                                 className={`w-full py-3 rounded-lg font-medium transition-colors ${plan.popular
-                                        ? 'bg-[#2962FF] hover:bg-[#1e53e5] text-white'
-                                        : 'bg-[#1e222d] hover:bg-[#2a2e39] text-white'
+                                    ? 'bg-[#2962FF] hover:bg-[#1e53e5] text-white'
+                                    : 'bg-[#1e222d] hover:bg-[#2a2e39] text-white'
                                     }`}
                             >
                                 {plan.cta}
@@ -128,7 +128,7 @@ export default function PricingPage() {
             </section>
 
             {/* Data Fees */}
-            <section className="py-24 px-6 bg-[#131722] border-y border-[#2a2e39]">
+            <section className="py-24 px-6 bg-[#131722]/20 backdrop-blur-sm border-y border-[#2a2e39]/30">
                 <div className="max-w-4xl mx-auto">
                     <div className="flex items-center gap-2 mb-8">
                         <h2 className="text-2xl font-bold text-white">Market Data Fees</h2>
@@ -166,7 +166,7 @@ export default function PricingPage() {
                             { q: 'Do you offer educational discounts?', a: 'Yes. University students and researchers email support@uptrade.io with .edu verification.' },
                             { q: 'Is there a self-hosted option?', a: 'Enterprise customers can deploy on-premise. Contact sales for VPC pricing.' },
                         ].map((faq, i) => (
-                            <div key={i} className="bg-[#131722] border border-[#2a2e39] rounded-lg p-6">
+                            <div key={i} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-lg p-6">
                                 <h3 className="text-white font-medium mb-2">{faq.q}</h3>
                                 <p className="text-[#868993] text-sm">{faq.a}</p>
                             </div>
@@ -175,7 +175,7 @@ export default function PricingPage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

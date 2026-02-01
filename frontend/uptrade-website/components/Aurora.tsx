@@ -111,12 +111,20 @@ void main() {
 }
 `
 
-export default function Aurora(props) {
-  const { colorStops = ["#5227FF", "#7cff67", "#5227FF"], amplitude = 1.0, blend = 0.5 } = props
-  const propsRef = useRef(props)
+interface AuroraProps {
+  colorStops?: string[];
+  amplitude?: number;
+  blend?: number;
+  time?: number;
+  speed?: number;
+}
+
+export default function Aurora(props: AuroraProps) {
+  const { colorStops = ["#0066FF", "#00FF99", "#00CC88"], amplitude = 1.0, blend = 0.5 } = props
+  const propsRef = useRef<AuroraProps>(props)
   propsRef.current = props
 
-  const ctnDom = useRef(null)
+  const ctnDom = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     const ctn = ctnDom.current
@@ -133,7 +141,7 @@ export default function Aurora(props) {
     gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
     gl.canvas.style.backgroundColor = "transparent"
 
-    let program
+    let program: Program
 
     function resize() {
       const width = window.innerWidth
@@ -150,7 +158,7 @@ export default function Aurora(props) {
       delete geometry.attributes.uv
     }
 
-    const colorStopsArray = colorStops.map((hex) => {
+    const colorStopsArray = colorStops.map((hex: string) => {
       const c = new Color(hex)
       return [c.r, c.g, c.b]
     })
@@ -173,17 +181,38 @@ export default function Aurora(props) {
     resize()
 
     let animateId = 0
-    const update = (t) => {
+    const update = (t: number) => {
       animateId = requestAnimationFrame(update)
       const { time = t * 0.01, speed = 1.0 } = propsRef.current
       program.uniforms.uTime.value = time * speed * 0.1
       program.uniforms.uAmplitude.value = propsRef.current.amplitude ?? 1.0
       program.uniforms.uBlend.value = propsRef.current.blend ?? blend
-      const stops = propsRef.current.colorStops ?? colorStops
-      program.uniforms.uColorStops.value = stops.map((hex) => {
-        const c = new Color(hex)
-        return [c.r, c.g, c.b]
-      })
+
+      // Dynamic Color Shifting (Blue-Teal-Green, BOOSTING Green)
+      const timeScale = time * 0.0005;
+
+      // Stop 1: Cyan to Bright Green
+      const r1 = 0.0;
+      const g1 = 0.6 + 0.4 * Math.sin(timeScale); // 0.2 - 1.0 (Green dominant)
+      const b1 = 0.6 + 0.4 * Math.cos(timeScale); // 0.2 - 1.0
+
+      // Stop 2: Deep Blue to Emerald
+      const r2 = 0.0;
+      const g2 = 0.5 + 0.5 * Math.sin(timeScale + 2); // 0.0 - 1.0 (Strong sweep)
+      const b2 = 0.5 + 0.3 * Math.cos(timeScale + 2);
+
+      // Stop 3: Teal base
+      const r3 = 0.0;
+      const g3 = 0.4 + 0.4 * Math.sin(timeScale + 4);
+      const b3 = 0.4 + 0.2 * Math.cos(timeScale + 4);
+
+      const stops = [
+        [r1, g1, b1],
+        [r2, g2, b2],
+        [r3, g3, b3]
+      ];
+
+      program.uniforms.uColorStops.value = stops;
       renderer.render({ scene: mesh })
     }
     animateId = requestAnimationFrame(update)

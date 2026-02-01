@@ -5,7 +5,7 @@ import MultiChartGrid from '@/components/multi-chart-grid'
 
 export default function EnginePage() {
     return (
-        <div className="min-h-screen" style={{ backgroundColor: '#0b0e14' }}>
+        <div className="min-h-screen bg-transparent">
             <GlassmorphismNav />
             <div className="pt-16">
                 <MultiChartGrid />

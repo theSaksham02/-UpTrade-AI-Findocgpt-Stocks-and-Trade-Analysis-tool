@@ -80,7 +80,7 @@ export default function MarketsPage() {
     const [activeTab, setActiveTab] = useState("Stocks")
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: 'var(--tv-bg-dark)' }}>
+        <div className="min-h-screen bg-transparent">
             <GlassmorphismNav />
 
             <main className="pt-24 pb-16">

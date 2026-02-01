@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Code, Terminal, Webhook, Key, Book, ChevronRight, Copy, Check } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 export default function APIPage() {
     const [copied, setCopied] = useState(false);
@@ -209,8 +209,8 @@ ws.onmessage = (event) => {
 
                                 <button
                                     className={`w-full py-3 rounded-lg font-medium transition-colors ${tier.popular
-                                            ? 'bg-[#2962FF] hover:bg-[#1e53e5] text-white'
-                                            : 'bg-[#1e222d] hover:bg-[#2a2e39] text-white'
+                                        ? 'bg-[#2962FF] hover:bg-[#1e53e5] text-white'
+                                        : 'bg-[#1e222d] hover:bg-[#2a2e39] text-white'
                                         }`}
                                 >
                                     Get Started
@@ -234,10 +234,10 @@ ws.onmessage = (event) => {
                             { method: 'GET', endpoint: '/v1/compare', desc: 'Multi-factor comparison' },
                             { method: 'WS', endpoint: '/ws/{symbol}', desc: 'Real-time sentiment stream' },
                         ].map((endpoint) => (
-                            <div key={endpoint.endpoint} className="flex items-center gap-4 p-4 bg-[#131722] rounded-lg border border-[#2a2e39] hover:border-[#363a45] transition-colors group cursor-pointer">
+                            <div key={endpoint.endpoint} className="flex items-center gap-4 p-4 bg-[#131722]/40 backdrop-blur-md rounded-lg border border-[#2a2e39]/50 hover:border-[#2962FF]/50 transition-colors group cursor-pointer">
                                 <span className={`font-mono text-sm px-2 py-1 rounded ${endpoint.method === 'GET' ? 'bg-[#089981]/20 text-[#089981]' :
-                                        endpoint.method === 'POST' ? 'bg-[#2962FF]/20 text-[#2962FF]' :
-                                            'bg-[#ff9800]/20 text-[#ff9800]'
+                                    endpoint.method === 'POST' ? 'bg-[#2962FF]/20 text-[#2962FF]' :
+                                        'bg-[#ff9800]/20 text-[#ff9800]'
                                     }`}>
                                     {endpoint.method}
                                 </span>
@@ -251,7 +251,7 @@ ws.onmessage = (event) => {
                     </div>
                 </div>
             </section>
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

@@ -2,7 +2,7 @@
 
 import { Search, Mail, MessageCircle, FileText } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const faqs = [
     { q: 'Why is my WebSocket disconnecting frequently?', a: 'Check your connection timeout settings. We recommend implementing exponential backoff reconnection with a max delay of 30 seconds. Also ensure you are sending ping frames every 30 seconds.' },
@@ -23,7 +23,7 @@ export default function SupportPage() {
                     <input
                         type="text"
                         placeholder="Search FAQs or documentation..."
-                        className="w-full bg-[#131722] border border-[#2a2e39] rounded-xl py-4 pl-12 pr-4 text-white placeholder-[#868993] focus:border-[#2962FF] outline-none"
+                        className="w-full bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl py-4 pl-12 pr-4 text-white placeholder-[#868993] focus:border-[#2962FF] outline-none"
                     />
                 </div>
             </section>
@@ -32,12 +32,12 @@ export default function SupportPage() {
                 <div className="max-w-4xl mx-auto space-y-12">
                     {/* Contact Options */}
                     <div className="grid md:grid-cols-3 gap-6">
-                        <a href="#" className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6 text-center hover:border-[#363a45] transition-colors">
+                        <a href="#" className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 text-center hover:border-[#363a45] transition-colors">
                             <Mail className="w-8 h-8 text-[#2962FF] mx-auto mb-3" />
                             <div className="text-white font-medium mb-1">Email Support</div>
                             <div className="text-[#868993] text-sm">Response in 24h</div>
                         </a>
-                        <a href="#" className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6 text-center hover:border-[#363a45] transition-colors">
+                        <a href="#" className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 text-center hover:border-[#363a45] transition-colors">
                             <MessageCircle className="w-8 h-8 text-[#089981] mx-auto mb-3" />
                             <div className="text-white font-medium mb-1">Live Chat</div>
                             <div className="text-[#868993] text-sm">Pro & Enterprise</div>
@@ -78,7 +78,7 @@ export default function SupportPage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

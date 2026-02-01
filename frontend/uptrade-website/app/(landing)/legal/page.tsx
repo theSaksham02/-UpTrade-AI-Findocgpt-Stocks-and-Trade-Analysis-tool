@@ -1,18 +1,16 @@
 import { GlassmorphismNav } from "@/components/glassmorphism-nav"
 import Aurora from "@/components/Aurora"
-import { Footer } from "@/components/footer"
+// Footer handled by layout
 import { Shield, FileText, Cookie, AlertTriangle } from "lucide-react"
 
 export default function LegalPage() {
   return (
-    <div className="min-h-screen bg-black overflow-hidden">
+    <div className="min-h-screen bg-transparent overflow-hidden">
       <main className="min-h-screen relative overflow-hidden">
-        <div className="fixed inset-0 w-full h-full">
-          <Aurora colorStops={["#1e293b", "#334155", "#475569"]} amplitude={1.2} blend={0.6} speed={0.8} />
-        </div>
+        {/* Aurora handled by root layout */}
         <div className="relative z-10">
           <GlassmorphismNav />
-          
+
           {/* Hero Section */}
           <section className="pt-32 pb-16 px-4">
             <div className="max-w-4xl mx-auto text-center">
@@ -20,11 +18,11 @@ export default function LegalPage() {
                 <Shield className="w-4 h-4 mr-2" />
                 Legal Information
               </div>
-              
+
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6">
                 Legal & Privacy
               </h1>
-              
+
               <p className="text-xl text-white/70 mb-8">
                 Our commitment to transparency, privacy, and responsible data handling
               </p>
@@ -58,14 +56,14 @@ export default function LegalPage() {
           {/* Legal Content */}
           <section className="py-12 px-4">
             <div className="max-w-4xl mx-auto space-y-12">
-              
+
               {/* Privacy Policy */}
               <div id="privacy" className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-8">
                 <div className="flex items-center space-x-3 mb-6">
                   <Shield className="w-8 h-8 text-blue-400" />
                   <h2 className="text-3xl font-bold text-white">Privacy Policy</h2>
                 </div>
-                
+
                 <div className="space-y-6 text-white/80">
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-3">Information We Collect</h3>
@@ -120,7 +118,7 @@ export default function LegalPage() {
                   <FileText className="w-8 h-8 text-green-400" />
                   <h2 className="text-3xl font-bold text-white">Terms of Service</h2>
                 </div>
-                
+
                 <div className="space-y-6 text-white/80">
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-3">Acceptance of Terms</h3>
@@ -178,7 +176,7 @@ export default function LegalPage() {
                   <Cookie className="w-8 h-8 text-yellow-400" />
                   <h2 className="text-3xl font-bold text-white">Cookie Policy</h2>
                 </div>
-                
+
                 <div className="space-y-6 text-white/80">
                   <div>
                     <h3 className="text-xl font-semibold text-white mb-3">What Are Cookies?</h3>
@@ -228,7 +226,7 @@ export default function LegalPage() {
                   <AlertTriangle className="w-8 h-8 text-red-400" />
                   <h2 className="text-3xl font-bold text-white">Disclaimer</h2>
                 </div>
-                
+
                 <div className="space-y-6 text-white/80">
                   <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-4">
                     <p className="font-semibold text-red-300 mb-2">
@@ -297,8 +295,8 @@ export default function LegalPage() {
                 <p className="text-white/70 mb-6">
                   If you have any questions or concerns about our legal policies, please contact us.
                 </p>
-                <a 
-                  href="mailto:legal@uptrade.com" 
+                <a
+                  href="mailto:legal@uptrade.com"
                   className="inline-block bg-white text-black font-semibold px-8 py-3 rounded-full hover:bg-white/90 transition-all"
                 >
                   Contact Legal Team
@@ -306,8 +304,8 @@ export default function LegalPage() {
               </div>
             </div>
           </section>
-          
-          <Footer />
+
+// Footer removed (handled by layout)
         </div>
       </main>
     </div>

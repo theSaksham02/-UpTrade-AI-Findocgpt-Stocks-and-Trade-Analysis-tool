@@ -1,11 +1,11 @@
 'use client'
 
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 export default function DisclaimerPage() {
     return (
-        <div className="bg-[#0b0e14] min-h-screen">
+        <div className="bg-transparent min-h-screen">
             <LandingHeader />
 
             <div className="py-32 px-6">
@@ -41,7 +41,7 @@ export default function DisclaimerPage() {
                 </div>
             </div>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

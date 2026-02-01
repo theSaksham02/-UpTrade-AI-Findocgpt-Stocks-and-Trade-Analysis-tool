@@ -2,7 +2,7 @@
 
 import { MapPin, DollarSign, Users } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const openings = [
     {
@@ -65,7 +65,7 @@ export default function CareersPage() {
             <section className="py-24 px-6">
                 <div className="max-w-4xl mx-auto space-y-6">
                     {openings.map((job) => (
-                        <div key={job.title} className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6 hover:border-[#363a45] transition-colors">
+                        <div key={job.title} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6 hover:border-[#2962FF]/50 transition-colors">
                             <div className="flex items-start justify-between mb-4">
                                 <div>
                                     <h3 className="text-xl font-bold text-white mb-1">{job.title}</h3>
@@ -109,7 +109,7 @@ export default function CareersPage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

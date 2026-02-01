@@ -7,7 +7,7 @@ import {
 import Link from 'next/link';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 export default function TradeXPage() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -92,7 +92,7 @@ export default function TradeXPage() {
 
           {/* Right: Interactive Preview */}
           <div className="relative">
-            <div className="relative bg-[#131722] border border-[#2a2e39] rounded-2xl p-6 shadow-2xl">
+            <div className="relative bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-2xl p-6 shadow-2xl">
               {/* Mock TradeX Interface */}
               <div className="flex items-center justify-between mb-6">
                 <div className="flex items-center gap-2">
@@ -151,7 +151,7 @@ export default function TradeXPage() {
             </div>
 
             {/* Floating Badge */}
-            <div className="absolute -bottom-6 -right-6 bg-[#1e222d] border border-[#363a45] rounded-lg p-4 shadow-xl">
+            <div className="absolute -bottom-6 -right-6 bg-[#1e222d]/60 backdrop-blur-md border border-[#363a45] rounded-lg p-4 shadow-xl">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 bg-[#089981]/20 rounded-lg flex items-center justify-center">
                   <TrendingUp className="w-5 h-5 text-[#089981]" />
@@ -227,11 +227,11 @@ export default function TradeXPage() {
       </section>
 
       {/* Infographic: The Formula */}
-      <section className="py-24 bg-[#131722]">
+      <div ref={containerRef} className="bg-transparent min-h-screen">
         <div className="max-w-5xl mx-auto px-6 text-center">
           <h2 className="text-3xl font-bold text-white mb-12">The PAS Formula</h2>
 
-          <div className="bg-[#0b0e14] border border-[#2a2e39] rounded-2xl p-8 font-mono text-lg overflow-x-auto">
+          <div className="bg-[#0b0e14]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-2xl p-8 font-mono text-lg overflow-x-auto">
             <div className="flex flex-nowrap items-center justify-center gap-4 text-[#868993] min-w-[600px]">
               <span className="text-white">PAS</span>
               <span>=</span>
@@ -258,7 +258,7 @@ export default function TradeXPage() {
             Bull markets overweight momentum. Bear markets overweight quality.
           </p>
         </div>
-      </section>
+      </div>
 
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
@@ -284,7 +284,7 @@ export default function TradeXPage() {
           </div>
         </div>
       </section>
-      <Footer />
+// Footer removed (handled by layout)
     </div>
   );
 };

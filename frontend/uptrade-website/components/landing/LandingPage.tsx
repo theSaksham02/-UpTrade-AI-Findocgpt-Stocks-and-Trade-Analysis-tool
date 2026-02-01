@@ -25,12 +25,8 @@ export function LandingPage() {
     }, [])
 
     return (
-        <div className="min-h-screen bg-[#0b0e14] overflow-hidden font-sans text-slate-300">
-            {/* Background Gradient */}
-            <div className="fixed inset-0 pointer-events-none">
-                <div className="absolute top-[-20%] left-[-10%] w-[70%] h-[70%] bg-[#2962FF]/10 blur-[120px] rounded-full mix-blend-screen" />
-                <div className="absolute bottom-[-20%] right-[-10%] w-[70%] h-[70%] bg-[#089981]/10 blur-[120px] rounded-full mix-blend-screen" />
-            </div>
+        <div className="overflow-hidden font-sans text-slate-300">
+            {/* Background handled by layout */}
 
             <div className="relative z-10">
                 {/* Header handled by layout */}

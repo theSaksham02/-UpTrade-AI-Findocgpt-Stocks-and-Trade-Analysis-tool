@@ -2,7 +2,7 @@
 
 import { MessageCircle, Github, Twitter, Disc, Users, Award } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const channels = [
     { name: 'Discord', members: '4,200+', icon: Disc, desc: 'Real-time chat, strategy sharing, and support' },
@@ -34,7 +34,7 @@ export default function CommunityPage() {
                         <a
                             key={channel.name}
                             href="#"
-                            className="bg-[#131722] border border-[#2a2e39] rounded-xl p-8 text-center hover:border-[#363a45] transition-colors group"
+                            className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-8 text-center hover:border-[#363a45] transition-colors group"
                         >
                             <channel.icon className="w-12 h-12 text-[#2962FF] mx-auto mb-4 group-hover:scale-110 transition-transform" />
                             <h3 className="text-xl font-bold text-white mb-2">{channel.name}</h3>
@@ -50,8 +50,8 @@ export default function CommunityPage() {
                         {leaderboard.map((user) => (
                             <div key={user.name} className="flex items-center gap-4 bg-[#131722] border border-[#2a2e39] rounded-xl p-6">
                                 <div className={`w-10 h-10 rounded-full flex items-center justify-center font-bold ${user.rank === 1 ? 'bg-[#ff9800] text-black' :
-                                        user.rank === 2 ? 'bg-[#868993] text-black' :
-                                            'bg-[#2a2e39] text-white'
+                                    user.rank === 2 ? 'bg-[#868993] text-black' :
+                                        'bg-[#2a2e39] text-white'
                                     }`}>
                                     {user.rank}
                                 </div>
@@ -69,7 +69,7 @@ export default function CommunityPage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

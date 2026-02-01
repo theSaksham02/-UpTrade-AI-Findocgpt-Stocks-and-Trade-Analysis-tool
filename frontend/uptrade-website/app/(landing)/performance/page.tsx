@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Activity, Clock, Database, Zap } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const metrics = [
     { name: 'API Response Time (p50)', value: 12, unit: 'ms', target: '<20ms', status: 'good' },
@@ -68,7 +68,7 @@ export default function PerformancePage() {
                     {/* Throughput Cards */}
                     <div className="grid md:grid-cols-4 gap-6">
                         {throughput.map((item) => (
-                            <div key={item.metric} className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6">
+                            <div key={item.metric} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6">
                                 <div className="text-[#868993] text-sm mb-2">{item.metric}</div>
                                 <div className="flex items-baseline gap-2">
                                     <span className="text-3xl font-bold text-white font-mono">{item.value}</span>
@@ -79,7 +79,7 @@ export default function PerformancePage() {
                     </div>
 
                     {/* Latency Table */}
-                    <div className="bg-[#131722] border border-[#2a2e39] rounded-xl overflow-hidden">
+                    <div className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl overflow-hidden">
                         <div className="px-6 py-4 border-b border-[#2a2e39]">
                             <h3 className="text-white font-bold">Latency Metrics (Live)</h3>
                         </div>
@@ -144,7 +144,7 @@ export default function PerformancePage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };

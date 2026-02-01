@@ -204,7 +204,7 @@ export default function ChartsPage() {
     }
 
     return (
-        <div className="min-h-screen" style={{ backgroundColor: 'var(--tv-bg-dark)' }}>
+        <div className="min-h-screen bg-transparent">
             <GlassmorphismNav />
 
             <main className="pt-20">

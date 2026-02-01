@@ -32,7 +32,7 @@ const plans = [
 
 export const Pricing = () => {
     return (
-        <section className="py-24 px-6 bg-[#0b0e14] border-t border-[#2a2e39]">
+        <section className="py-24 px-6 bg-transparent border-t border-white/5">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16">
                     <h2 className="text-3xl font-bold text-white mb-4">Simple Pricing</h2>
@@ -43,8 +43,7 @@ export const Pricing = () => {
                     {plans.map((plan) => (
                         <div
                             key={plan.name}
-                            className={`bg-[#131722] border rounded-2xl p-8 relative ${plan.popular ? 'border-[#2962FF] shadow-2xl shadow-blue-900/20' : 'border-[#2a2e39]'
-                                }`}
+                            className={`bg-[#131722]/40 backdrop-blur-sm border rounded-2xl p-8 relative ${plan.popular ? 'border-[#2962FF] shadow-2xl shadow-blue-900/20' : 'border-[#2a2e39]/50'}`}
                         >
                             {plan.popular && (
                                 <div className="absolute -top-4 left-1/2 -translate-x-1/2 bg-[#2962FF] text-white px-4 py-1 rounded-full text-sm font-medium">
@@ -70,8 +69,8 @@ export const Pricing = () => {
                             <Link
                                 href="/signup"
                                 className={`block w-full text-center py-3 rounded-lg font-medium transition-colors ${plan.popular
-                                        ? 'bg-[#2962FF] hover:bg-[#1e53e5] text-white'
-                                        : 'bg-[#1e222d] hover:bg-[#2a2e39] text-white'
+                                    ? 'bg-[#2962FF] hover:bg-[#1e53e5] text-white'
+                                    : 'bg-[#1e222d] hover:bg-[#2a2e39] text-white'
                                     }`}
                             >
                                 {plan.cta}

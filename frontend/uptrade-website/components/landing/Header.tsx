@@ -17,8 +17,8 @@ export const LandingHeader = () => {
     return (
         <header className={`fixed top-4 md:top-6 left-1/2 -translate-x-1/2 z-50 w-[95vw] max-w-7xl transition-all duration-300`}>
             <div className={`rounded-full border px-6 py-3 transition-all duration-300 ${scrolled
-                    ? 'bg-[#0b0e14]/80 backdrop-blur-xl border-[#2a2e39] shadow-2xl'
-                    : 'bg-[#0b0e14]/60 backdrop-blur-md border-transparent hover:bg-[#0b0e14]/80 hover:border-[#2a2e39]'
+                ? 'bg-[#0b0e14]/80 backdrop-blur-xl border-[#2a2e39] shadow-2xl'
+                : 'bg-[#0b0e14]/60 backdrop-blur-md border-transparent hover:bg-[#0b0e14]/80 hover:border-[#2a2e39]'
                 }`}>
                 <div className="flex items-center justify-between">
                     <Link href="/" className="flex items-center gap-2">
@@ -34,7 +34,7 @@ export const LandingHeader = () => {
                                 Product <ChevronDown className="w-4 h-4" />
                             </button>
                             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div className="bg-[#131722] border border-[#2a2e39] rounded-lg shadow-xl py-2 w-48 overflow-hidden">
+                                <div className="bg-[#131722]/80 backdrop-blur-md border border-[#2a2e39]/50 rounded-lg shadow-xl py-2 w-48 overflow-hidden">
                                     <Link href="/features" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">Features</Link>
                                     <Link href="/tradex" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">TradeX</Link>
                                     <Link href="/visualx" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">VisualX</Link>
@@ -48,7 +48,7 @@ export const LandingHeader = () => {
                                 Solutions <ChevronDown className="w-4 h-4" />
                             </button>
                             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div className="bg-[#131722] border border-[#2a2e39] rounded-lg shadow-xl py-2 w-48 overflow-hidden">
+                                <div className="bg-[#131722]/80 backdrop-blur-md border border-[#2a2e39]/50 rounded-lg shadow-xl py-2 w-48 overflow-hidden">
                                     <Link href="/docs" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">For Developers</Link>
                                     <Link href="/pricing" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">For Traders</Link>
                                     <Link href="/api-page" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">For Institutions</Link>
@@ -63,7 +63,7 @@ export const LandingHeader = () => {
                                 Developers <ChevronDown className="w-4 h-4" />
                             </button>
                             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div className="bg-[#131722] border border-[#2a2e39] rounded-lg shadow-xl py-2 w-48 overflow-hidden">
+                                <div className="bg-[#131722]/80 backdrop-blur-md border border-[#2a2e39]/50 rounded-lg shadow-xl py-2 w-48 overflow-hidden">
                                     <Link href="/docs" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">Documentation</Link>
                                     <Link href="/api-page" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">API Reference</Link>
                                 </div>
@@ -75,7 +75,7 @@ export const LandingHeader = () => {
                                 Company <ChevronDown className="w-4 h-4" />
                             </button>
                             <div className="absolute top-full left-0 pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                                <div className="bg-[#131722] border border-[#2a2e39] rounded-lg shadow-xl py-2 w-48 overflow-hidden">
+                                <div className="bg-[#131722]/80 backdrop-blur-md border border-[#2a2e39]/50 rounded-lg shadow-xl py-2 w-48 overflow-hidden">
                                     <Link href="/about" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">About Us</Link>
                                     <Link href="/blog" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">Blog</Link>
                                     <Link href="/careers" className="block px-4 py-2 text-sm text-[#868993] hover:text-white hover:bg-[#1e222d] transition-colors">Careers</Link>

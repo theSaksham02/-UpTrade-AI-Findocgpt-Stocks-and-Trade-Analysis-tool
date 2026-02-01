@@ -2,7 +2,7 @@
 
 import { Microscope, Brain, Network, Binary } from 'lucide-react';
 import { LandingHeader } from '@/components/landing/Header';
-import { Footer } from '@/components/footer';
+// Footer handled by layout
 
 const models = [
     {
@@ -56,7 +56,7 @@ export default function AIAnalysisPage() {
             <section className="py-24 px-6">
                 <div className="max-w-6xl mx-auto space-y-8">
                     {models.map((model) => (
-                        <div key={model.name} className="bg-[#131722] border border-[#2a2e39] rounded-xl p-6">
+                        <div key={model.name} className="bg-[#131722]/40 backdrop-blur-md border border-[#2a2e39]/50 rounded-xl p-6">
                             <div className="grid md:grid-cols-6 gap-6 items-center">
                                 <div className="md:col-span-2">
                                     <h3 className="text-xl font-bold text-white mb-1">{model.name}</h3>
@@ -121,7 +121,7 @@ export default function AIAnalysisPage() {
                 </div>
             </section>
 
-            <Footer />
+// Footer removed (handled by layout)
         </div>
     );
 };
