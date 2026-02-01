@@ -30,6 +30,7 @@ interface ChartInstance {
     volumeSeries: ISeriesApi<'Histogram'> | null
     lastPrice: number
     lastSentiment: number
+    disposed?: boolean
 }
 
 interface MultiChartGridProps {
@@ -221,9 +222,16 @@ export function MultiChartGrid({ configs, wsUrl = 'ws://localhost:8080' }: Multi
     useEffect(() => {
         if (!gridContainerRef.current) return
 
-        // Clear existing charts
+        // Clear existing charts safely
         chartRefs.current.forEach((instance) => {
-            instance.chart.remove()
+            if (!instance.disposed) {
+                try {
+                    instance.chart.remove()
+                    instance.disposed = true
+                } catch (e) {
+                    // Chart already disposed
+                }
+            }
         })
         chartRefs.current.clear()
 
@@ -367,7 +375,14 @@ export function MultiChartGrid({ configs, wsUrl = 'ws://localhost:8080' }: Multi
         return () => {
             clearInterval(updateInterval)
             chartRefs.current.forEach((instance) => {
-                instance.chart.remove()
+                if (!instance.disposed) {
+                    try {
+                        instance.chart.remove()
+                        instance.disposed = true
+                    } catch (e) {
+                        // Chart already disposed
+                    }
+                }
             })
         }
     }, [chartConfigs])
