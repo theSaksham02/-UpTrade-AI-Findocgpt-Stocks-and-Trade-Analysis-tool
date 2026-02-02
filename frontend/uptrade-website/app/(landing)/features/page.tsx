@@ -125,11 +125,9 @@ export default function FeaturesPage() {
                 <div className="max-w-6xl mx-auto space-y-32">
                     {features.map((section, sectionIdx) => (
                         <div key={section.category}>
-                            <div className="flex items-center gap-4 mb-12">
-                                <div className="w-12 h-12 bg-[#1e222d]/40 backdrop-blur-md rounded-xl flex items-center justify-center border border-[#2a2e39]/50">
-                                    <section.icon className="w-6 h-6 text-[#2962FF]" />
-                                </div>
-                                <h2 className="text-3xl font-bold text-white">{section.category}</h2>
+                            <div className="flex items-center gap-3 mb-12">
+                                <section.icon className="w-6 h-6 text-[#00d4ff]" />
+                                <h2 className="text-2xl font-bold text-white font-mono">{section.category}</h2>
                             </div>
 
                             <div className="grid md:grid-cols-3 gap-6">

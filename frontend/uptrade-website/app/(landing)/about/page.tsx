@@ -1,378 +1,376 @@
-'use client';
+'use client'
 
-import { useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { Activity } from 'lucide-react';
-import { LandingHeader } from '@/components/landing/Header';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Github, Linkedin, Twitter, ChevronLeft, ChevronRight } from 'lucide-react';
+import Image from 'next/image';
+
+const timeline = [
+    {
+        year: '2021',
+        title: 'Internal Tool at Hedge Fund',
+        description: 'Started as an internal research tool to detect sentiment-price divergences before market moves.'
+    },
+    {
+        year: '2022',
+        title: 'VisualX Algorithm Breakthrough',
+        description: 'Developed the core divergence detection engine. 73% accuracy on backtested signals across 50k+ events.'
+    },
+    {
+        year: '2023',
+        title: 'Public Beta Launch',
+        description: 'Launched API access for developers. First 1,000 users within 60 days. Zero marketing spend.'
+    },
+    {
+        year: '2024',
+        title: '12,000+ Active Traders',
+        description: 'Processing 1.2M messages/sec. Expanded to crypto, forex, and options data coverage.'
+    },
+];
+
+const stats = [
+    { value: '50+', label: 'Data Sources' },
+    { value: '<50ms', label: 'P99 Latency' },
+    { value: '99.99%', label: 'API Uptime' },
+];
+
+const founderImages = [
+    {
+        src: '/images/founder/pitch_1.png',
+        caption: 'Pitching UpTrade at the GEAC Investor Summit',
+        context: 'Value Tiers & Enterprise Access'
+    },
+    {
+        src: '/images/founder/pitch_2.png',
+        caption: 'Introducing the Intelligence Loop',
+        context: 'TradeX & TradeSphere Demo'
+    },
+    {
+        src: '/images/founder/pitch_3.png',
+        caption: 'Addressing the Core Problem',
+        context: 'PITCH STAGE - Investor Demo Day'
+    },
+];
+
+const techStack = `# UpTrade Architecture
+
+## Data Layer
+- PostgreSQL + TimescaleDB (time-series)
+- Redis Cluster (caching, pub/sub)
+- Weaviate (vector embeddings)
+
+## Processing
+- FastAPI (Python REST/WebSocket)
+- Kafka (event streaming)
+- PyTorch + ONNX (ML inference)
+
+## Infrastructure  
+- Kubernetes on GCP
+- CloudFlare (edge caching)
+- Datadog (observability)`;
+
+const jobs = [
+    { role: 'Senior Backend Engineer', dept: 'Engineering', location: 'Remote (US/EU)', link: '#' },
+    { role: 'ML Engineer, NLP', dept: 'AI/ML', location: 'San Francisco', link: '#' },
+    { role: 'DevOps/SRE', dept: 'Infrastructure', location: 'Remote', link: '#' },
+];
 
 export default function AboutPage() {
-    const containerRef = useRef<HTMLDivElement>(null);
-    const { scrollYProgress } = useScroll({
-        target: containerRef,
-        offset: ["start start", "end end"]
-    });
+    const [currentImage, setCurrentImage] = useState(0);
+    const [isHovered, setIsHovered] = useState(false);
 
-    // Parallax transforms
-    const y1 = useTransform(scrollYProgress, [0, 1], [0, -500]);
-    const y2 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-    const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+    // Auto-advance carousel
+    useEffect(() => {
+        if (isHovered) return;
+        const interval = setInterval(() => {
+            setCurrentImage((prev) => (prev + 1) % founderImages.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, [isHovered]);
+
+    const nextImage = () => setCurrentImage((prev) => (prev + 1) % founderImages.length);
+    const prevImage = () => setCurrentImage((prev) => (prev - 1 + founderImages.length) % founderImages.length);
 
     return (
-        <div ref={containerRef} className="bg-[#02040a] min-h-[200vh] relative overflow-hidden">
-
-            {/* =========================================
-          BACKGROUND LAYERS (Depth Effect)
-      ========================================= */}
-
-            {/* Layer 1: Deep Space Gradient */}
-            <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_50%,_#0a1628_0%,_#02040a_50%)]" />
-
-            {/* Layer 2: Animated Noise Texture for Film Grain */}
-            <div className="fixed inset-0 opacity-[0.03] pointer-events-none">
-                <svg className="w-full h-full">
-                    <filter id="noise">
-                        <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" />
-                    </filter>
-                    <rect width="100%" height="100%" filter="url(#noise)" />
-                </svg>
-            </div>
-
-            {/* Layer 3: Floating Organic Blobs (3D CSS) */}
-            <FloatingBlobs />
-
-            {/* =========================================
-          HERO SECTION (First Viewport)
-      ========================================= */}
-
-            <section className="h-screen relative flex items-center justify-center">
-                <LandingHeader />
-
-                {/* Floating Glass Button - Like "Contact us" in video */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.5, duration: 1 }}
-                    className="fixed top-1/2 right-20 z-50 hidden lg:block"
-                >
-                    <a
-                        href="/app"
-                        className="group relative px-8 py-4 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl overflow-hidden block"
+        <div className="min-h-screen">
+            {/* Hero */}
+            <section className="pt-32 pb-16 px-6">
+                <div className="max-w-3xl mx-auto text-center">
+                    <motion.h1
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-4xl md:text-5xl font-bold text-white mb-6 leading-tight tracking-tight"
                     >
-                        {/* Inner glow effect */}
-                        <div className="absolute inset-0 bg-gradient-to-br from-[#2962FF]/20 via-transparent to-[#089981]/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        <span className="relative text-white/90 font-medium tracking-wide text-sm">
-                            Launch Platform
-                        </span>
-                    </a>
-                </motion.div>
-
-                {/* Large Background Text - "We Are" */}
-                <motion.div style={{ y: y1 }} className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <h1 className="text-[20vw] font-black text-white/[0.02] tracking-tighter whitespace-nowrap">
-                        UPTRADE
-                    </h1>
-                </motion.div>
-
-                {/* Hero Content */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center z-40">
-                    <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 1 }}
+                        Built by traders who were tired of being slow.
+                    </motion.h1>
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
+                        className="text-lg text-[#868993] leading-relaxed"
                     >
-                        <h2 className="text-6xl font-light text-white mb-6 tracking-tighter">
-                            Creating a <br />
-                            <span className="font-bold text-transparent bg-clip-text bg-gradient-to-r from-[#2962FF] to-[#089981]">
-                                Brighter Future
-                            </span>
-                        </h2>
-                    </motion.div>
+                        We spent years watching retail traders lose to institutional speed.
+                        UpTrade exists to close that gap.
+                    </motion.p>
                 </div>
+            </section>
 
-                {/* Right side info - Like hello@nexaai */}
-                <div className="absolute bottom-12 right-12 text-right z-40">
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 1 }}
-                        className="text-white/60 text-sm font-light tracking-wider"
+            {/* Founder Showcase - Image Carousel */}
+            <section className="py-16 px-6">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-xs text-[#868993] font-mono uppercase tracking-wider mb-8">
+                        // Founder in Action
+                    </h2>
+
+                    <div
+                        className="relative group"
+                        onMouseEnter={() => setIsHovered(true)}
+                        onMouseLeave={() => setIsHovered(false)}
                     >
-                        hello@uptrade.io
-                    </motion.div>
-                    <div className="text-white/30 text-xs mt-2">Decision Intelligence Engine</div>
-                </div>
-
-                {/* Navigation Grid - Like Services, About us, etc */}
-                <div className="absolute bottom-12 left-12 grid grid-cols-2 gap-12 z-40">
-                    <div>
-                        <div className="text-white/40 text-xs uppercase tracking-widest mb-4">Explore</div>
-                        <nav className="space-y-3">
-                            {['Services', 'About us', 'Insight', 'Career', 'News'].map((item, i) => (
-                                <motion.a
-                                    key={item}
-                                    href={`/${item.toLowerCase().replace(' ', '-')}`}
-                                    initial={{ opacity: 0, x: -10 }}
+                        {/* Main Image Container */}
+                        <motion.div
+                            className="relative aspect-[16/10] rounded-xl overflow-hidden border border-white/10 bg-[#13131f]"
+                            whileHover={{ scale: 1.01 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={currentImage}
+                                    initial={{ opacity: 0, x: 50 }}
                                     animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 0.8 + i * 0.1 }}
-                                    className="block text-white/70 hover:text-white text-sm font-light transition-colors"
+                                    exit={{ opacity: 0, x: -50 }}
+                                    transition={{ duration: 0.5, ease: "easeInOut" }}
+                                    className="absolute inset-0"
                                 >
-                                    {item}
-                                </motion.a>
+                                    <Image
+                                        src={founderImages[currentImage].src}
+                                        alt={founderImages[currentImage].caption}
+                                        fill
+                                        className="object-cover"
+                                        priority
+                                    />
+                                    {/* Gradient Overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0f] via-transparent to-transparent" />
+                                </motion.div>
+                            </AnimatePresence>
+
+                            {/* Caption */}
+                            <motion.div
+                                className="absolute bottom-0 left-0 right-0 p-6"
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.3 }}
+                            >
+                                <div className="flex items-center gap-2 mb-2">
+                                    <span className="w-2 h-2 bg-[#00d4ff] rounded-full animate-pulse" />
+                                    <span className="text-[#00d4ff] font-mono text-xs uppercase tracking-wider">
+                                        {founderImages[currentImage].context}
+                                    </span>
+                                </div>
+                                <p className="text-white text-lg font-medium">
+                                    {founderImages[currentImage].caption}
+                                </p>
+                            </motion.div>
+
+                            {/* Navigation Arrows */}
+                            <button
+                                onClick={prevImage}
+                                className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0a0a0f]/80 border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#00d4ff] hover:border-[#00d4ff] hover:text-[#0a0a0f]"
+                            >
+                                <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <button
+                                onClick={nextImage}
+                                className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-[#0a0a0f]/80 border border-white/10 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-[#00d4ff] hover:border-[#00d4ff] hover:text-[#0a0a0f]"
+                            >
+                                <ChevronRight className="w-5 h-5" />
+                            </button>
+                        </motion.div>
+
+                        {/* Dots Indicator */}
+                        <div className="flex justify-center gap-2 mt-4">
+                            {founderImages.map((_, idx) => (
+                                <button
+                                    key={idx}
+                                    onClick={() => setCurrentImage(idx)}
+                                    className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentImage
+                                            ? 'w-8 bg-[#00d4ff]'
+                                            : 'w-1.5 bg-white/30 hover:bg-white/50'
+                                        }`}
+                                />
                             ))}
-                        </nav>
+                        </div>
+
+                        {/* Floating Badge */}
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.5 }}
+                            className="absolute -top-4 -right-4 bg-[#00d4ff] text-[#0a0a0f] px-3 py-1.5 rounded-full font-mono text-xs font-bold shadow-lg shadow-[#00d4ff]/30"
+                        >
+                            Live Pitch
+                        </motion.div>
                     </div>
 
-                    <div>
-                        <div className="text-white/40 text-xs uppercase tracking-widest mb-4">Social</div>
-                        <nav className="space-y-3">
-                            {['Instagram', 'X / Twitter', 'LinkedIn', 'Discord'].map((item, i) => (
-                                <motion.a
-                                    key={item}
-                                    href="#"
-                                    initial={{ opacity: 0, x: -10 }}
-                                    animate={{ opacity: 1, x: 0 }}
-                                    transition={{ delay: 1 + i * 0.1 }}
-                                    className="block text-white/70 hover:text-white text-sm font-light transition-colors"
-                                >
-                                    {item}
-                                </motion.a>
-                            ))}
-                        </nav>
+                    {/* Founder Info Card */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                        className="mt-8 bg-[#13131f] border border-white/10 rounded-lg p-6 flex items-center gap-6"
+                    >
+                        <div className="w-16 h-16 bg-gradient-to-br from-[#00d4ff] to-[#7c3aed] rounded-lg flex items-center justify-center text-white font-bold font-mono text-xl">
+                            SM
+                        </div>
+                        <div className="flex-1">
+                            <div className="text-white font-bold text-lg">Saksham Mishra</div>
+                            <div className="text-[#868993] text-sm">Founder & CEO</div>
+                            <div className="text-xs text-[#868993] mt-1 font-mono">
+                                Building the future of trading intelligence
+                            </div>
+                        </div>
+                        <div className="flex gap-3">
+                            <a href="https://linkedin.com" className="text-[#868993] hover:text-[#00d4ff] transition-colors">
+                                <Linkedin className="w-5 h-5" />
+                            </a>
+                            <a href="https://twitter.com" className="text-[#868993] hover:text-[#00d4ff] transition-colors">
+                                <Twitter className="w-5 h-5" />
+                            </a>
+                            <a href="https://github.com" className="text-[#868993] hover:text-[#00d4ff] transition-colors">
+                                <Github className="w-5 h-5" />
+                            </a>
+                        </div>
+                    </motion.div>
+                </div>
+            </section>
+
+            {/* Timeline */}
+            <section className="py-16 px-6">
+                <div className="max-w-3xl mx-auto">
+                    <h2 className="text-xs text-[#868993] font-mono uppercase tracking-wider mb-8">
+                        // Timeline
+                    </h2>
+                    <div className="space-y-8 border-l-2 border-white/10 pl-8">
+                        {timeline.map((item, idx) => (
+                            <motion.div
+                                key={item.year}
+                                initial={{ opacity: 0, x: -20 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                                className="relative"
+                            >
+                                <div className="absolute -left-[41px] w-4 h-4 rounded-full bg-[#00d4ff] border-4 border-[#0a0a0f]" />
+                                <div className="text-[#00d4ff] font-mono text-sm mb-1">{item.year}</div>
+                                <h3 className="text-white font-bold text-lg mb-2">{item.title}</h3>
+                                <p className="text-[#868993] text-sm leading-relaxed">{item.description}</p>
+                            </motion.div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* =========================================
-          SECOND SECTION: About Us Content
-          (Torch/Glow Element)
-      ========================================= */}
-
-            <section className="h-screen relative flex items-center justify-center">
-                {/* Central Glowing Element - The "Torch" */}
-                <div className="absolute inset-0 flex items-center justify-center">
-                    <TorchElement />
+            {/* Stats */}
+            <section className="py-16 px-6 border-y border-white/10">
+                <div className="max-w-3xl mx-auto">
+                    <div className="grid grid-cols-3 gap-8">
+                        {stats.map((stat, idx) => (
+                            <motion.div
+                                key={stat.label}
+                                className="text-center"
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                            >
+                                <div className="text-3xl md:text-4xl font-bold text-white font-mono">
+                                    {stat.value}
+                                </div>
+                                <div className="text-sm text-[#868993] mt-1">{stat.label}</div>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
+            </section>
 
-                {/* Left Text - "Our Mission" */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                    className="absolute left-20 top-1/2 -translate-y-1/2 z-40"
-                >
-                    <div className="w-12 h-px bg-white/20 mb-4" />
-                    <div className="text-white/60 text-sm tracking-wider">Our Mission</div>
-                </motion.div>
-
-                {/* Right Text - Staggered Word Reveal */}
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    whileInView={{ opacity: 1 }}
-                    transition={{ duration: 1 }}
-                    className="absolute right-20 top-1/2 -translate-y-1/2 z-40 max-w-md text-right"
-                >
-                    <StaggeredText text="Building the future of financial intelligence" />
-                    <motion.p
+            {/* Tech Stack */}
+            <section className="py-16 px-6">
+                <div className="max-w-3xl mx-auto">
+                    <h2 className="text-xs text-[#868993] font-mono uppercase tracking-wider mb-8">
+                        // Tech Stack
+                    </h2>
+                    <motion.div
                         initial={{ opacity: 0 }}
                         whileInView={{ opacity: 1 }}
-                        transition={{ delay: 1.5 }}
-                        className="text-white/50 text-sm mt-6 leading-relaxed"
+                        viewport={{ once: true }}
+                        className="bg-[#13131f] border border-white/10 rounded-lg overflow-hidden"
                     >
-                        Eliminating the fragmentation tax through unified decision intelligence.
-                    </motion.p>
-                </motion.div>
+                        <div className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0f] border-b border-white/10">
+                            <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
+                            <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
+                            <div className="w-3 h-3 rounded-full bg-[#10b981]" />
+                            <span className="text-xs text-[#868993] font-mono ml-2">architecture.md</span>
+                        </div>
+                        <pre className="p-4 text-sm font-mono text-[#868993] overflow-x-auto whitespace-pre-wrap">
+                            {techStack.split('\n').map((line, i) => {
+                                if (line.startsWith('# ')) {
+                                    return <div key={i} className="text-white font-bold">{line}</div>;
+                                } else if (line.startsWith('## ')) {
+                                    return <div key={i} className="text-[#00d4ff] mt-4">{line}</div>;
+                                } else if (line.startsWith('- ')) {
+                                    return <div key={i} className="text-[#868993] pl-2">{line}</div>;
+                                }
+                                return <div key={i}>{line}</div>;
+                            })}
+                        </pre>
+                    </motion.div>
+                </div>
             </section>
 
-            {/* Footer Bar */}
-            <div className="absolute bottom-0 left-0 right-0 p-6 flex justify-between items-center text-white/30 text-xs z-50 pointer-events-none">
-                <span>© 2024 UPTRADE AI SOLUTION</span>
-                <div className="flex gap-6 pointer-events-auto">
-                    <a href="/privacy" className="hover:text-white transition-colors">Privacy Policy</a>
-                    <a href="/terms" className="hover:text-white transition-colors">Terms & conditions</a>
+            {/* Careers */}
+            <section className="py-16 px-6 pb-24">
+                <div className="max-w-3xl mx-auto">
+                    <h2 className="text-xs text-[#868993] font-mono uppercase tracking-wider mb-8">
+                        // Open Positions
+                    </h2>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        viewport={{ once: true }}
+                        className="bg-[#13131f] border border-white/10 rounded-lg overflow-hidden"
+                    >
+                        <div className="grid grid-cols-4 gap-4 px-4 py-3 bg-[#0a0a0f] border-b border-white/10 text-xs text-[#868993] font-mono uppercase tracking-wider">
+                            <div>Role</div>
+                            <div>Department</div>
+                            <div>Location</div>
+                            <div></div>
+                        </div>
+                        {jobs.map((job, idx) => (
+                            <motion.div
+                                key={job.role}
+                                initial={{ opacity: 0, x: -10 }}
+                                whileInView={{ opacity: 1, x: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ delay: idx * 0.1 }}
+                                className={`grid grid-cols-4 gap-4 px-4 py-4 items-center ${idx !== jobs.length - 1 ? 'border-b border-white/10' : ''
+                                    } hover:bg-white/5 transition-colors`}
+                            >
+                                <div className="text-white font-medium">{job.role}</div>
+                                <div className="text-[#868993] text-sm">{job.dept}</div>
+                                <div className="text-[#868993] text-sm font-mono">{job.location}</div>
+                                <div className="text-right">
+                                    <a
+                                        href={job.link}
+                                        className="text-[#00d4ff] text-sm font-mono hover:underline"
+                                    >
+                                        Apply →
+                                    </a>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </motion.div>
                 </div>
-            </div>
+            </section>
         </div>
     );
-};
-
-// =========================================
-// COMPONENT: Floating Organic Blobs
-// =========================================
-const FloatingBlobs = () => {
-    return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden">
-            {/* Main large blob */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.2, 1],
-                    rotate: [0, 90, 0],
-                    x: [0, 100, 0],
-                    y: [0, -50, 0],
-                }}
-                transition={{
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute top-1/4 left-1/4 w-[600px] h-[600px]"
-                style={{
-                    background: 'radial-gradient(circle, rgba(41,98,255,0.3) 0%, transparent 70%)',
-                    filter: 'blur(60px)',
-                    mixBlendMode: 'screen'
-                }}
-            />
-
-            {/* Secondary blob */}
-            <motion.div
-                animate={{
-                    scale: [1.2, 1, 1.2],
-                    rotate: [90, 0, 90],
-                    x: [0, -100, 0],
-                    y: [0, 100, 0],
-                }}
-                transition={{
-                    duration: 25,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px]"
-                style={{
-                    background: 'radial-gradient(circle, rgba(8,153,129,0.2) 0%, transparent 70%)',
-                    filter: 'blur(80px)',
-                    mixBlendMode: 'screen'
-                }}
-            />
-
-            {/* Small accent blobs */}
-            {[...Array(5)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    animate={{
-                        y: [0, -200, 0],
-                        x: [0, Math.random() * 100 - 50, 0],
-                        scale: [1, 1.5, 1],
-                        opacity: [0.3, 0.6, 0.3],
-                    }}
-                    transition={{
-                        duration: 10 + Math.random() * 10,
-                        repeat: Infinity,
-                        delay: i * 2,
-                        ease: "easeInOut"
-                    }}
-                    className="absolute w-32 h-32 rounded-full"
-                    style={{
-                        left: `${Math.random() * 100}%`,
-                        top: `${Math.random() * 100}%`,
-                        background: `radial-gradient(circle, rgba(41,98,255,${0.2 + Math.random() * 0.3}) 0%, transparent 70%)`,
-                        filter: `blur(${30 + Math.random() * 20}px)`,
-                    }}
-                />
-            ))}
-        </div>
-    );
-};
-
-// =========================================
-// COMPONENT: Central Torch/Glow Element
-// =========================================
-const TorchElement = () => {
-    return (
-        <div className="relative w-40 h-96 flex items-center justify-center">
-            {/* Core bright light */}
-            <motion.div
-                animate={{
-                    scale: [1, 1.2, 1],
-                    opacity: [0.8, 1, 0.8],
-                }}
-                transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute w-8 h-32 bg-white rounded-full blur-xl"
-                style={{
-                    boxShadow: '0 0 60px 20px rgba(41,98,255,0.8), 0 0 100px 40px rgba(41,98,255,0.4)'
-                }}
-            />
-
-            {/* Inner flame */}
-            <motion.div
-                animate={{
-                    height: ['80%', '100%', '80%'],
-                    opacity: [0.9, 1, 0.9],
-                }}
-                transition={{
-                    duration: 2,
-                    repeat: Infinity,
-                    ease: "easeInOut"
-                }}
-                className="absolute w-4 h-24 bg-gradient-to-t from-[#2962FF] via-white to-transparent rounded-full blur-md"
-            />
-
-            {/* Outer glow ring */}
-            <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute w-64 h-64 border border-[#2962FF]/20 rounded-full"
-                style={{
-                    background: 'conic-gradient(from 0deg, transparent, rgba(41,98,255,0.1), transparent)'
-                }}
-            />
-
-            {/* Orbiting particles */}
-            {[...Array(3)].map((_, i) => (
-                <motion.div
-                    key={i}
-                    animate={{ rotate: 360 }}
-                    transition={{
-                        duration: 10 + i * 5,
-                        repeat: Infinity,
-                        ease: "linear"
-                    }}
-                    className="absolute w-full h-full"
-                    style={{ animationDelay: `${i * 3}s` }}
-                >
-                    <div
-                        className="absolute w-2 h-2 bg-[#2962FF] rounded-full blur-sm"
-                        style={{
-                            top: '0%',
-                            left: '50%',
-                            transform: 'translateX(-50%)',
-                            boxShadow: '0 0 20px 5px rgba(41,98,255,0.8)'
-                        }}
-                    />
-                </motion.div>
-            ))}
-
-            {/* Trail effect */}
-            <div className="absolute top-full w-2 h-32 bg-gradient-to-b from-[#2962FF]/50 to-transparent blur-lg" />
-        </div>
-    );
-};
-
-// =========================================
-// COMPONENT: Staggered Text Animation
-// =========================================
-const StaggeredText = ({ text }: { text: string }) => {
-    const words = text.split(' ');
-
-    return (
-        <h2 className="text-4xl md:text-5xl font-light text-white leading-tight">
-            {words.map((word, i) => (
-                <motion.span
-                    key={i}
-                    initial={{ opacity: 0, y: 20, filter: 'blur(10px)' }}
-                    whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                    transition={{
-                        duration: 0.8,
-                        delay: i * 0.15,
-                        ease: [0.23, 1, 0.32, 1]
-                    }}
-                    className="inline-block mr-3"
-                >
-                    {word}
-                </motion.span>
-            ))}
-        </h2>
-    );
-};
+}

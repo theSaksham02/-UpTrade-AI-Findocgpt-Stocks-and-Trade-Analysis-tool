@@ -7,7 +7,7 @@ import { LandingHeader } from '@/components/landing/Header';
 
 export default function VisualXPage() {
   return (
-    <div className="bg-[#0b0e14] min-h-screen">
+    <div className="min-h-screen">
       <LandingHeader />
       {/* Hero with Animated Heatmap Background */}
       <section className="relative h-screen flex items-center overflow-hidden pt-20">
