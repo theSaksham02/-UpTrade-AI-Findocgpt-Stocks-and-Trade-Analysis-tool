@@ -4,8 +4,10 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
     AreaChart, BarChart3, Brain, CandlestickChart, ChevronDown, Crosshair, FlaskConical, LineChart, List,
-    Minus, Newspaper, PanelRight, Search, Slash, Sparkles, Trash2, TrendingUp, Activity,
+    LogIn, LogOut, Minus, Newspaper, PanelRight, Search, Slash, Sparkles, Trash2, TrendingUp, Activity,
 } from 'lucide-react'
+import { displayName, useSession } from '@/components/auth/use-session'
+import { useWatchlistSync, type SyncState } from './use-watchlist-sync'
 import { INTERVALS, type Interval, type Quote } from '@/lib/market/types'
 import ChartPanel, { INDICATOR_META, type ChartType, type IndicatorKey, type Tool } from './chart-panel'
 import SymbolSearch from './symbol-search'
@@ -74,6 +76,52 @@ function Dropdown({ label, children, width = 220 }: { label: React.ReactNode; ch
     )
 }
 
+const SYNC_LABEL: Record<SyncState, string> = {
+    off: 'Watchlist saved in this browser',
+    loading: 'Loading your watchlist…',
+    synced: 'Watchlist synced to your account',
+    saving: 'Saving watchlist…',
+    error: 'Watchlist sync failed; changes are kept in this browser',
+}
+
+function AccountMenu({ session, syncState }: { session: ReturnType<typeof useSession>; syncState: SyncState }) {
+    const { user, loading, configured, signOut } = session
+    if (!configured || loading) return null
+    if (!user) {
+        const next = typeof window === 'undefined' ? '/app' : window.location.pathname + window.location.search
+        return (
+            <Link href={`/login?next=${encodeURIComponent(next)}`} className="ml-1 flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#2a2e39]" title="Sign in to sync your watchlist">
+                <LogIn size={15} /><span className="hidden sm:inline">Sign in</span>
+            </Link>
+        )
+    }
+    const name = displayName(user)
+    return (
+        <Dropdown
+            width={240}
+            label={
+                <span className="flex items-center gap-1.5" title={name}>
+                    <span className="flex h-6 w-6 items-center justify-center rounded-full text-[11px] font-semibold text-white" style={{ background: C.accent }}>{name.charAt(0).toUpperCase()}</span>
+                    <span className="hidden max-w-[140px] truncate xl:inline">{name}</span>
+                </span>
+            }
+        >
+            {(close) => (
+                <>
+                    <div className="px-3 py-2" style={{ borderBottom: `1px solid ${C.border2}` }}>
+                        <div className="truncate font-medium">{name}</div>
+                        {user.email && user.email !== name && <div className="truncate text-[12px]" style={{ color: C.muted }}>{user.email}</div>}
+                        <div className="mt-1 text-[11px]" style={{ color: syncState === 'error' ? C.amber : C.muted }}>{SYNC_LABEL[syncState]}</div>
+                    </div>
+                    <button onClick={async () => { close(); await signOut() }} className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-[#2a2e39]">
+                        <LogOut size={15} />Sign out
+                    </button>
+                </>
+            )}
+        </Dropdown>
+    )
+}
+
 const Sep = () => <div className="mx-1 h-5 w-px shrink-0" style={{ background: C.border2 }} />
 
 function ToolButton({ active, onClick, title, children }: { active?: boolean; onClick: () => void; title: string; children: React.ReactNode }) {
@@ -109,6 +157,8 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
     const [search, setSearch] = useState<null | 'chart' | 'watchlist'>(null)
     const [searchSeed, setSearchSeed] = useState('')
     const [clock, setClock] = useState('')
+    const session = useSession()
+    const syncState = useWatchlistSync(session.user, watchlist, setWatchlist)
 
     const activeSymbol = charts[Math.min(active, charts.length - 1)] || 'AAPL'
     const quoteSymbols = useMemo(() => Array.from(new Set([...watchlist, ...charts.slice(0, layout)])), [watchlist, charts, layout])
@@ -222,6 +272,7 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
                 </div>
                 <div className="flex-1" />
                 <span className="hidden shrink-0 font-mono text-[12px] lg:inline" style={{ color: C.muted }}>{clock}</span>
+                <AccountMenu session={session} syncState={syncState} />
                 <button onClick={() => setPanelOpen((o) => !o)} className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded hover:bg-[#2a2e39]" title="Toggle right panel" style={{ color: panelOpen ? C.accent : C.text }}>
                     <PanelRight size={17} />
                 </button>
