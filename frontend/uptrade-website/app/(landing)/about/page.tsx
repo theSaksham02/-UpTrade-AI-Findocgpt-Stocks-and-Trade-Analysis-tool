@@ -29,9 +29,9 @@ const timeline = [
 ];
 
 const stats = [
-    { value: '50+', label: 'Data Sources' },
-    { value: '<50ms', label: 'P99 Latency' },
-    { value: '99.99%', label: 'API Uptime' },
+    { value: '5 yrs', label: 'Daily history per symbol' },
+    { value: '4', label: 'Strategies to backtest' },
+    { value: '30d', label: 'Forecast horizon, with error band' },
 ];
 
 const founderImages = [

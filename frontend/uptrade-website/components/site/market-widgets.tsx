@@ -44,7 +44,7 @@ export function QuoteCard({ item }: { item: OverviewItem }) {
     return (
         <Link
             href={`/app?symbol=${encodeURIComponent(item.symbol)}`}
-            className="group block rounded-2xl border border-white/[0.08] bg-white/[0.03] p-4 transition-colors hover:border-white/20 hover:bg-white/[0.06]"
+            className="group block rounded-md border border-white/[0.08] bg-white/[0.03] p-4 transition-colors hover:border-white/20 hover:bg-white/[0.06]"
         >
             <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
@@ -64,7 +64,7 @@ export function QuoteCard({ item }: { item: OverviewItem }) {
 }
 
 export function SkeletonCard() {
-    return <div className="h-[150px] animate-pulse rounded-2xl border border-white/[0.06] bg-white/[0.03]" />
+    return <div className="h-[150px] animate-pulse rounded-md border border-white/[0.06] bg-white/[0.03]" />
 }
 
 // Large area chart used in the hero

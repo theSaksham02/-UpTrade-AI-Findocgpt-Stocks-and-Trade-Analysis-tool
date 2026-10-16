@@ -62,8 +62,8 @@ function Heatmap({ quotes }: { quotes: Record<string, Quote> }) {
 
 function MoverList({ title, rows }: { title: string; rows: Quote[] }) {
     return (
-        <div className="rounded-2xl border border-white/[0.08]">
-            <h3 className="border-b border-white/[0.08] px-4 py-3 font-display text-base font-semibold text-white">{title}</h3>
+        <div className="rounded-md border border-white/[0.08]">
+            <h3 className="border-b border-white/[0.08] px-4 py-3 text-sm font-medium text-white">{title}</h3>
             <ul>
                 {rows.map((q) => (
                     <li key={q.symbol}>
@@ -95,9 +95,9 @@ export function Markets() {
     const breadth = sorted.length ? sorted.filter((q) => q.changePercent > 0).length / sorted.length : null
 
     return (
-        <div className="min-h-screen bg-[#07080c] text-white">
+        <div className="min-h-screen bg-[#0a0b0d] text-white">
             <div className="mx-auto max-w-[1400px] px-4 pb-20 pt-10 md:px-6">
-                <h1 className="font-display text-4xl font-bold tracking-tight md:text-5xl">Markets</h1>
+                <h1 className="font-display text-4xl font-normal md:text-5xl">Markets</h1>
                 <p className="mt-3 max-w-2xl text-white/55">
                     Today’s moves across indices, large caps and crypto. Click any symbol to open it in the terminal.
                 </p>
@@ -108,7 +108,7 @@ export function Markets() {
 
                 <section className="mt-14">
                     <div className="mb-4 flex flex-wrap items-end justify-between gap-3">
-                        <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">Large-cap heatmap</h2>
+                        <h2 className="font-display text-2xl font-normal md:text-3xl">Large-cap heatmap</h2>
                         {breadth != null && (
                             <div className="flex items-center gap-3 text-sm text-white/60">
                                 <span>{Math.round(breadth * 100)}% advancing</span>
@@ -133,23 +133,23 @@ export function Markets() {
                 </section>
 
                 <section id="scan" className="mt-14 scroll-mt-24">
-                    <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">Model scan</h2>
+                    <h2 className="font-display text-2xl font-normal md:text-3xl">Model scan</h2>
                     <p className="mt-2 max-w-2xl text-sm text-white/50">Ranked by UpTrade score. The 30-day signal comes from the ARIMA forecast with the original Buy / Hold / Sell thresholds.</p>
                     <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                         {scan.data?.items.map((r) => (
-                            <Link key={r.symbol} href={`/app?symbol=${encodeURIComponent(r.symbol)}`} className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4 hover:border-white/20">
+                            <Link key={r.symbol} href={`/app?symbol=${encodeURIComponent(r.symbol)}`} className="rounded-md border border-white/[0.08] bg-white/[0.02] p-4 hover:border-white/20">
                                 <div className="flex items-center justify-between">
                                     <span className="font-semibold">{displaySymbol(r.symbol)}</span>
                                     <span className={`rounded-md px-2 py-0.5 text-xs font-medium ${r.stance === 'Bullish' ? 'bg-green-500/10 text-green-400' : r.stance === 'Bearish' ? 'bg-red-500/10 text-red-400' : 'bg-amber-500/10 text-amber-300'}`}>{r.stance}</span>
                                 </div>
                                 <div className="mt-3 flex items-end justify-between">
-                                    <span className="font-display text-4xl font-bold">{r.score}</span>
+                                    <span className="font-display text-4xl font-normal">{r.score}</span>
                                     <span className="text-right text-xs text-white/50">{r.signal}<br /><span className="font-mono">{fmtPct(r.projectedChangePct, 1, true)} / 30d</span></span>
                                 </div>
-                                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-[#5b8cff]" style={{ width: `${r.score}%` }} /></div>
+                                <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/10"><div className="h-full rounded-full bg-[#e8b04a]" style={{ width: `${r.score}%` }} /></div>
                             </Link>
                         ))}
-                        {!scan.data && Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-36 animate-pulse rounded-2xl bg-white/[0.03]" />)}
+                        {!scan.data && Array.from({ length: 8 }).map((_, i) => <div key={i} className="h-36 animate-pulse rounded-md bg-white/[0.03]" />)}
                     </div>
                     <p className="mt-3 text-xs text-white/40">Model output for research only. Not financial advice.</p>
                 </section>

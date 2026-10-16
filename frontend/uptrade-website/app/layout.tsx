@@ -5,12 +5,13 @@ import "./globals.css"
 import { PageTransition } from "@/components/page-transition"
 import { NavigationTransition } from "@/components/navigation-transition"
 import { SpeedInsights } from "@vercel/speed-insights/next"
-import { Space_Grotesk, IBM_Plex_Sans, JetBrains_Mono } from "next/font/google"
-import { RouteBackground } from "@/components/route-background"
+import { Instrument_Serif, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google"
 
-// UpTrade type system: Space Grotesk (display), IBM Plex Sans (UI/body), JetBrains Mono (numbers)
-const display = Space_Grotesk({
+// UpTrade type system: Instrument Serif (headlines), IBM Plex Sans (UI/body), IBM Plex Mono (numbers)
+const display = Instrument_Serif({
   subsets: ["latin"],
+  weight: "400",
+  style: ["normal", "italic"],
   variable: "--font-ut-display",
   display: "swap",
 })
@@ -22,8 +23,9 @@ const body = IBM_Plex_Sans({
   display: "swap",
 })
 
-const code = JetBrains_Mono({
+const code = IBM_Plex_Mono({
   subsets: ["latin"],
+  weight: ["400", "500"],
   variable: "--font-code",
   display: "swap",
 })
@@ -43,8 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark h-full">
-      <body className={`font-sans antialiased ${display.variable} ${body.variable} ${code.variable} min-h-screen relative bg-black selection:bg-blue-500/30`}>
-        <RouteBackground />
+      <body className={`font-sans antialiased ${display.variable} ${body.variable} ${code.variable} min-h-screen relative bg-[#0a0b0d] selection:bg-amber-300/30`}>
         <div className="relative z-10 flex flex-col min-h-screen">
           <Suspense fallback={null}>
             <NavigationTransition />

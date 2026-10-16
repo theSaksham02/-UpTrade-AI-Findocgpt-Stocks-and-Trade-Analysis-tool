@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import { TrendingUp } from 'lucide-react'
 
 const COLUMNS = [
     {
@@ -16,8 +15,6 @@ const COLUMNS = [
         title: 'Learn',
         links: [
             { href: '/docs', label: 'Docs' },
-            { href: '/api-page', label: 'API' },
-            { href: '/research', label: 'Research' },
             { href: '/blog', label: 'Blog' },
         ],
     },
@@ -25,8 +22,7 @@ const COLUMNS = [
         title: 'Company',
         links: [
             { href: '/about', label: 'About' },
-            { href: '/careers', label: 'Careers' },
-            { href: '/contact', label: 'Contact' },
+                        { href: '/contact', label: 'Contact' },
             { href: '/support', label: 'Support' },
         ],
     },
@@ -43,15 +39,13 @@ const COLUMNS = [
 
 export function SiteFooter() {
     return (
-        <footer className="border-t border-white/10 bg-[#07080c]">
+        <footer className="border-t border-[#ecebe6]/10 bg-[#0a0b0d]">
             <div className="mx-auto max-w-[1400px] px-4 py-14 md:px-6">
                 <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
                     <div className="max-w-xs">
-                        <Link href="/" className="flex items-center gap-2">
-                            <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#2962ff]">
-                                <TrendingUp className="h-[18px] w-[18px] text-white" />
-                            </span>
-                            <span className="font-display text-lg font-bold tracking-tight text-white">UpTrade</span>
+                        <Link href="/" className="flex items-baseline gap-1.5">
+                            <span className="font-display text-[28px] leading-none text-[#ecebe6]">UpTrade</span>
+                            <span className="h-1.5 w-1.5 bg-[#e8b04a]" />
                         </Link>
                         <p className="mt-4 text-sm leading-6 text-white/50">
                             Charts, an open forecasting model and market signals in one place.
@@ -59,7 +53,7 @@ export function SiteFooter() {
                     </div>
                     {COLUMNS.map((c) => (
                         <div key={c.title}>
-                            <h3 className="font-display text-sm font-semibold text-white">{c.title}</h3>
+                            <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#ecebe6]/45">{c.title}</h3>
                             <ul className="mt-4 space-y-2.5">
                                 {c.links.map((l) => (
                                     <li key={l.href + l.label}>
