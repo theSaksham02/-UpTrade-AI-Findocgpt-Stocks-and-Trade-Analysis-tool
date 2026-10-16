@@ -101,7 +101,7 @@ export default function ChartPanel(props: Props) {
                 background: { type: ColorType.Solid, color: C.bg },
                 textColor: C.text,
                 fontSize: 11,
-                fontFamily: '-apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif',
+                fontFamily: getComputedStyle(document.body).getPropertyValue('--font-code').trim() || 'ui-monospace, monospace',
                 panes: { separatorColor: C.border, separatorHoverColor: 'rgba(41,98,255,0.3)', enableResize: true },
             },
             grid: { vertLines: { color: 'rgba(42,46,57,0.6)' }, horzLines: { color: 'rgba(42,46,57,0.6)' } },
