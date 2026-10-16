@@ -4,7 +4,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
 import {
     AreaChart, BarChart3, Brain, CandlestickChart, ChevronDown, Crosshair, FlaskConical, LineChart, List,
-    LogIn, LogOut, Minus, Newspaper, PanelRight, Search, Slash, Sparkles, Trash2, TrendingUp, Activity,
+    LogIn, LogOut, Minus, Newspaper, PanelRight, Search, Slash, Sparkles, Trash2, Activity, X,
 } from 'lucide-react'
 import { displayName, useSession } from '@/components/auth/use-session'
 import { useWatchlistSync, type SyncState } from './use-watchlist-sync'
@@ -151,6 +151,8 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
     const [logScale, setLogScale] = useLocalStorage('uptrade.log', false)
     const [panel, setPanel] = useState<SidePanel>(defaultPanel)
     const [panelOpen, setPanelOpen] = useState(true)
+    // Below md the side panel opens as a sheet over the chart
+    const [sheetOpen, setSheetOpen] = useState(false)
     const [active, setActive] = useState(0)
     const [tool, setTool] = useState<Tool>('cursor')
     const [clearToken, setClearToken] = useState(0)
@@ -222,9 +224,9 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
         <div className="fixed inset-0 z-40 flex flex-col overflow-hidden text-[13px]" style={{ background: '#0c0e15', color: C.text }}>
             {/* ===== Top toolbar ===== */}
             <header className="flex h-11 shrink-0 items-center gap-1 overflow-x-auto px-2" style={{ background: C.bg, borderBottom: `1px solid ${C.border}` }}>
-                <Link href="/" className="mr-1 flex shrink-0 items-center gap-1.5 rounded px-1.5 py-1 hover:bg-[#2a2e39]" title="UpTrade home">
-                    <span className="flex h-6 w-6 items-center justify-center rounded" style={{ background: C.accent }}><TrendingUp size={14} color="#fff" /></span>
-                    <span className="hidden font-semibold sm:inline">UpTrade</span>
+                <Link href="/" className="mr-1 flex shrink-0 items-baseline gap-1 rounded px-1.5 py-1 hover:bg-[#2a2e39]" title="UpTrade home">
+                    <span className="font-display text-[19px] leading-none text-[#ecebe6]">UpTrade</span>
+                    <span className="h-1 w-1 bg-[#e8b04a]" />
                 </Link>
                 <button onClick={() => setSearch('chart')} className="flex h-8 shrink-0 items-center gap-2 rounded px-2 font-semibold hover:bg-[#2a2e39]" title="Symbol search (⌘K or start typing)">
                     <Search size={15} color={C.muted} />{displaySymbol(activeSymbol)}
@@ -314,14 +316,21 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
                 </main>
 
                 {/* ===== Right widget panel ===== */}
-                {panelOpen && (
-                    <aside className="hidden w-[320px] shrink-0 flex-col md:flex" style={{ background: C.bg, borderLeft: `1px solid ${C.border}` }}>
+                {(panelOpen || sheetOpen) && (
+                    <aside
+                        className={`${sheetOpen ? 'fixed inset-x-0 bottom-6 top-11 z-50 flex' : 'hidden'} w-full flex-col md:static md:z-auto md:w-[320px] md:shrink-0 ${panelOpen ? 'md:flex' : 'md:hidden'}`}
+                        style={{ background: C.bg, borderLeft: `1px solid ${C.border}` }}
+                    >
+                        <div className="flex h-10 shrink-0 items-center justify-between px-3 md:hidden" style={{ borderBottom: `1px solid ${C.border}` }}>
+                            <span className="text-[13px] font-semibold">{displaySymbol(activeSymbol)} · panel</span>
+                            <button onClick={() => setSheetOpen(false)} aria-label="Close panel" className="rounded p-1.5 hover:bg-[#2a2e39]"><X size={16} /></button>
+                        </div>
                         <div className="flex h-[56%] min-h-0 flex-col">
                             <Watchlist
                                 symbols={watchlist}
                                 quotes={quotes}
                                 selected={activeSymbol}
-                                onSelect={setChartSymbol}
+                                onSelect={(sym) => { setChartSymbol(sym); setSheetOpen(false) }}
                                 onRemove={(s) => setWatchlist((w) => w.filter((x) => x !== s))}
                                 onAdd={() => setSearch('watchlist')}
                             />
@@ -356,7 +365,8 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
                 <span>Data: Yahoo Finance · may be delayed</span>
                 <span className="hidden sm:inline">For research only — not financial advice</span>
                 <div className="flex-1" />
-                <button className="flex items-center gap-1 md:hidden" onClick={() => setSearch('chart')}><List size={12} />Symbols</button>
+                <button className="flex items-center gap-1 md:hidden" onClick={() => setSearch('chart')}><Search size={12} />Search</button>
+                <button className="flex items-center gap-1 font-medium md:hidden" style={{ color: C.text }} onClick={() => setSheetOpen((o) => !o)}><List size={12} />Watchlist · AI · News</button>
             </footer>
 
             <SymbolSearch
