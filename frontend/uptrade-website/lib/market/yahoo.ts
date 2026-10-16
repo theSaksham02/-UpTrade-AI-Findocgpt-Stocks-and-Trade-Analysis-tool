@@ -39,9 +39,11 @@ async function yahooJson(path: string, revalidate: number) {
     return res.json()
 }
 
-function toQuote(meta: any, candles: Candle[]): Quote {
+// `prevClose` must be the prior session's close. Yahoo's `chartPreviousClose` is the close
+// before the requested *range*, so it is only a last-resort fallback.
+function toQuote(meta: any, candles: Candle[], prevClose?: number): Quote {
     const price = meta.regularMarketPrice ?? candles.at(-1)?.close ?? 0
-    const prev = meta.chartPreviousClose ?? meta.previousClose ?? price
+    const prev = prevClose ?? meta.previousClose ?? meta.chartPreviousClose ?? price
     return {
         symbol: meta.symbol,
         name: meta.longName || meta.shortName || meta.symbol,
@@ -78,14 +80,17 @@ function parseCandles(result: any): Candle[] {
 export async function getBars(rawSymbol: string, interval: Interval): Promise<BarsResponse> {
     const symbol = normalizeSymbol(rawSymbol)
     const cfg = INTERVAL_MAP[interval] ?? INTERVAL_MAP['1D']
-    const json = await yahooJson(
-        `/v8/finance/chart/${encodeURIComponent(symbol)}?interval=${cfg.interval}&range=${cfg.range}&includePrePost=false`,
-        cfg.revalidate,
-    )
+    const [json, liveQuote] = await Promise.all([
+        yahooJson(
+            `/v8/finance/chart/${encodeURIComponent(symbol)}?interval=${cfg.interval}&range=${cfg.range}&includePrePost=false`,
+            cfg.revalidate,
+        ),
+        getQuote(symbol).catch(() => null),
+    ])
     const result = json?.chart?.result?.[0]
     if (!result) throw new MarketDataError(json?.chart?.error?.description || 'Symbol not found', 404)
     const candles = parseCandles(result)
-    const quote = toQuote(result.meta, candles)
+    const quote = liveQuote ?? toQuote(result.meta, candles)
     // Yahoo appends an empty placeholder bar outside equity trading hours
     const lastBar = candles[candles.length - 1]
     if (quote.type !== 'CRYPTOCURRENCY' && lastBar && lastBar.volume === 0 && lastBar.high === lastBar.low && candles.length > 1) candles.pop()
@@ -97,7 +102,8 @@ export async function getQuote(rawSymbol: string): Promise<Quote> {
     const json = await yahooJson(`/v8/finance/chart/${encodeURIComponent(symbol)}?interval=1d&range=5d`, 15)
     const result = json?.chart?.result?.[0]
     if (!result) throw new MarketDataError('Symbol not found', 404)
-    return toQuote(result.meta, parseCandles(result))
+    const daily = parseCandles(result)
+    return toQuote(result.meta, daily, daily.length >= 2 ? daily[daily.length - 2].close : undefined)
 }
 
 export async function search(query: string): Promise<{ quotes: SearchResult[]; news: NewsItem[] }> {
