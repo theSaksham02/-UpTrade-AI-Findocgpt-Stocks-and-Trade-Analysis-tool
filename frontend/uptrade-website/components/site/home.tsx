@@ -37,6 +37,12 @@ function SectionHead({ kicker, title, children, href, cta }: { kicker: string; t
 
 const pctClass = (v: number) => (v >= 0 ? 'text-[#3fb97f]' : 'text-[#e5534b]')
 
+// Shown instead of skeletons when a request failed, so a provider outage doesn't look like endless loading
+const UNAVAILABLE = 'Market data is temporarily unavailable.'
+const Unavailable = ({ className = '' }: { className?: string }) => (
+    <p className={`text-sm text-[#ecebe6]/50 ${className}`}>{UNAVAILABLE}</p>
+)
+
 // ------------------------------------------------------------
 // Ticker tape
 // ------------------------------------------------------------
@@ -107,7 +113,7 @@ function Hero() {
                         )}
                     </figcaption>
                     <div className="h-[300px] px-1 md:h-[360px]">
-                        {history.length ? <ForecastChart history={history} forecast={forecast} /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
+                        {history.length ? <ForecastChart history={history} forecast={forecast} /> : bars.error ? <Unavailable className="flex h-full items-center justify-center" /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
                     </div>
                     <div className="flex flex-wrap gap-x-6 gap-y-1 border-t border-[#ecebe6]/10 px-4 py-3 font-mono text-[11px] text-[#ecebe6]/50">
                         <span><span className="mr-1.5 inline-block w-4 border-t-2 border-dashed border-[#e8b04a] align-middle" />ARIMA(5,1,0) · next 30 sessions</span>
@@ -171,7 +177,7 @@ type Tab = keyof typeof TABS
 
 function MarketSummary() {
     const [tab, setTab] = useState<Tab>('Indices')
-    const { data } = useApi<{ items: OverviewItem[] }>(`/api/market/overview?symbols=${encodeURIComponent(TABS[tab].join(','))}`, 60000)
+    const { data, error } = useApi<{ items: OverviewItem[] }>(`/api/market/overview?symbols=${encodeURIComponent(TABS[tab].join(','))}`, 60000)
     return (
         <section className="py-16">
             <Wrap>
@@ -205,7 +211,8 @@ function MarketSummary() {
                             </Link>
                         )
                     })}
-                    {!data && TABS[tab].map((s) => <div key={s} className="h-[76px] animate-pulse border-b border-[#ecebe6]/8 bg-[#ecebe6]/[0.02]" />)}
+                    {!data && !error && TABS[tab].map((s) => <div key={s} className="h-[76px] animate-pulse border-b border-[#ecebe6]/8 bg-[#ecebe6]/[0.02]" />)}
+                    {!data && error && <Unavailable className="py-4" />}
                 </div>
             </Wrap>
         </section>
@@ -247,6 +254,7 @@ function Receipts() {
         { name: 'UpTrade ARIMA', color: AMBER, total: a.totalReturn, dd: a.maxDrawdown, sharpe: a.sharpe },
     ] : []
     const lost = a ? a.totalReturn < a.buyHoldReturn : false
+    const failed = !series.length && !!(arima.error || sma.error)
 
     return (
         <section className="py-16">
@@ -260,7 +268,7 @@ function Receipts() {
                 </SectionHead>
                 <div className="grid gap-8 lg:grid-cols-[1.5fr_1fr]">
                     <div className="h-[320px] border border-[#ecebe6]/12 bg-[#0e0f12] p-2 md:h-[380px]">
-                        {series.length ? <EquityChart series={series} /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
+                        {series.length ? <EquityChart series={series} /> : failed ? <Unavailable className="flex h-full items-center justify-center" /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
                     </div>
                     <div>
                         <table className="w-full text-sm">
@@ -281,7 +289,7 @@ function Receipts() {
                                         <td className="py-3 text-right font-mono tabular-nums text-[#ecebe6]/70">{r.sharpe == null ? '—' : r.sharpe.toFixed(2)}</td>
                                     </tr>
                                 ))}
-                                {!rows.length && Array.from({ length: 3 }).map((_, i) => <tr key={i}><td colSpan={4} className="py-3"><div className="h-4 animate-pulse bg-[#ecebe6]/[0.05]" /></td></tr>)}
+                                {!rows.length && !failed && Array.from({ length: 3 }).map((_, i) => <tr key={i}><td colSpan={4} className="py-3"><div className="h-4 animate-pulse bg-[#ecebe6]/[0.05]" /></td></tr>)}
                             </tbody>
                         </table>
                         <p className="mt-5 text-sm leading-6 text-[#ecebe6]/55">
@@ -347,6 +355,7 @@ function ModelScan() {
                                 </tr>
                             ))}
                             {!data && !error && Array.from({ length: 6 }).map((_, i) => <tr key={i}><td colSpan={7} className="py-3"><div className="h-4 animate-pulse bg-[#ecebe6]/[0.05]" /></td></tr>)}
+                            {!data && error && <tr><td colSpan={7} className="py-4"><Unavailable /></td></tr>}
                         </tbody>
                     </table>
                 </div>
@@ -392,7 +401,7 @@ function MoreScreens() {
 type NewsResp = { items: { title: string; publisher: string; link: string; time: number; label: string }[] }
 
 function Headlines() {
-    const { data } = useApi<NewsResp>('/api/model/sentiment?symbol=SPY', 300000)
+    const { data, error } = useApi<NewsResp>('/api/model/sentiment?symbol=SPY', 300000)
     const ago = (t: number) => {
         const s = Date.now() / 1000 - t
         return s < 3600 ? `${Math.max(1, Math.round(s / 60))}m` : s < 86400 ? `${Math.round(s / 3600)}h` : `${Math.round(s / 86400)}d`
@@ -416,7 +425,8 @@ function Headlines() {
                             </a>
                         </li>
                     ))}
-                    {!data && Array.from({ length: 6 }).map((_, i) => <li key={i} className="h-20 animate-pulse border-b border-[#ecebe6]/8 bg-[#ecebe6]/[0.02]" />)}
+                    {!data && !error && Array.from({ length: 6 }).map((_, i) => <li key={i} className="h-20 animate-pulse border-b border-[#ecebe6]/8 bg-[#ecebe6]/[0.02]" />)}
+                    {!data && error && <li className="py-4"><Unavailable /></li>}
                 </ul>
             </Wrap>
         </section>
