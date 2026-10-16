@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { ChevronDown, Menu, Search, X } from 'lucide-react'
 import SymbolSearch from '@/components/uptrade-terminal/symbol-search'
+import { useSession } from '@/components/auth/use-session'
 
 const PRODUCTS = [
     { href: '/app', title: 'Terminal', text: 'Multi-pane charts, indicators and drawing tools' },
@@ -15,6 +16,7 @@ const PRODUCTS = [
 
 const NAV = [
     { href: '/markets', label: 'Markets' },
+    { href: '/dashboard', label: 'Dashboard' },
     { href: '/pricing', label: 'Pricing' },
     { href: '/docs', label: 'Docs' },
     { href: '/about', label: 'About' },
@@ -22,6 +24,7 @@ const NAV = [
 
 export function SiteHeader() {
     const router = useRouter()
+    const { user } = useSession()
     const [searchOpen, setSearchOpen] = useState(false)
     const [mobileOpen, setMobileOpen] = useState(false)
     const [scrolled, setScrolled] = useState(false)
@@ -87,8 +90,8 @@ export function SiteHeader() {
                     </nav>
 
                     <div className="ml-auto flex shrink-0 items-center gap-2">
-                        <Link href="/login" className="hidden rounded-md px-3 py-2 text-sm font-medium text-white/80 hover:text-white sm:inline">
-                            Sign in
+                        <Link href={user ? '/dashboard' : '/login'} className="hidden rounded-md px-3 py-2 text-sm font-medium text-white/80 hover:text-white sm:inline">
+                            {user ? 'Dashboard' : 'Sign in'}
                         </Link>
                         <Link href="/app" className="hidden rounded-md bg-[#ecebe6] px-4 py-2 text-sm font-semibold text-[#0a0b0d] hover:bg-white sm:inline">
                             Open terminal
@@ -107,7 +110,7 @@ export function SiteHeader() {
                             </Link>
                         ))}
                         <div className="mt-4 flex gap-2">
-                            <Link href="/login" className="flex-1 rounded-md border border-[#ecebe6]/15 py-2.5 text-center text-sm font-medium text-white">Sign in</Link>
+                            <Link href={user ? '/dashboard' : '/login'} className="flex-1 rounded-md border border-[#ecebe6]/15 py-2.5 text-center text-sm font-medium text-white">{user ? 'Dashboard' : 'Sign in'}</Link>
                             <Link href="/app" className="flex-1 rounded-md bg-[#ecebe6] py-2.5 text-center text-sm font-semibold text-[#0a0b0d]">Open terminal</Link>
                         </div>
                     </div>
