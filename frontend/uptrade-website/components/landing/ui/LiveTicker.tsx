@@ -1,48 +1,35 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
-interface TickerItem {
-    symbol: string;
-    price: number;
-    change: number;
-}
+import { useQuotes } from '@/components/uptrade-terminal/hooks';
 
-const initialTickers: TickerItem[] = [
-    { symbol: 'BTC', price: 42839.24, change: 2.4 },
-    { symbol: 'TSLA', price: 263.04, change: -1.2 },
-    { symbol: 'NVDA', price: 721.84, change: 5.6 },
-    { symbol: 'SPY', price: 515.19, change: 0.4 },
-    { symbol: 'AAPL', price: 186.45, change: -0.64 },
-    { symbol: 'META', price: 474.51, change: 1.95 },
-    { symbol: 'GOOGL', price: 141.24, change: -0.6 },
-    { symbol: 'AMD', price: 168.75, change: 1.8 },
-    { symbol: 'MSFT', price: 378.91, change: -0.33 },
-    { symbol: 'AMZN', price: 172.44, change: 1.26 },
+const TICKERS = [
+    { symbol: 'BTC', yahoo: 'BTC-USD' },
+    { symbol: 'TSLA', yahoo: 'TSLA' },
+    { symbol: 'NVDA', yahoo: 'NVDA' },
+    { symbol: 'SPY', yahoo: 'SPY' },
+    { symbol: 'AAPL', yahoo: 'AAPL' },
+    { symbol: 'META', yahoo: 'META' },
+    { symbol: 'GOOGL', yahoo: 'GOOGL' },
+    { symbol: 'AMD', yahoo: 'AMD' },
+    { symbol: 'MSFT', yahoo: 'MSFT' },
+    { symbol: 'AMZN', yahoo: 'AMZN' },
 ];
 
 export const LiveTicker = () => {
-    const [tickers, setTickers] = useState(initialTickers);
     const [isPaused, setIsPaused] = useState(false);
+    // Real quotes (refreshed every 30s); items without a quote yet are hidden
+    const quotes = useQuotes(TICKERS.map((t) => t.yahoo), 30000);
+    const tickers = TICKERS.flatMap((t) => {
+        const q = quotes[t.yahoo];
+        return q ? [{ symbol: t.symbol, price: q.price, change: q.changePercent }] : [];
+    });
 
-    // Simulate live price updates
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setTickers(prev => prev.map(ticker => ({
-                ...ticker,
-                price: ticker.price * (1 + (Math.random() - 0.5) * 0.002),
-                change: ticker.change + (Math.random() - 0.5) * 0.1,
-            })));
-        }, 2000);
+    const formatPrice = (price: number) =>
+        price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-        return () => clearInterval(interval);
-    }, []);
-
-    const formatPrice = (price: number) => {
-        if (price > 1000) return price.toFixed(2);
-        if (price > 100) return price.toFixed(2);
-        return price.toFixed(2);
-    };
+    if (!tickers.length) return <div className="h-[45px] w-full bg-[#0b0e14] border-y border-[#2a2e39]" />;
 
     return (
         <div

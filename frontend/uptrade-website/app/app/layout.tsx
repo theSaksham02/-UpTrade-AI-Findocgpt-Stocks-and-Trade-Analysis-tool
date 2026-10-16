@@ -1,18 +1,5 @@
-'use client';
-
-import { RequireAuth } from '@/components/RequireAuth';
-import { TradingLayout } from '@/components/app/TradingLayout';
-
-export default function AppLayout({
-    children,
-}: {
-    children: React.ReactNode;
-}) {
-    return (
-        <RequireAuth>
-            <TradingLayout>
-                {children}
-            </TradingLayout>
-        </RequireAuth>
-    );
+// The terminal renders full-screen; no extra chrome or auth gate here.
+// (Real authentication is not implemented yet — see LAUNCH.md.)
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+    return <>{children}</>
 }

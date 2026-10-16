@@ -1,8 +1,7 @@
-'use client'
+import UpTradeTerminal from '@/components/uptrade-terminal/terminal'
 
-import TradingDashboard from '@/components/trading-dashboard'
+export const metadata = { title: 'UpTrade Terminal · Backtest' }
 
-// TradeX panel active by default
 export default function TradeXPage() {
-    return <TradingDashboard defaultPanel="tradex" />
+    return <UpTradeTerminal defaultPanel="backtest" />
 }

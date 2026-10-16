@@ -1,8 +1,7 @@
-'use client'
+import UpTradeTerminal from '@/components/uptrade-terminal/terminal'
 
-import TradingDashboard from '@/components/trading-dashboard'
+export const metadata = { title: 'UpTrade Terminal' }
 
-// Trading Terminal - The actual product (requires auth in production)
 export default function AppPage() {
-    return <TradingDashboard />
+    return <UpTradeTerminal />
 }

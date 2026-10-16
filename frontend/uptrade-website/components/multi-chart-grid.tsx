@@ -31,6 +31,7 @@ interface ChartInstance {
     lastPrice: number
     lastSentiment: number
     disposed?: boolean
+    isReal?: boolean
 }
 
 interface MultiChartGridProps {
@@ -138,7 +139,7 @@ function ChartStats({ symbol, price, change }: { symbol: string; price: number; 
     )
 }
 
-export function MultiChartGrid({ configs, wsUrl = 'ws://localhost:8080' }: MultiChartGridProps) {
+export function MultiChartGrid({ configs, wsUrl = process.env.NEXT_PUBLIC_WS_URL || '' }: MultiChartGridProps) {
     const chartRefs = useRef<Map<string, ChartInstance>>(new Map())
     const gridContainerRef = useRef<HTMLDivElement>(null)
     const [alerts, setAlerts] = useState<DivergenceAlert[]>([])
@@ -331,6 +332,29 @@ export function MultiChartGrid({ configs, wsUrl = 'ws://localhost:8080' }: Multi
                 },
             }))
 
+            // BTC: replace demo data with real HF history + pipeline output (btc_pipeline.py)
+            if (config.symbol === 'BTC') {
+                loadRealBtc().then((real) => {
+                    const instance = chartRefs.current.get('BTC')
+                    if (!real || !instance || instance.disposed) return
+                    candleSeries.setData(real.candles as any)
+                    volumeSeries.setData([])
+                    sentimentSeries?.setData([])
+                    chart.addSeries(LineSeries, { color: colors.blue, lineWidth: 1, priceLineVisible: false, lastValueVisible: false }).setData(real.sma50 as any)
+                    chart.addSeries(LineSeries, { color: '#f0b90b', lineWidth: 1, priceLineVisible: false, lastValueVisible: false }).setData(real.sma200 as any)
+                    chart.addSeries(LineSeries, { color: '#ab47bc', lineWidth: 2, lineStyle: 2, title: 'ARIMA' }).setData(real.forecast as any)
+                    const last = real.candles[real.candles.length - 1].close
+                    const yearAgo = real.candles[Math.max(0, real.candles.length - 366)].close
+                    instance.lastPrice = last
+                    instance.isReal = true
+                    setChartPrices((prev) => ({ ...prev, BTC: { price: last, change: ((last - yearAgo) / yearAgo) * 100 } }))
+                    chart.timeScale().setVisibleRange({
+                        from: real.candles[Math.max(0, real.candles.length - 365)].time,
+                        to: real.forecast[real.forecast.length - 1].time,
+                    } as any)
+                })
+            }
+
             // Sync crosshair
             chart.subscribeCrosshairMove((param) => {
                 if (param.time) {
@@ -355,6 +379,7 @@ export function MultiChartGrid({ configs, wsUrl = 'ws://localhost:8080' }: Multi
         // Simulate real-time updates
         const updateInterval = setInterval(() => {
             chartRefs.current.forEach((instance) => {
+                if (instance.isReal) return
                 const lastPrice = instance.lastPrice
                 const volatility = 0.003
                 const change = lastPrice * volatility * (Math.random() - 0.5)
@@ -568,3 +593,20 @@ function generateDemoData(symbol: string) {
 }
 
 export default MultiChartGrid
+
+// Real BTC history from Hugging Face, produced by btc_pipeline.py
+type BtcPoint = { time: string; value: number }
+type RealBtc = {
+    candles: { time: string; open: number; high: number; low: number; close: number }[]
+    sma50: BtcPoint[]
+    sma200: BtcPoint[]
+    forecast: BtcPoint[]
+}
+
+let realBtcPromise: Promise<RealBtc | null> | null = null
+function loadRealBtc(): Promise<RealBtc | null> {
+    realBtcPromise ??= fetch('/data/btc_daily.json')
+        .then((r) => (r.ok ? r.json() : null))
+        .catch(() => null)
+    return realBtcPromise
+}
