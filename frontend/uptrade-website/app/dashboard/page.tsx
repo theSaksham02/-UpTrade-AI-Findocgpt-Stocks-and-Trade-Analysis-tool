@@ -1,9 +1,7 @@
-'use client'
+import UpTradeTerminal from '@/components/uptrade-terminal/terminal'
 
-import TradingDashboard from '@/components/trading-dashboard'
+export const metadata = { title: 'UpTrade Terminal' }
 
-// Unified Trading Dashboard - TradingView/Bloomberg style
-// Replaces separate marketing pages with one integrated interface
 export default function DashboardPage() {
-  return <TradingDashboard />
+    return <UpTradeTerminal />
 }

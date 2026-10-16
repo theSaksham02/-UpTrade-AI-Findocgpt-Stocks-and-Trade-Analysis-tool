@@ -10,7 +10,6 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   const [isAnimating, setIsAnimating] = useState(false)
 
   useEffect(() => {
-    console.log("[v0] Page changed to:", pathname)
     // Fade in when page loads
     setIsAnimating(true)
     const timer = setTimeout(() => {

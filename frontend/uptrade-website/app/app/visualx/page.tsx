@@ -1,8 +1,7 @@
-'use client'
+import UpTradeTerminal from '@/components/uptrade-terminal/terminal'
 
-import TradingDashboard from '@/components/trading-dashboard'
+export const metadata = { title: 'UpTrade Terminal · Sentiment' }
 
-// VisualX panel active by default
 export default function VisualXPage() {
-    return <TradingDashboard defaultPanel="visualx" />
+    return <UpTradeTerminal defaultPanel="news" />
 }

@@ -16,15 +16,22 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
     const reconnectTimeout = useRef<NodeJS.Timeout>()
     const reconnectAttempts = useRef(0)
     const messageQueue = useRef<object[]>([])
+    // Keep the latest handler in a ref so an inline onMessage doesn't recreate
+    // `connect` on every render (which opened a new socket per render).
+    const onMessageRef = useRef(options.onMessage)
+    onMessageRef.current = options.onMessage
 
     const {
-        onMessage,
         reconnectInterval = 3000,
         maxReconnectAttempts = 10
     } = options
 
     const connect = useCallback(() => {
-        if (ws.current?.readyState === WebSocket.OPEN) return
+        if (!url) {
+            setConnectionStatus('disconnected')
+            return
+        }
+        if (ws.current?.readyState === WebSocket.OPEN || ws.current?.readyState === WebSocket.CONNECTING) return
 
         setConnectionStatus('connecting')
 
@@ -47,7 +54,7 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
                 try {
                     const message: WebSocketMessage = JSON.parse(event.data)
                     setLastMessage(message)
-                    onMessage?.(message)
+                    onMessageRef.current?.(message)
                 } catch (err) {
                     console.error('Failed to parse WebSocket message:', err)
                 }
@@ -75,7 +82,7 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
             console.error('Failed to create WebSocket:', err)
             setConnectionStatus('error')
         }
-    }, [url, onMessage, reconnectInterval, maxReconnectAttempts])
+    }, [url, reconnectInterval, maxReconnectAttempts])
 
     // Initial connection
     useEffect(() => {
@@ -85,7 +92,11 @@ export function useWebSocket(url: string, options: UseWebSocketOptions = {}) {
             if (reconnectTimeout.current) {
                 clearTimeout(reconnectTimeout.current)
             }
-            ws.current?.close()
+            if (ws.current) {
+                ws.current.onclose = null
+                ws.current.close()
+                ws.current = null
+            }
         }
     }, [connect])
 
