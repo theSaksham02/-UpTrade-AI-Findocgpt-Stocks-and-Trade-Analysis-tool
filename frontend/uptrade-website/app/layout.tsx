@@ -5,6 +5,9 @@ import "./globals.css"
 import { PageTransition } from "@/components/page-transition"
 import { NavigationTransition } from "@/components/navigation-transition"
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/react"
+import { SentryClientInit } from "@/components/monitoring/sentry-client-init"
+import { SITE_URL } from "@/lib/site-url"
 import { Instrument_Serif, IBM_Plex_Sans, IBM_Plex_Mono } from "next/font/google"
 
 // UpTrade type system: Instrument Serif (headlines), IBM Plex Sans (UI/body), IBM Plex Mono (numbers)
@@ -30,12 +33,29 @@ const code = IBM_Plex_Mono({
   display: "swap",
 })
 
+const defaultTitle = "UpTrade — charts, an open forecasting model and backtests"
+const description =
+  "Live charts for stocks, ETFs, indices and crypto, an ARIMA forecast drawn with its error band, and 5-year backtests you can check. Free while in beta."
+
 export const metadata: Metadata = {
-  title: "UpTrade - AI-Powered Financial Analysis & Trading Intelligence",
-  description:
-    "Transform your trading strategy with advanced AI-driven market analysis, real-time insights, and intelligent investment recommendations. Professional-grade financial tools for modern traders.",
-  keywords: "stock trading, AI trading, financial analysis, market intelligence, investment strategy, trading tools, stock analysis, fintech",
-  generator: "v0.app",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: defaultTitle,
+    template: "%s · UpTrade",
+  },
+  description,
+  applicationName: "UpTrade",
+  openGraph: {
+    type: "website",
+    siteName: "UpTrade",
+    title: defaultTitle,
+    description,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: defaultTitle,
+    description,
+  },
 }
 
 export default function RootLayout({
@@ -52,6 +72,8 @@ export default function RootLayout({
             <PageTransition>{children}</PageTransition>
           </Suspense>
           <SpeedInsights />
+          <Analytics />
+          <SentryClientInit />
         </div>
       </body>
     </html>
