@@ -1,212 +1,88 @@
 'use client'
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Copy, Check, Send } from 'lucide-react';
+import { useState } from 'react'
+import Link from 'next/link'
 
-const contacts = [
-    { label: 'Sales', email: 'sales@uptrade.com', description: 'Enterprise inquiries' },
-    { label: 'Support', email: 'support@uptrade.com', description: 'Technical help' },
-    { label: 'API Issues', email: 'api@uptrade.com', description: 'Integration support' },
-    { label: 'Partnerships', email: 'partners@uptrade.com', description: 'Business development' },
-];
+const TOPICS = [
+    { id: 'general', label: 'General question' },
+    { id: 'bug', label: 'Something is broken' },
+    { id: 'data', label: 'Wrong or missing market data' },
+    { id: 'account', label: 'My account or data deletion' },
+] as const
 
-const faqs = [
-    {
-        q: 'What is your response time for support tickets?',
-        a: 'Free tier: 48h. Pro tier: 24h. Enterprise: <4h with dedicated Slack channel.'
-    },
-    {
-        q: 'Do you offer onboarding calls?',
-        a: 'Yes. Pro users get a 30-min onboarding. Enterprise gets custom integration support.'
-    },
-    {
-        q: 'How do I report a critical API issue?',
-        a: 'Email api@uptrade.com with subject line starting with [CRITICAL]. We monitor 24/7.'
-    },
-];
+const field = 'w-full rounded-md border border-[#ecebe6]/15 bg-[#0e0f12] px-3.5 py-2.5 text-[15px] text-[#ecebe6] outline-none placeholder:text-[#ecebe6]/30 focus:border-[#e8b04a]/70'
 
 export default function ContactPage() {
-    const [copiedEmail, setCopiedEmail] = useState<string | null>(null);
-    const [formData, setFormData] = useState({ email: '', subject: '', message: '' });
-    const [submitted, setSubmitted] = useState(false);
+    const [form, setForm] = useState({ email: '', topic: 'general', message: '', website: '' })
+    const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
+    const [error, setError] = useState('')
 
-    const handleCopy = (email: string) => {
-        navigator.clipboard.writeText(email);
-        setCopiedEmail(email);
-        setTimeout(() => setCopiedEmail(null), 2000);
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        setSubmitted(true);
-        setTimeout(() => setSubmitted(false), 5000);
-        setFormData({ email: '', subject: '', message: '' });
-    };
+    async function submit(e: React.FormEvent) {
+        e.preventDefault()
+        setState('sending')
+        setError('')
+        try {
+            const res = await fetch('/api/contact', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(form) })
+            const body = await res.json().catch(() => ({}))
+            if (!res.ok) throw new Error(body.error || 'Couldn’t send your message.')
+            setState('sent')
+        } catch (err) {
+            setError((err as Error).message)
+            setState('error')
+        }
+    }
 
     return (
-        <div className="min-h-screen">
-            {/* Header */}
-            <section className="pt-32 pb-8 px-6">
-                <div className="max-w-5xl mx-auto">
-                    <div className="text-[#00d4ff] font-mono text-sm mb-2 tracking-wider">CONTACT</div>
-                    <h1 className="text-4xl font-bold text-white tracking-tight mb-4">
-                        Support Desk
-                    </h1>
-                    <p className="text-[#868993]">
-                        Reach out via email or use the terminal below.
+        <div className="min-h-screen bg-[#0a0b0d] text-[#ecebe6]">
+            <div className="mx-auto grid max-w-[1100px] gap-14 px-5 pb-24 pt-14 md:grid-cols-[1fr_1.2fr] md:px-8">
+                <div>
+                    <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#ecebe6]/45">Contact</div>
+                    <h1 className="mt-3 font-display text-5xl leading-[1.02] md:text-6xl">Tell us what’s <em className="text-[#e8b04a]">not working.</em></h1>
+                    <p className="mt-5 max-w-sm text-[15px] leading-7 text-[#ecebe6]/60">
+                        UpTrade is in free beta and built by a small team. Bug reports, wrong prices and feature requests all
+                        come here, and we read every one.
                     </p>
+                    <ul className="mt-8 space-y-3 border-t border-[#ecebe6]/12 pt-6 text-sm text-[#ecebe6]/60">
+                        <li>To delete your account and data, choose <span className="text-[#ecebe6]">“My account or data deletion”</span> and send from the email you signed up with.</li>
+                        <li>For how the model and data work, see the <Link href="/docs" className="text-[#ecebe6] underline underline-offset-4">docs</Link>.</li>
+                    </ul>
                 </div>
-            </section>
 
-            {/* Main Content - Split Layout */}
-            <section className="px-6 pb-16">
-                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-                    {/* Left: Contact Methods */}
-                    <div>
-                        <div className="bg-[#13131f] border border-white/10 rounded-lg overflow-hidden">
-                            <div className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0f] border-b border-white/10">
-                                <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
-                                <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
-                                <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                                <span className="text-xs text-[#868993] font-mono ml-2">contacts.sh</span>
-                            </div>
-                            <div className="p-4 space-y-4">
-                                {contacts.map((contact) => (
-                                    <motion.div
-                                        key={contact.email}
-                                        initial={{ opacity: 0, x: -10 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        className="flex items-center justify-between group"
-                                    >
-                                        <div className="font-mono text-sm">
-                                            <span className="text-[#10b981]">&gt;</span>{' '}
-                                            <span className="text-[#868993]">{contact.label}:</span>{' '}
-                                            <span className="text-[#00d4ff]">{contact.email}</span>
-                                        </div>
-                                        <button
-                                            onClick={() => handleCopy(contact.email)}
-                                            className="text-[#868993] hover:text-white transition-colors p-1"
-                                            title="Copy to clipboard"
-                                        >
-                                            {copiedEmail === contact.email ? (
-                                                <Check className="w-4 h-4 text-[#10b981]" />
-                                            ) : (
-                                                <Copy className="w-4 h-4" />
-                                            )}
-                                        </button>
-                                    </motion.div>
-                                ))}
-                                <div className="pt-4 border-t border-white/10 mt-4">
-                                    <div className="text-xs text-[#868993] font-mono">
-                                        <span className="text-[#fbbf24]"># Office Hours</span>
-                                        <br />
-                                        Mon-Fri 09:00-18:00 EST
-                                    </div>
-                                </div>
-                            </div>
+                <div>
+                    {state === 'sent' ? (
+                        <div className="border border-[#ecebe6]/12 bg-[#0e0f12] p-8">
+                            <h2 className="font-display text-3xl">Thanks — message received.</h2>
+                            <p className="mt-3 text-[15px] text-[#ecebe6]/60">We’ll reply to {form.email}, usually within two working days.</p>
+                            <button onClick={() => { setForm({ email: form.email, topic: 'general', message: '', website: '' }); setState('idle') }} className="mt-6 text-sm text-[#ecebe6]/75 underline underline-offset-4 hover:text-[#ecebe6]">
+                                Send another
+                            </button>
                         </div>
-
-                        {/* Status */}
-                        <div className="mt-4 flex items-center gap-2 text-sm">
-                            <span className="relative flex h-2 w-2">
-                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#10b981] opacity-75"></span>
-                                <span className="relative inline-flex rounded-full h-2 w-2 bg-[#10b981]"></span>
-                            </span>
-                            <span className="text-[#10b981] font-mono">All systems operational</span>
-                            <a href="/status" className="text-[#868993] hover:text-white ml-2 underline text-xs">
-                                View status →
-                            </a>
-                        </div>
-                    </div>
-
-                    {/* Right: Contact Form */}
-                    <div>
-                        <div className="bg-[#13131f] border border-white/10 rounded-lg overflow-hidden">
-                            <div className="flex items-center gap-2 px-4 py-2 bg-[#0a0a0f] border-b border-white/10">
-                                <div className="w-3 h-3 rounded-full bg-[#ef4444]" />
-                                <div className="w-3 h-3 rounded-full bg-[#fbbf24]" />
-                                <div className="w-3 h-3 rounded-full bg-[#10b981]" />
-                                <span className="text-xs text-[#868993] font-mono ml-2">send_message.sh</span>
-                            </div>
-                            <form onSubmit={handleSubmit} className="p-4 space-y-4">
-                                <div>
-                                    <label className="block text-xs text-[#868993] font-mono mb-1">
-                                        // Your Email
-                                    </label>
-                                    <input
-                                        type="email"
-                                        value={formData.email}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                                        placeholder="you@example.com"
-                                        required
-                                        className="w-full bg-[#0a0a0f] border border-white/10 text-white px-3 py-2 rounded font-mono text-sm focus:outline-none focus:border-[#00d4ff] placeholder:text-[#868993]/50"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-[#868993] font-mono mb-1">
-                                        // Subject
-                                    </label>
-                                    <input
-                                        type="text"
-                                        value={formData.subject}
-                                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                                        placeholder="API integration help"
-                                        required
-                                        className="w-full bg-[#0a0a0f] border border-white/10 text-white px-3 py-2 rounded font-mono text-sm focus:outline-none focus:border-[#00d4ff] placeholder:text-[#868993]/50"
-                                    />
-                                </div>
-                                <div>
-                                    <label className="block text-xs text-[#868993] font-mono mb-1">
-                                        // Message
-                                    </label>
-                                    <textarea
-                                        value={formData.message}
-                                        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                                        placeholder="Describe your issue or question..."
-                                        required
-                                        rows={5}
-                                        className="w-full bg-[#0a0a0f] border border-white/10 text-white px-3 py-2 rounded font-mono text-sm focus:outline-none focus:border-[#00d4ff] placeholder:text-[#868993]/50 resize-none"
-                                    />
-                                </div>
-                                <button
-                                    type="submit"
-                                    className="w-full py-2.5 bg-[#00d4ff] text-[#0a0a0f] font-mono font-bold text-sm rounded hover:bg-[#00b8d9] transition-colors flex items-center justify-center gap-2"
-                                >
-                                    <Send className="w-4 h-4" />
-                                    &gt; Send Message
-                                </button>
-                                {submitted && (
-                                    <div className="text-[#10b981] text-sm font-mono text-center">
-                                        ✓ Message sent successfully [{new Date().toISOString()}]
-                                    </div>
-                                )}
-                            </form>
-                        </div>
-                    </div>
+                    ) : (
+                        <form onSubmit={submit} className="space-y-5">
+                            <label className="block">
+                                <span className="mb-1.5 block text-sm text-[#ecebe6]/70">Your email</span>
+                                <input type="email" required autoComplete="email" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className={field} placeholder="you@example.com" />
+                            </label>
+                            <label className="block">
+                                <span className="mb-1.5 block text-sm text-[#ecebe6]/70">Topic</span>
+                                <select value={form.topic} onChange={(e) => setForm({ ...form, topic: e.target.value })} className={field}>
+                                    {TOPICS.map((t) => <option key={t.id} value={t.id}>{t.label}</option>)}
+                                </select>
+                            </label>
+                            <label className="block">
+                                <span className="mb-1.5 block text-sm text-[#ecebe6]/70">Message</span>
+                                <textarea required minLength={5} maxLength={5000} rows={7} value={form.message} onChange={(e) => setForm({ ...form, message: e.target.value })} className={field} placeholder="What happened, and on which symbol or page?" />
+                            </label>
+                            {/* Honeypot: hidden from people, filled by bots */}
+                            <input type="text" tabIndex={-1} autoComplete="off" value={form.website} onChange={(e) => setForm({ ...form, website: e.target.value })} className="hidden" aria-hidden />
+                            {state === 'error' && <p className="text-sm text-[#e5534b]" role="alert">{error}</p>}
+                            <button type="submit" disabled={state === 'sending'} className="rounded-md bg-[#ecebe6] px-5 py-3 text-sm font-semibold text-[#0a0b0d] hover:bg-white disabled:opacity-60">
+                                {state === 'sending' ? 'Sending…' : 'Send message'}
+                            </button>
+                        </form>
+                    )}
                 </div>
-            </section>
-
-            {/* FAQ */}
-            <section className="px-6 pb-24">
-                <div className="max-w-5xl mx-auto">
-                    <h2 className="text-lg font-bold text-white mb-6 font-mono">
-                        <span className="text-[#868993]"># </span>FAQs
-                    </h2>
-                    <div className="space-y-3 font-mono">
-                        {faqs.map((faq, i) => (
-                            <div key={i} className="bg-[#13131f] border border-white/10 rounded-lg p-4">
-                                <div className="text-[#00d4ff] text-sm mb-2">
-                                    <span className="text-[#868993]">Q: </span>{faq.q}
-                                </div>
-                                <div className="text-white text-sm pl-3 border-l-2 border-[#10b981]/30">
-                                    <span className="text-[#10b981]">A: </span>{faq.a}
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
+            </div>
         </div>
-    );
+    )
 }

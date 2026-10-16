@@ -7,16 +7,17 @@ const nextConfig = {
     unoptimized: true,
   },
   async redirects() {
-    // Legacy prototype pages (mock data / localhost backend) now live in the terminal
+    // Pages removed for the MVP (prototype tools, or content describing infrastructure
+    // we don't run). Old links land on the nearest real page.
+    const to = (destination) => (source) => ({ source, destination, permanent: false })
     return [
-      { source: '/charts', destination: '/app', permanent: false },
-      // These pages described press coverage and live infrastructure metrics that don't exist
-      { source: '/press', destination: '/about', permanent: false },
-      { source: '/performance', destination: '/about', permanent: false },
-      { source: '/terminal', destination: '/app', permanent: false },
-      { source: '/engine', destination: '/app', permanent: false },
-      { source: '/tradex/tool', destination: '/app/tradex', permanent: false },
-      { source: '/visualx/tool', destination: '/app/visualx', permanent: false },
+      ...['/charts', '/terminal', '/engine', '/tradesphere', '/ai-analysis'].map(to('/app')),
+      ...['/tradex', '/tradex/:path*'].map(to('/app/tradex')),
+      ...['/visualx', '/visualx/:path*'].map(to('/app/visualx')),
+      ...['/features', '/research', '/blog', '/blog/:path*', '/community', '/api-page', '/api-dev', '/performance'].map(to('/')),
+      ...['/press', '/careers'].map(to('/about')),
+      ...['/support'].map(to('/contact')),
+      ...['/legal'].map(to('/terms')),
     ]
   },
 }

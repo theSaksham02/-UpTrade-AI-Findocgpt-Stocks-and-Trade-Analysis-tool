@@ -38,7 +38,7 @@ export function ForgotPasswordForm() {
         <AuthShell title="Reset your password" subtitle="We'll email you a link to choose a new one" error={error} notice={notice}>
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label htmlFor="email" className="block text-sm text-[#868993] mb-2">Email</label>
+                    <label htmlFor="email" className="block text-sm text-[#ecebe6]/60 mb-2">Email</label>
                     <input id="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} className={inputClass} placeholder="you@example.com" />
                 </div>
                 <button type="submit" disabled={disabled} className={buttonClass}>
@@ -46,8 +46,8 @@ export function ForgotPasswordForm() {
                 </button>
             </form>
 
-            <p className="text-center text-[#868993] text-sm mt-6">
-                Remembered it? <Link href="/login" className="text-[#2962FF] hover:underline">Sign in</Link>
+            <p className="text-center text-[#ecebe6]/60 text-sm mt-6">
+                Remembered it? <Link href="/login" className="text-[#e8b04a] hover:underline">Sign in</Link>
             </p>
         </AuthShell>
     )
@@ -94,11 +94,11 @@ export function ResetPasswordForm() {
         >
             <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
-                    <label htmlFor="password" className="block text-sm text-[#868993] mb-2">New password</label>
+                    <label htmlFor="password" className="block text-sm text-[#ecebe6]/60 mb-2">New password</label>
                     <input id="password" type="password" required minLength={8} autoComplete="new-password" value={password} onChange={(e) => setPassword(e.target.value)} disabled={disabled} className={inputClass} placeholder="At least 8 characters" />
                 </div>
                 <div>
-                    <label htmlFor="confirm" className="block text-sm text-[#868993] mb-2">Confirm new password</label>
+                    <label htmlFor="confirm" className="block text-sm text-[#ecebe6]/60 mb-2">Confirm new password</label>
                     <input id="confirm" type="password" required minLength={8} autoComplete="new-password" value={confirm} onChange={(e) => setConfirm(e.target.value)} disabled={disabled} className={inputClass} placeholder="Type it again" />
                 </div>
                 <button type="submit" disabled={disabled} className={buttonClass}>
@@ -106,10 +106,10 @@ export function ResetPasswordForm() {
                 </button>
             </form>
 
-            <p className="text-center text-[#868993] text-sm mt-6">
+            <p className="text-center text-[#ecebe6]/60 text-sm mt-6">
                 {noSession
-                    ? <Link href="/forgot-password" className="text-[#2962FF] hover:underline">Send a new reset link</Link>
-                    : <Link href="/app" className="text-[#5d606b] hover:text-[#868993]">Cancel and go to the terminal</Link>}
+                    ? <Link href="/forgot-password" className="text-[#e8b04a] hover:underline">Send a new reset link</Link>
+                    : <Link href="/app" className="text-[#ecebe6]/40 hover:text-[#ecebe6]/60">Cancel and go to the terminal</Link>}
             </p>
         </AuthShell>
     )

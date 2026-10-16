@@ -12,18 +12,11 @@ const COLUMNS = [
         ],
     },
     {
-        title: 'Learn',
-        links: [
-            { href: '/docs', label: 'Docs' },
-            { href: '/blog', label: 'Blog' },
-        ],
-    },
-    {
         title: 'Company',
         links: [
             { href: '/about', label: 'About' },
-                        { href: '/contact', label: 'Contact' },
-            { href: '/support', label: 'Support' },
+            { href: '/docs', label: 'Docs' },
+            { href: '/contact', label: 'Contact' },
         ],
     },
     {
@@ -41,7 +34,7 @@ export function SiteFooter() {
     return (
         <footer className="border-t border-[#ecebe6]/10 bg-[#0a0b0d]">
             <div className="mx-auto max-w-[1400px] px-4 py-14 md:px-6">
-                <div className="grid gap-10 md:grid-cols-[1.4fr_repeat(4,1fr)]">
+                <div className="grid gap-10 md:grid-cols-[1.6fr_repeat(3,1fr)]">
                     <div className="max-w-xs">
                         <Link href="/" className="flex items-baseline gap-1.5">
                             <span className="font-display text-[28px] leading-none text-[#ecebe6]">UpTrade</span>

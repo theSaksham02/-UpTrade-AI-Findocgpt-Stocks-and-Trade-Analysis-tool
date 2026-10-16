@@ -8,9 +8,9 @@ import { isAuthConfigured, isGoogleEnabled, safeNext } from '@/lib/supabase/conf
 
 type Mode = 'login' | 'signup'
 
-export const inputClass = 'w-full bg-[#131722] border border-[#2a2e39] rounded-lg px-4 py-3 text-white focus:border-[#2962FF] outline-none disabled:opacity-50'
+export const inputClass = 'w-full rounded-md border border-[#ecebe6]/15 bg-[#0e0f12] px-3.5 py-2.5 text-[15px] text-[#ecebe6] outline-none placeholder:text-[#ecebe6]/30 focus:border-[#e8b04a]/70 disabled:opacity-50'
 
-export const buttonClass = 'w-full bg-[#2962FF] hover:bg-[#1e53e5] text-white py-3 rounded-lg font-medium transition-colors disabled:opacity-50'
+export const buttonClass = 'w-full rounded-md bg-[#ecebe6] py-3 text-sm font-semibold text-[#0a0b0d] transition-colors hover:bg-white disabled:opacity-50'
 
 // Page frame shared by the sign-in, sign-up and password-reset screens
 export function AuthShell({ title, subtitle, error, notice, children }: {
@@ -21,20 +21,24 @@ export function AuthShell({ title, subtitle, error, notice, children }: {
     children: React.ReactNode
 }) {
     return (
-        <div className="min-h-screen bg-[#0b0e14] flex items-center justify-center px-6">
+        <div className="min-h-screen bg-[#0a0b0d] flex items-center justify-center px-6">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-bold text-white mb-2">{title}</h1>
-                    <p className="text-[#868993]">{subtitle}</p>
+                    <Link href="/" className="mb-8 inline-flex items-baseline gap-1.5" aria-label="UpTrade home">
+                        <span className="font-display text-[28px] leading-none text-[#ecebe6]">UpTrade</span>
+                        <span className="h-1.5 w-1.5 bg-[#e8b04a]" />
+                    </Link>
+                    <h1 className="font-display text-5xl leading-tight text-[#ecebe6] mb-2">{title}</h1>
+                    <p className="text-[#ecebe6]/60">{subtitle}</p>
                 </div>
 
                 {!isAuthConfigured && (
-                    <div className="mb-4 rounded-lg border border-[#f59e0b]/40 bg-[#f59e0b]/10 px-4 py-3 text-sm text-[#fbbf24]">
+                    <div className="mb-4 rounded-md border border-[#f59e0b]/40 bg-[#f59e0b]/10 px-4 py-3 text-sm text-[#fbbf24]">
                         Accounts aren&apos;t enabled on this deployment yet. The <Link href="/app" className="underline">terminal</Link> works without signing in.
                     </div>
                 )}
-                {error && <div role="alert" className="mb-4 rounded-lg border border-[#ef4444]/40 bg-[#ef4444]/10 px-4 py-3 text-sm text-[#f87171]">{error}</div>}
-                {notice && <div role="status" className="mb-4 rounded-lg border border-[#22c55e]/40 bg-[#22c55e]/10 px-4 py-3 text-sm text-[#4ade80]">{notice}</div>}
+                {error && <div role="alert" className="mb-4 rounded-md border border-[#ef4444]/40 bg-[#ef4444]/10 px-4 py-3 text-sm text-[#f87171]">{error}</div>}
+                {notice && <div role="status" className="mb-4 rounded-md border border-[#22c55e]/40 bg-[#22c55e]/10 px-4 py-3 text-sm text-[#4ade80]">{notice}</div>}
 
                 {children}
             </div>
@@ -139,31 +143,31 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 type="button"
                 onClick={handleGoogle}
                 disabled={disabled}
-                className="w-full flex items-center justify-center gap-2 bg-white hover:bg-[#f1f3f4] text-[#1f1f1f] py-3 rounded-lg font-medium transition-colors disabled:opacity-50"
+                className="w-full flex items-center justify-center gap-2 bg-white hover:bg-[#f1f3f4] text-[#1f1f1f] py-3 rounded-md font-medium transition-colors disabled:opacity-50"
             >
                 <GoogleIcon />Continue with Google
             </button>
 
-            <div className="my-5 flex items-center gap-3 text-xs text-[#5d606b]">
-                <span className="h-px flex-1 bg-[#2a2e39]" />or<span className="h-px flex-1 bg-[#2a2e39]" />
+            <div className="my-5 flex items-center gap-3 text-xs text-[#ecebe6]/40">
+                <span className="h-px flex-1 bg-[#ecebe6]/10" />or<span className="h-px flex-1 bg-[#ecebe6]/10" />
             </div>
             </>)}
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 {!isLogin && (
                     <div>
-                        <label htmlFor="name" className="block text-sm text-[#868993] mb-2">Name <span className="text-[#5d606b]">(optional)</span></label>
+                        <label htmlFor="name" className="block text-sm text-[#ecebe6]/60 mb-2">Name <span className="text-[#ecebe6]/40">(optional)</span></label>
                         <input id="name" type="text" autoComplete="name" value={name} onChange={(e) => setName(e.target.value)} disabled={disabled} className={inputClass} placeholder="Ada Lovelace" />
                     </div>
                 )}
                 <div>
-                    <label htmlFor="email" className="block text-sm text-[#868993] mb-2">Email</label>
+                    <label htmlFor="email" className="block text-sm text-[#ecebe6]/60 mb-2">Email</label>
                     <input id="email" type="email" required autoComplete="email" value={email} onChange={(e) => setEmail(e.target.value)} disabled={disabled} className={inputClass} placeholder="you@example.com" />
                 </div>
                 <div>
                     <div className="flex items-baseline justify-between mb-2">
-                        <label htmlFor="password" className="block text-sm text-[#868993]">Password</label>
-                        {isLogin && <Link href="/forgot-password" className="text-sm text-[#2962FF] hover:underline">Forgot password?</Link>}
+                        <label htmlFor="password" className="block text-sm text-[#ecebe6]/60">Password</label>
+                        {isLogin && <Link href="/forgot-password" className="text-sm text-[#e8b04a] hover:underline">Forgot password?</Link>}
                     </div>
                     <input
                         id="password"
@@ -183,14 +187,14 @@ export default function AuthForm({ mode }: { mode: Mode }) {
                 </button>
             </form>
 
-            <p className="text-center text-[#868993] text-sm mt-6">
+            <p className="text-center text-[#ecebe6]/60 text-sm mt-6">
                 {isLogin ? "Don't have an account? " : 'Already have an account? '}
-                <Link href={`${isLogin ? '/signup' : '/login'}${next !== '/app' ? `?next=${encodeURIComponent(next)}` : ''}`} className="text-[#2962FF] hover:underline">
+                <Link href={`${isLogin ? '/signup' : '/login'}${next !== '/app' ? `?next=${encodeURIComponent(next)}` : ''}`} className="text-[#e8b04a] hover:underline">
                     {isLogin ? 'Sign up' : 'Sign in'}
                 </Link>
             </p>
             <p className="text-center text-sm mt-3">
-                <Link href="/app" className="text-[#5d606b] hover:text-[#868993]">Continue to the terminal without an account →</Link>
+                <Link href="/app" className="text-[#ecebe6]/40 hover:text-[#ecebe6]/60">Continue to the terminal without an account →</Link>
             </p>
         </AuthShell>
     )
