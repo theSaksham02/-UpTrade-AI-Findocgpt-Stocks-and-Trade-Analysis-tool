@@ -38,3 +38,7 @@ next-env.d.ts
 
 # pnpm
 pnpm-lock.yaml
+
+# test output
+/test-results/
+/playwright-report/

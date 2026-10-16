@@ -1,7 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  typescript: {
-    ignoreBuildErrors: true,
+  experimental: {
+    // Loads instrumentation.ts so server-side Sentry runs (Next 14)
+    instrumentationHook: true,
   },
   images: {
     unoptimized: true,

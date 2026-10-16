@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import type { SearchResult } from '@/lib/market/types'
 import { C } from './hooks'
@@ -28,6 +28,8 @@ export default function SymbolSearch({ open, onClose, onPick, seed = '', title =
 }) {
     const [q, setQ] = useState('')
     const [results, setResults] = useState<SearchResult[]>(POPULAR)
+    // The query `results` belong to; while a newer query is loading we filter locally
+    const [resultsFor, setResultsFor] = useState('')
     const [idx, setIdx] = useState(0)
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -35,24 +37,44 @@ export default function SymbolSearch({ open, onClose, onPick, seed = '', title =
         if (open) {
             setQ(seed)
             setResults(POPULAR)
+            setResultsFor('')
             setIdx(0)
             setTimeout(() => inputRef.current?.focus(), 0)
         }
     }, [open, seed])
 
     useEffect(() => {
-        if (!q.trim()) return setResults(POPULAR)
+        const query = q.trim()
+        if (!query) return
         const ctrl = new AbortController()
         const id = setTimeout(async () => {
             try {
-                const res = await fetch(`/api/market/search?q=${encodeURIComponent(q.trim())}`, { signal: ctrl.signal })
+                const res = await fetch(`/api/market/search?q=${encodeURIComponent(query)}`, { signal: ctrl.signal })
                 const body = await res.json()
                 setResults(body.quotes || [])
+                setResultsFor(query)
                 setIdx(0)
             } catch { }
         }, 200)
         return () => { clearTimeout(id); ctrl.abort() }
     }, [q])
+
+    // What the list shows (and what Enter picks): popular when empty, server results for the
+    // current query, or — until those arrive — known symbols that match what's typed so far.
+    const shown = useMemo(() => {
+        const query = q.trim()
+        if (!query) return POPULAR
+        if (resultsFor === query) return results
+        const needle = query.toLowerCase()
+        const seen = new Set<string>()
+        return [...results, ...POPULAR].filter((r) => {
+            if (seen.has(r.symbol)) return false
+            seen.add(r.symbol)
+            return r.symbol.toLowerCase().startsWith(needle) || r.name.toLowerCase().includes(needle)
+        })
+    }, [q, results, resultsFor])
+
+    useEffect(() => setIdx(0), [shown])
 
     if (!open) return null
 
@@ -79,10 +101,10 @@ export default function SymbolSearch({ open, onClose, onPick, seed = '', title =
                         onChange={(e) => setQ(e.target.value)}
                         onKeyDown={(e) => {
                             if (e.key === 'Escape') onClose()
-                            else if (e.key === 'ArrowDown') { e.preventDefault(); setIdx((i) => Math.min(results.length - 1, i + 1)) }
+                            else if (e.key === 'ArrowDown') { e.preventDefault(); setIdx((i) => Math.min(shown.length - 1, i + 1)) }
                             else if (e.key === 'ArrowUp') { e.preventDefault(); setIdx((i) => Math.max(0, i - 1)) }
                             else if (e.key === 'Enter') {
-                                const r = results[idx]
+                                const r = shown[idx]
                                 if (r) pick(r.symbol)
                                 else if (q.trim()) pick(q.trim().toUpperCase())
                             }
@@ -94,7 +116,7 @@ export default function SymbolSearch({ open, onClose, onPick, seed = '', title =
                 </div>
                 <div className="max-h-[50vh] overflow-y-auto pb-2">
                     {!q.trim() && <div className="px-4 py-1 text-[11px] uppercase tracking-wide" style={{ color: C.muted }}>Popular</div>}
-                    {results.map((r, i) => (
+                    {shown.map((r, i) => (
                         <button
                             key={r.symbol}
                             onMouseEnter={() => setIdx(i)}
@@ -107,7 +129,7 @@ export default function SymbolSearch({ open, onClose, onPick, seed = '', title =
                             <span className="shrink-0 text-[11px]" style={{ color: C.muted }}>{TYPE_LABEL[r.type] || r.type.toLowerCase()} · {r.exchange}</span>
                         </button>
                     ))}
-                    {q.trim() && !results.length && <div className="px-4 py-6 text-center text-xs" style={{ color: C.muted }}>No symbols match “{q}”</div>}
+                    {q.trim() && !shown.length && <div className="px-4 py-6 text-center text-xs" style={{ color: C.muted }}>No symbols match “{q}”</div>}
                 </div>
             </div>
         </div>

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { LandingHeader } from '@/components/landing/Header';
 import { CONTACT, ENTITY, LegalSection, LegalTitle } from '@/components/legal/legal-section';
 // Footer handled by layout
 
@@ -11,7 +10,6 @@ export const metadata: Metadata = {
 export default function DisclaimerPage() {
     return (
         <div className="bg-transparent min-h-screen">
-            <LandingHeader />
 
             <div className="py-32 px-6">
                 <div className="max-w-3xl mx-auto">
