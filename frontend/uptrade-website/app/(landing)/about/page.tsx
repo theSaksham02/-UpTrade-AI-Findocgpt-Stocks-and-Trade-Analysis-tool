@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Github, Linkedin, Twitter, ChevronLeft, ChevronRight } from 'lucide-react';
 import Image from 'next/image';
 
+// Only claims we can stand behind; add metrics back once they're measured.
 const timeline = [
     {
         year: '2021',
@@ -13,18 +14,13 @@ const timeline = [
     },
     {
         year: '2022',
-        title: 'VisualX Algorithm Breakthrough',
-        description: 'Developed the core divergence detection engine. 73% accuracy on backtested signals across 50k+ events.'
+        title: 'VisualX Divergence Engine',
+        description: 'Built the first version of the engine that flags when news sentiment and price disagree.'
     },
     {
-        year: '2023',
-        title: 'Public Beta Launch',
-        description: 'Launched API access for developers. First 1,000 users within 60 days. Zero marketing spend.'
-    },
-    {
-        year: '2024',
-        title: '12,000+ Active Traders',
-        description: 'Processing 1.2M messages/sec. Expanded to crypto, forex, and options data coverage.'
+        year: '2026',
+        title: 'Public Beta',
+        description: 'Opened the terminal, the forecasting model and the strategy tester to everyone, free.'
     },
 ];
 
@@ -52,28 +48,24 @@ const founderImages = [
     },
 ];
 
-const techStack = `# UpTrade Architecture
+const techStack = `# How UpTrade is built
 
-## Data Layer
-- PostgreSQL + TimescaleDB (time-series)
-- Redis Cluster (caching, pub/sub)
-- Weaviate (vector embeddings)
+## App
+- Next.js on Vercel (terminal, site, API routes)
+- TradingView Lightweight Charts
 
-## Processing
-- FastAPI (Python REST/WebSocket)
-- Kafka (event streaming)
-- PyTorch + ONNX (ML inference)
+## Data
+- Yahoo Finance (prices, history, search, headlines)
+- Cached at the edge per symbol and interval
 
-## Infrastructure  
-- Kubernetes on GCP
-- CloudFlare (edge caching)
-- Datadog (observability)`;
+## Model
+- UpTrade model in TypeScript: ARIMA(5,1,0),
+  factor score, anomaly detection, backtester
+- Optional FinBERT sentiment via Hugging Face
 
-const jobs = [
-    { role: 'Senior Backend Engineer', dept: 'Engineering', location: 'Remote (US/EU)', link: '#' },
-    { role: 'ML Engineer, NLP', dept: 'AI/ML', location: 'San Francisco', link: '#' },
-    { role: 'DevOps/SRE', dept: 'Infrastructure', location: 'Remote', link: '#' },
-];
+## Accounts
+- Supabase Auth + Postgres (row-level security)`;
+
 
 export default function AboutPage() {
     const [currentImage, setCurrentImage] = useState(0);
@@ -327,50 +319,6 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* Careers */}
-            <section className="py-16 px-6 pb-24">
-                <div className="max-w-3xl mx-auto">
-                    <h2 className="text-xs text-[#868993] font-mono uppercase tracking-wider mb-8">
-                        // Open Positions
-                    </h2>
-                    <motion.div
-                        initial={{ opacity: 0 }}
-                        whileInView={{ opacity: 1 }}
-                        viewport={{ once: true }}
-                        className="bg-[#13131f] border border-white/10 rounded-lg overflow-hidden"
-                    >
-                        <div className="grid grid-cols-4 gap-4 px-4 py-3 bg-[#0a0a0f] border-b border-white/10 text-xs text-[#868993] font-mono uppercase tracking-wider">
-                            <div>Role</div>
-                            <div>Department</div>
-                            <div>Location</div>
-                            <div></div>
-                        </div>
-                        {jobs.map((job, idx) => (
-                            <motion.div
-                                key={job.role}
-                                initial={{ opacity: 0, x: -10 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: idx * 0.1 }}
-                                className={`grid grid-cols-4 gap-4 px-4 py-4 items-center ${idx !== jobs.length - 1 ? 'border-b border-white/10' : ''
-                                    } hover:bg-white/5 transition-colors`}
-                            >
-                                <div className="text-white font-medium">{job.role}</div>
-                                <div className="text-[#868993] text-sm">{job.dept}</div>
-                                <div className="text-[#868993] text-sm font-mono">{job.location}</div>
-                                <div className="text-right">
-                                    <a
-                                        href={job.link}
-                                        className="text-[#00d4ff] text-sm font-mono hover:underline"
-                                    >
-                                        Apply →
-                                    </a>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </motion.div>
-                </div>
-            </section>
         </div>
     );
 }
