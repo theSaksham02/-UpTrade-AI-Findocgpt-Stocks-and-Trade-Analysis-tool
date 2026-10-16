@@ -3,6 +3,7 @@ import { errorResponse, json, readSymbol } from '@/lib/market/http'
 import { scoreHeadlines } from '@/lib/model/sentiment'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 20
 
 export async function GET(req: Request) {
     try {

@@ -4,6 +4,7 @@ import { isCrypto } from '@/lib/market/types'
 import { analyze } from '@/lib/model/uptrade'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 20
 
 export async function GET(req: Request) {
     try {

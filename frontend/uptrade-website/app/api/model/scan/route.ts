@@ -4,6 +4,7 @@ import { isCrypto } from '@/lib/market/types'
 import { analyze } from '@/lib/model/uptrade'
 
 export const dynamic = 'force-dynamic'
+export const maxDuration = 20
 
 // Runs the UpTrade model over a list of symbols and returns a compact ranking
 export async function GET(req: Request) {
@@ -28,9 +29,16 @@ export async function GET(req: Request) {
                 rsi: a.stats.rsi,
             }
         }))
+        // Partial results beat a 500: drop the symbols that failed and say which ones
         const items = results.flatMap((r) => (r.status === 'fulfilled' ? [r.value] : []))
             .sort((a, b) => b.score - a.score)
-        return json({ items, disclaimer: 'Model output for research only. Not financial advice.' }, 600)
+        const failed = symbols.filter((_, i) => results[i].status === 'rejected').map((s) => s.toUpperCase())
+        if (!items.length) {
+            const first = results.find((r): r is PromiseRejectedResult => r.status === 'rejected')
+            throw first?.reason ?? new MarketDataError('Market data unavailable', 503)
+        }
+        // Cache a partial scan briefly so a transient failure isn't pinned at the edge for ten minutes
+        return json({ items, failed, disclaimer: 'Model output for research only. Not financial advice.' }, failed.length ? 60 : 600)
     } catch (err) {
         return errorResponse(err)
     }

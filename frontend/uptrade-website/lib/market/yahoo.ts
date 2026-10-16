@@ -1,9 +1,9 @@
 import type { BarsResponse, Candle, Interval, NewsItem, Quote, SearchResult } from './types'
 
 // Yahoo Finance public endpoints (no API key). Responses are cached by Next's
-// fetch cache so we stay well inside rate limits.
+// fetch cache so we stay well inside rate limits. query2 mirrors query1 and is the fallback.
 
-const BASE = 'https://query1.finance.yahoo.com'
+const HOSTS = ['https://query1.finance.yahoo.com', 'https://query2.finance.yahoo.com']
 const HEADERS = { 'User-Agent': 'Mozilla/5.0 (compatible; UpTrade/1.0)' }
 
 // Friendly aliases → Yahoo symbols
@@ -32,10 +32,32 @@ export class MarketDataError extends Error {
     }
 }
 
+const retryable = (status: number) => status === 429 || status >= 500
+const backoff = () => new Promise((r) => setTimeout(r, 300 + Math.random() * 400))
+
+// Fetches each URL in turn, moving on (after a jittered pause) on 429, 5xx or a network error.
+// Any other response — including 404 — is returned as is.
+async function fetchWithRetry(urls: string[], revalidate: number): Promise<Response> {
+    let last: Response | null = null
+    let lastErr: unknown = null
+    for (let i = 0; i < urls.length; i++) {
+        if (i > 0) await backoff()
+        try {
+            const res = await fetch(urls[i], { headers: HEADERS, next: { revalidate } })
+            if (!retryable(res.status)) return res
+            last = res
+        } catch (err) {
+            lastErr = err
+        }
+    }
+    if (last) return last
+    throw new MarketDataError(`Market data provider unreachable${lastErr instanceof Error ? ` (${lastErr.message})` : ''}`, 503)
+}
+
 async function yahooJson(path: string, revalidate: number) {
-    const res = await fetch(`${BASE}${path}`, { headers: HEADERS, next: { revalidate } })
+    const res = await fetchWithRetry(HOSTS.map((h) => `${h}${path}`), revalidate)
     if (res.status === 404) throw new MarketDataError('Symbol not found', 404)
-    if (!res.ok) throw new MarketDataError(`Market data provider error (${res.status})`)
+    if (!res.ok) throw new MarketDataError(`Market data provider error (${res.status})`, retryable(res.status) ? 503 : 502)
     return res.json()
 }
 
@@ -135,11 +157,10 @@ const decode = (s: string) =>
 
 export async function getNews(rawSymbol: string): Promise<NewsItem[]> {
     const symbol = normalizeSymbol(rawSymbol)
-    const res = await fetch(
-        `https://feeds.finance.yahoo.com/rss/2.0/headline?s=${encodeURIComponent(symbol)}&region=US&lang=en-US`,
-        { headers: HEADERS, next: { revalidate: 900 } },
-    )
-    if (!res.ok) throw new MarketDataError(`News provider error (${res.status})`)
+    const url = `https://feeds.finance.yahoo.com/rss/2.0/headline?s=${encodeURIComponent(symbol)}&region=US&lang=en-US`
+    // The RSS feed has a single host, so the fallback is one retry of the same URL
+    const res = await fetchWithRetry([url, url], 900)
+    if (!res.ok) throw new MarketDataError(`News provider error (${res.status})`, retryable(res.status) ? 503 : 502)
     const xml = await res.text()
     return [...xml.matchAll(/<item>([\s\S]*?)<\/item>/g)].slice(0, 15).map(([, item]) => {
         const tag = (t: string) => decode(item.match(new RegExp(`<${t}>([\\s\\S]*?)</${t}>`))?.[1] || '')

@@ -33,6 +33,8 @@ function Stat({ label, value, sub, tone }: { label: string; value: React.ReactNo
     )
 }
 
+const UNAVAILABLE = 'Market data is temporarily unavailable.'
+
 type NewsResp = { items: { title: string; publisher: string; link: string; time: number; label: string }[] }
 
 function HoldingsNews({ symbols }: { symbols: string[] }) {
@@ -61,8 +63,9 @@ function HoldingsNews({ symbols }: { symbols: string[] }) {
                     </a>
                 </li>
             ))}
-            {!a.data && symbols.length > 0 && Array.from({ length: 4 }).map((_, i) => <li key={i} className="my-3 h-5 animate-pulse bg-[#ecebe6]/[0.04]" />)}
+            {!a.data && !a.error && symbols.length > 0 && Array.from({ length: 4 }).map((_, i) => <li key={i} className="my-3 h-5 animate-pulse bg-[#ecebe6]/[0.04]" />)}
             {a.data && !items.length && <li className="py-3 text-sm text-[#ecebe6]/50">No recent headlines.</li>}
+            {!a.data && a.error && <li className="py-3 text-sm text-[#ecebe6]/50">{UNAVAILABLE}</li>}
         </ul>
     )
 }
@@ -142,10 +145,10 @@ export function ClientDashboard() {
 
                 {/* Summary */}
                 <div className="mt-10 grid gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-4">
-                    <Stat label="Advancing today" value={quoted.length ? `${advancing}/${quoted.length}` : '—'} sub={avgDay != null ? <>Average move <span className={pctClass(avgDay)}>{fmtPct(avgDay, 2, true)}</span></> : 'Loading quotes…'} />
+                    <Stat label="Advancing today" value={quoted.length ? `${advancing}/${quoted.length}` : '—'} sub={avgDay != null ? <>Average move <span className={pctClass(avgDay)}>{fmtPct(avgDay, 2, true)}</span></> : overview.error ? UNAVAILABLE : 'Loading quotes…'} />
                     <Stat label="Best today" value={best ? displaySymbol(best.symbol) : '—'} tone="text-[#3fb97f]" sub={best ? fmtPct(best.ov!.quote.changePercent, 2, true) : undefined} />
                     <Stat label="Worst today" value={worst && worst !== best ? displaySymbol(worst.symbol) : '—'} tone="text-[#e5534b]" sub={worst && worst !== best ? fmtPct(worst.ov!.quote.changePercent, 2, true) : undefined} />
-                    <Stat label="Model: bullish" value={scan.data ? `${bullish}/${scan.data.items.length}` : '—'} sub={scan.data ? 'Names the UpTrade score rates bullish' : 'Running the model…'} />
+                    <Stat label="Model: bullish" value={scan.data ? `${bullish}/${scan.data.items.length}` : '—'} sub={scan.data ? 'Names the UpTrade score rates bullish' : scan.error ? UNAVAILABLE : 'Running the model…'} />
                 </div>
 
                 <div className="mt-12 grid gap-10 lg:grid-cols-[1.6fr_1fr]">
@@ -212,7 +215,7 @@ export function ClientDashboard() {
                             </div>
                             <p className="mt-1 text-sm text-[#ecebe6]/50">Your watchlist as if you held each name equally, last ~3 months.</p>
                             <div className="mt-4 h-48 border border-[#ecebe6]/12 bg-[#0e0f12] p-1">
-                                {basket.length > 1 ? <EquityChart series={[{ color: AMBER, width: 2, points: basket }]} /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
+                                {basket.length > 1 ? <EquityChart series={[{ color: AMBER, width: 2, points: basket }]} /> : overview.error && !overview.data ? <p className="flex h-full items-center justify-center text-sm text-[#ecebe6]/50">{UNAVAILABLE}</p> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
                             </div>
                         </section>
 
