@@ -17,7 +17,7 @@ export default function PrivacyPage() {
                     <LegalTitle>Privacy Policy</LegalTitle>
                     <div className="text-[#a3a29c] leading-relaxed space-y-6">
                         <p>
-                            UpTrade is operated by {ENTITY}, which is responsible for the personal data described here. We collect
+                            UpTrade is run by {ENTITY}, who are responsible for the personal data described here. We collect
                             as little as we can: the terminal works without an account, and an account exists only to sync your
                             watchlist. Questions or requests: {CONTACT}.
                         </p>
@@ -95,7 +95,7 @@ export default function PrivacyPage() {
                             <p>
                                 Depending on where you live (for example under the GDPR, UK GDPR or California law), you can ask to
                                 access, correct, export or delete your personal data, or object to how we use it. To delete your
-                                account and watchlist, email {CONTACT} from the address on the account. We&rsquo;ll confirm and
+                                account and watchlist, send a request through {CONTACT} from the email on the account. We&rsquo;ll confirm and
                                 complete requests within 30 days. You can also complain to your local data protection authority.
                             </p>
                         </LegalSection>

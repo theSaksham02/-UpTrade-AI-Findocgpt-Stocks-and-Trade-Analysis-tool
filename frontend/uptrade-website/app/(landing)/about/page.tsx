@@ -8,14 +8,9 @@ import Image from 'next/image';
 // Only claims we can stand behind; add metrics back once they're measured.
 const timeline = [
     {
-        year: '2021',
-        title: 'Internal Tool at Hedge Fund',
-        description: 'Started as an internal research tool to detect sentiment-price divergences before market moves.'
-    },
-    {
-        year: '2022',
-        title: 'VisualX Divergence Engine',
-        description: 'Built the first version of the engine that flags when news sentiment and price disagree.'
+        year: 'Summer 2025',
+        title: 'Started UpTrade',
+        description: 'Began building a research tool that puts charts, a forecasting model and news sentiment in one place.'
     },
     {
         year: '2026',
@@ -101,7 +96,7 @@ export default function AboutPage() {
                         transition={{ delay: 0.1 }}
                         className="text-lg text-[#868993] leading-relaxed"
                     >
-                        We spent years watching retail traders lose to institutional speed.
+                        We watched retail traders lose to institutional speed.
                         UpTrade exists to close that gap.
                     </motion.p>
                 </div>

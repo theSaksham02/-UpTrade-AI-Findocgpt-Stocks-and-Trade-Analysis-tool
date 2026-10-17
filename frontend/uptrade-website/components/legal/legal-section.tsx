@@ -29,5 +29,6 @@ export function Placeholder({ children }: { children: React.ReactNode }) {
     return <span className="font-mono text-[0.9em] text-[#e8b04a]">{children}</span>
 }
 
-export const ENTITY = <Placeholder>[LEGAL ENTITY NAME]</Placeholder>
-export const CONTACT = <Placeholder>[CONTACT EMAIL]</Placeholder>
+// UpTrade has no registered company yet; it's run by the UpTrade team. Requests go through the contact form.
+export const ENTITY = <>the UpTrade team</>
+export const CONTACT = <a href="/contact" className="text-[#ecebe6] underline underline-offset-4">our contact form</a>

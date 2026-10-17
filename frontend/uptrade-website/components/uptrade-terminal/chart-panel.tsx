@@ -20,8 +20,8 @@ export const INDICATOR_META: Record<IndicatorKey, { label: string; color: string
     sma50: { label: 'SMA 50', color: C.accent },
     sma200: { label: 'SMA 200', color: C.amber },
     ema20: { label: 'EMA 20', color: '#26c6da' },
-    bb: { label: 'Bollinger Bands (20, 2)', color: '#7e57c2' },
-    rsi: { label: 'RSI 14', color: '#7e57c2', pane: true },
+    bb: { label: 'Bollinger Bands (20, 2)', color: '#c792ea' },
+    rsi: { label: 'RSI 14', color: '#c792ea', pane: true },
     macd: { label: 'MACD 12 26 9', color: C.accent, pane: true },
 }
 
@@ -102,13 +102,13 @@ export default function ChartPanel(props: Props) {
                 textColor: C.text,
                 fontSize: 11,
                 fontFamily: getComputedStyle(document.body).getPropertyValue('--font-code').trim() || 'ui-monospace, monospace',
-                panes: { separatorColor: C.border, separatorHoverColor: 'rgba(41,98,255,0.3)', enableResize: true },
+                panes: { separatorColor: C.border, separatorHoverColor: 'rgba(232,176,74,0.3)', enableResize: true },
             },
-            grid: { vertLines: { color: 'rgba(42,46,57,0.6)' }, horzLines: { color: 'rgba(42,46,57,0.6)' } },
+            grid: { vertLines: { color: 'rgba(36,37,42,0.6)' }, horzLines: { color: 'rgba(36,37,42,0.6)' } },
             crosshair: {
                 mode: CrosshairMode.Normal,
-                vertLine: { color: '#9598a1', width: 1, style: LineStyle.Dashed, labelBackgroundColor: C.border2 },
-                horzLine: { color: '#9598a1', width: 1, style: LineStyle.Dashed, labelBackgroundColor: C.border2 },
+                vertLine: { color: '#8b8a84', width: 1, style: LineStyle.Dashed, labelBackgroundColor: C.border2 },
+                horzLine: { color: '#8b8a84', width: 1, style: LineStyle.Dashed, labelBackgroundColor: C.border2 },
             },
             rightPriceScale: { borderColor: C.border },
             timeScale: { borderColor: C.border, timeVisible: intraday, secondsVisible: false, rightOffset: 8 },
@@ -239,7 +239,7 @@ export default function ChartPanel(props: Props) {
             main = chart.addSeries(LineSeries, { color: C.accent, lineWidth: 2, priceFormat })
             main.setData(data.map((d) => ({ time: d.time, value: d.close })))
         } else if (chartType === 'area') {
-            main = chart.addSeries(AreaSeries, { lineColor: C.accent, topColor: 'rgba(41,98,255,0.28)', bottomColor: 'rgba(41,98,255,0.02)', lineWidth: 2, priceFormat })
+            main = chart.addSeries(AreaSeries, { lineColor: C.accent, topColor: 'rgba(232,176,74,0.28)', bottomColor: 'rgba(232,176,74,0.02)', lineWidth: 2, priceFormat })
             main.setData(data.map((d) => ({ time: d.time, value: d.close })))
         } else if (chartType === 'bars') {
             main = chart.addSeries(BarSeries, { upColor: C.up, downColor: C.down, priceFormat })
@@ -260,7 +260,7 @@ export default function ChartPanel(props: Props) {
         if (has('vol') && candles.some((c) => c.volume > 0)) {
             const v = add(chart.addSeries(HistogramSeries, { priceFormat: { type: 'volume' }, priceScaleId: 'vol', lastValueVisible: false, priceLineVisible: false }))
             v.priceScale().applyOptions({ scaleMargins: { top: 0.82, bottom: 0 } })
-            v.setData(candles.map((c) => ({ time: ts(c.time), value: c.volume, color: c.close >= c.open ? 'rgba(8,153,129,0.35)' : 'rgba(242,54,69,0.35)' })))
+            v.setData(candles.map((c) => ({ time: ts(c.time), value: c.volume, color: c.close >= c.open ? 'rgba(63,185,127,0.35)' : 'rgba(229,83,75,0.35)' })))
         }
         const overlay = (vals: Series, color: string, width: 1 | 2 = 1, style = LineStyle.Solid) =>
             add(chart.addSeries(LineSeries, { color, lineWidth: width, lineStyle: style, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false })).setData(line(vals, candles))
@@ -271,7 +271,7 @@ export default function ChartPanel(props: Props) {
         if (has('bb')) {
             const b = bollinger(closes)
             overlay(b.upper, INDICATOR_META.bb.color)
-            overlay(b.mid, 'rgba(126,87,194,0.6)', 1, LineStyle.Dotted)
+            overlay(b.mid, 'rgba(199,146,234,0.6)', 1, LineStyle.Dotted)
             overlay(b.lower, INDICATOR_META.bb.color)
         }
 
@@ -286,7 +286,7 @@ export default function ChartPanel(props: Props) {
         if (has('macd')) {
             const m = macd(closes)
             add(chart.addSeries(HistogramSeries, { priceLineVisible: false, lastValueVisible: false }, pane)).setData(
-                m.hist.flatMap((v, i) => (v == null ? [] : [{ time: ts(candles[i].time), value: v, color: v >= 0 ? 'rgba(8,153,129,0.6)' : 'rgba(242,54,69,0.6)' }])),
+                m.hist.flatMap((v, i) => (v == null ? [] : [{ time: ts(candles[i].time), value: v, color: v >= 0 ? 'rgba(63,185,127,0.6)' : 'rgba(229,83,75,0.6)' }])),
             )
             add(chart.addSeries(LineSeries, { color: C.accent, lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, pane)).setData(line(m.line, candles))
             add(chart.addSeries(LineSeries, { color: C.amber, lineWidth: 1, priceLineVisible: false, lastValueVisible: false }, pane)).setData(line(m.signal, candles))
@@ -299,8 +299,8 @@ export default function ChartPanel(props: Props) {
             const anchor = { time: ts(candles[candles.length - 1].time), value: last }
             const fl = (key: 'value' | 'lower' | 'upper') => [anchor, ...forecast.map((f) => ({ time: ts(f.time), value: f[key] }))]
             add(chart.addSeries(LineSeries, { color: C.purple, lineWidth: 2, lineStyle: LineStyle.Dashed, priceLineVisible: false, title: 'Forecast', priceFormat })).setData(fl('value'))
-            add(chart.addSeries(LineSeries, { color: 'rgba(171,71,188,0.45)', lineWidth: 1, lineStyle: LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false })).setData(fl('upper'))
-            add(chart.addSeries(LineSeries, { color: 'rgba(171,71,188,0.45)', lineWidth: 1, lineStyle: LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false })).setData(fl('lower'))
+            add(chart.addSeries(LineSeries, { color: 'rgba(199,146,234,0.45)', lineWidth: 1, lineStyle: LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false })).setData(fl('upper'))
+            add(chart.addSeries(LineSeries, { color: 'rgba(199,146,234,0.45)', lineWidth: 1, lineStyle: LineStyle.Dotted, priceLineVisible: false, lastValueVisible: false, crosshairMarkerVisible: false })).setData(fl('lower'))
         }
 
         if (anomalies?.length) {
@@ -387,7 +387,7 @@ export default function ChartPanel(props: Props) {
             </div>
 
             {pending && (
-                <div className="pointer-events-none absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded px-2 py-1 text-[11px]" style={{ background: C.accent, color: '#fff' }}>
+                <div className="pointer-events-none absolute left-1/2 top-2 z-10 -translate-x-1/2 rounded px-2 py-1 text-[11px]" style={{ background: C.accent, color: '#0a0b0d' }}>
                     Click the second point
                 </div>
             )}
