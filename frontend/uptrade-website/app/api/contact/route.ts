@@ -7,7 +7,7 @@ export const dynamic = 'force-dynamic'
 
 const Body = z.object({
     email: z.string().trim().email().max(254),
-    topic: z.enum(['general', 'bug', 'data', 'account']).default('general'),
+    topic: z.enum(['general', 'business', 'bug', 'data', 'account']).default('general'),
     message: z.string().trim().min(5, 'Message is too short').max(5000),
     website: z.string().optional(), // honeypot: real users never fill this
 })

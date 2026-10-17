@@ -1,6 +1,7 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { ArrowRight, ArrowUpRight } from 'lucide-react'
@@ -9,6 +10,8 @@ import type { Analysis, BacktestResult } from '@/lib/model/uptrade'
 import { displaySymbol, fmtPct, fmtPrice, useApi, useQuotes } from '@/components/uptrade-terminal/hooks'
 import { Sparkline, type OverviewItem, type ScanItem } from './market-widgets'
 import { AMBER, DOWN, EquityChart, ForecastChart, PAPER, UP } from './charts'
+import { Reveal, RevealItem, Stagger, WordReveal } from './motion'
+import { VENUES } from './research'
 
 // ------------------------------------------------------------
 // Shared bits
@@ -20,7 +23,7 @@ const Wrap = ({ children, className = '' }: { children: React.ReactNode; classNa
 
 function SectionHead({ kicker, title, children, href, cta }: { kicker: string; title: React.ReactNode; children?: React.ReactNode; href?: string; cta?: string }) {
     return (
-        <div className="mb-8 grid gap-4 border-t border-[#ecebe6]/15 pt-6 md:grid-cols-[220px_1fr_auto] md:items-baseline">
+        <Reveal className="mb-8 grid gap-4 border-t border-[#ecebe6]/15 pt-6 md:grid-cols-[220px_1fr_auto] md:items-baseline">
             <div className="font-mono text-xs uppercase tracking-[0.14em] text-[#ecebe6]/45">{kicker}</div>
             <div>
                 <h2 className="font-display text-4xl leading-[1.05] text-[#ecebe6] md:text-5xl">{title}</h2>
@@ -31,7 +34,7 @@ function SectionHead({ kicker, title, children, href, cta }: { kicker: string; t
                     {cta} <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
             )}
-        </div>
+        </Reveal>
     )
 }
 
@@ -47,80 +50,200 @@ const Unavailable = ({ className = '' }: { className?: string }) => (
 // Ticker tape
 // ------------------------------------------------------------
 
-const TAPE = ['^GSPC', '^NDX', '^DJI', '^VIX', 'BTC-USD', 'ETH-USD', 'AAPL', 'NVDA', 'MSFT', 'TSLA', 'GLD', 'TLT']
-const TAPE_NAMES: Record<string, string> = { '^GSPC': 'S&P 500', '^NDX': 'Nasdaq 100', '^DJI': 'Dow', '^VIX': 'VIX', 'BTC-USD': 'Bitcoin', 'ETH-USD': 'Ether' }
-
-function TickerTape() {
-    const quotes = useQuotes(TAPE, 30000)
-    const items = TAPE.flatMap((s) => (quotes[s] ? [{ s, q: quotes[s] }] : []))
-    return (
-        <div className="overflow-hidden border-b border-[#ecebe6]/10 bg-[#0d0e11]">
-            <div className="flex h-9 w-max animate-[tape_60s_linear_infinite] items-center hover:[animation-play-state:paused]">
-                {[...items, ...items].map(({ s, q }, i) => (
-                    <Link key={i} href={`/app?symbol=${encodeURIComponent(s)}`} className="flex items-center gap-2 px-5 font-mono text-[12px]">
-                        <span className="text-[#ecebe6]/80">{TAPE_NAMES[s] ?? displaySymbol(s)}</span>
-                        <span className="tabular-nums text-[#ecebe6]">{fmtPrice(q.price)}</span>
-                        <span className={`tabular-nums ${pctClass(q.changePercent)}`}>{fmtPct(q.changePercent, 2, true)}</span>
-                    </Link>
-                ))}
-            </div>
-            <style jsx>{`@keyframes tape { from { transform: translateX(0) } to { transform: translateX(-50%) } }`}</style>
-        </div>
-    )
-}
-
 // ------------------------------------------------------------
 // Hero: S&P 500 with the model's forecast drawn on it
 // ------------------------------------------------------------
 
+const HERO_SYMBOLS = [
+    { s: '^GSPC', label: 'S&P 500' },
+    { s: '^NDX', label: 'Nasdaq 100' },
+    { s: 'BTC-USD', label: 'Bitcoin' },
+    { s: 'GLD', label: 'Gold' },
+]
+
 function Hero() {
-    const bars = useApi<BarsResponse>('/api/market/bars?symbol=%5EGSPC&interval=1D')
-    const model = useApi<{ analysis: Analysis }>('/api/model/analyze?symbol=%5EGSPC')
+    const [i, setI] = useState(0)
+    const [touched, setTouched] = useState(false)
+    const sym = HERO_SYMBOLS[i]
+    const enc = encodeURIComponent(sym.s)
+    const bars = useApi<BarsResponse>(`/api/market/bars?symbol=${enc}&interval=1D`)
+    const model = useApi<{ analysis: Analysis }>(`/api/model/analyze?symbol=${enc}`)
     const history = useMemo(() => (bars.data?.candles ?? []).slice(-130).map((c) => ({ time: c.time, value: c.close })), [bars.data])
-    const forecast = model.data?.analysis.forecast ?? []
+    const forecast = useMemo(() => model.data?.analysis.forecast ?? [], [model.data])
     const q = bars.data?.quote
     const end = forecast[forecast.length - 1]
 
+    // Rotate through markets until the visitor picks one (never with reduced motion)
+    useEffect(() => {
+        if (touched || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+        const id = setInterval(() => setI((x) => (x + 1) % HERO_SYMBOLS.length), 9000)
+        return () => clearInterval(id)
+    }, [touched])
+
     return (
-        <section>
-            <Wrap className="grid gap-10 pb-14 pt-14 md:pt-20 lg:grid-cols-[1fr_1.15fr] lg:items-end">
+        <section className="relative overflow-hidden">
+            <motion.div aria-hidden className="pointer-events-none absolute -left-32 top-24 h-[420px] w-[420px] rounded-full border border-[#ecebe6]/[0.06]" initial={{ scale: 0.85, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 1.6 }} />
+            <Wrap className="relative grid gap-10 pb-14 pt-14 md:pt-20 lg:grid-cols-[1fr_1.15fr] lg:items-end">
                 <div>
+                    <Reveal>
+                        <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ecebe6]/12 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.14em] text-[#ecebe6]/60">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#e8b04a]" /> Free beta · for investors and teams
+                        </div>
+                    </Reveal>
                     <h1 className="font-display text-[56px] leading-[0.98] text-[#ecebe6] md:text-[84px]">
-                        A trading terminal that <em className="text-[#e8b04a]">shows its work.</em>
+                        <WordReveal text="A trading terminal that" />{' '}
+                        <WordReveal text="shows its work." className="italic text-[#e8b04a]" delay={0.3} />
                     </h1>
-                    <p className="mt-6 max-w-md text-[17px] leading-8 text-[#ecebe6]/65">
-                        Charts for stocks, ETFs, indices and crypto. Every forecast is drawn with its error band, and every
-                        strategy comes with a five-year backtest — losses included.
-                    </p>
-                    <div className="mt-8 flex flex-wrap items-center gap-5">
-                        <Link href="/app" className="rounded-md bg-[#ecebe6] px-5 py-3 text-sm font-semibold text-[#0a0b0d] hover:bg-white">
-                            Open the terminal
-                        </Link>
-                        <Link href="/markets" className="inline-flex items-center gap-1 text-sm text-[#ecebe6]/75 underline-offset-4 hover:text-[#ecebe6] hover:underline">
-                            Today’s markets <ArrowRight className="h-3.5 w-3.5" />
-                        </Link>
-                    </div>
+                    <Reveal delay={0.5}>
+                        <p className="mt-6 max-w-md text-[17px] leading-8 text-[#ecebe6]/65">
+                            Charts for stocks, ETFs, indices and crypto. Every forecast is drawn with its error band, and every
+                            strategy comes with a five-year backtest — losses included.
+                        </p>
+                    </Reveal>
+                    <Reveal delay={0.6}>
+                        <div className="mt-8 flex flex-wrap items-center gap-5">
+                            <Link href="/app" className="group relative inline-flex items-center gap-1.5 overflow-hidden rounded-md bg-[#ecebe6] px-5 py-3 text-sm font-semibold text-[#0a0b0d]">
+                                <span className="absolute inset-0 -translate-x-full bg-[#e8b04a] transition-transform duration-300 ease-out group-hover:translate-x-0" />
+                                <span className="relative">Open the terminal</span>
+                                <ArrowRight className="relative h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                            </Link>
+                            <Link href="/contact?topic=business" className="group inline-flex items-center gap-1 text-sm text-[#ecebe6]/75 transition-colors hover:text-[#ecebe6]">
+                                <span className="bg-[linear-gradient(currentColor,currentColor)] bg-[length:0%_1px] bg-left-bottom bg-no-repeat pb-0.5 transition-[background-size] duration-300 group-hover:bg-[length:100%_1px]">For teams: talk to us</span>
+                                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                            </Link>
+                        </div>
+                    </Reveal>
                 </div>
 
-                <figure className="border border-[#ecebe6]/12 bg-[#0e0f12]">
-                    <figcaption className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 border-b border-[#ecebe6]/10 px-4 py-3">
-                        <span className="text-sm text-[#ecebe6]">S&amp;P 500 <span className="text-[#ecebe6]/40">· daily</span></span>
-                        {q && (
-                            <span className="font-mono text-sm tabular-nums">
-                                <span className="text-[#ecebe6]">{fmtPrice(q.price)}</span>{' '}
-                                <span className={pctClass(q.changePercent)}>{fmtPct(q.changePercent, 2, true)}</span>
-                            </span>
-                        )}
-                    </figcaption>
-                    <div className="h-[300px] px-1 md:h-[360px]">
-                        {history.length ? <ForecastChart history={history} forecast={forecast} /> : bars.error ? <Unavailable className="flex h-full items-center justify-center" /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
-                    </div>
-                    <div className="flex flex-wrap gap-x-6 gap-y-1 border-t border-[#ecebe6]/10 px-4 py-3 font-mono text-[11px] text-[#ecebe6]/50">
-                        <span><span className="mr-1.5 inline-block w-4 border-t-2 border-dashed border-[#e8b04a] align-middle" />ARIMA(5,1,0) · next 30 sessions</span>
-                        <span><span className="mr-1.5 inline-block w-4 border-t border-dotted border-[#e8b04a] align-middle" />95% band</span>
-                        {end && <span>Target {fmtPrice(end.value)} · range {fmtPrice(end.lower)}–{fmtPrice(end.upper)}</span>}
-                    </div>
-                </figure>
+                <Reveal delay={0.2}>
+                    <figure className="border border-[#ecebe6]/12 bg-[#0e0f12] transition-colors duration-300 hover:border-[#ecebe6]/25">
+                        <figcaption className="flex flex-wrap items-center justify-between gap-x-4 gap-y-2 border-b border-[#ecebe6]/10 px-4 py-2">
+                            <div className="flex gap-1" role="tablist" aria-label="Market">
+                                {HERO_SYMBOLS.map((h, k) => (
+                                    <button
+                                        key={h.s}
+                                        role="tab"
+                                        aria-selected={k === i}
+                                        onClick={() => { setI(k); setTouched(true) }}
+                                        className={`relative px-2.5 py-1.5 text-sm transition-colors ${k === i ? 'text-[#ecebe6]' : 'text-[#ecebe6]/45 hover:text-[#ecebe6]/80'}`}
+                                    >
+                                        {k === i && <motion.span layoutId="hero-tab" className="absolute inset-0 rounded-sm bg-[#ecebe6]/[0.07]" transition={{ type: 'spring', stiffness: 400, damping: 34 }} />}
+                                        <span className="relative">{h.label}</span>
+                                        {k === i && !touched && (
+                                            <motion.span key={`p${i}`} className="absolute inset-x-1 bottom-0 h-px origin-left bg-[#e8b04a]" initial={{ scaleX: 0 }} animate={{ scaleX: 1 }} transition={{ duration: 9, ease: 'linear' }} />
+                                        )}
+                                    </button>
+                                ))}
+                            </div>
+                            {q && (
+                                <span className="font-mono text-sm tabular-nums">
+                                    <span className="text-[#ecebe6]">{fmtPrice(q.price)}</span>{' '}
+                                    <span className={pctClass(q.changePercent)}>{fmtPct(q.changePercent, 2, true)}</span>
+                                </span>
+                            )}
+                        </figcaption>
+                        <div className="relative h-[300px] px-1 md:h-[360px]">
+                            <AnimatePresence mode="wait">
+                                <motion.div key={sym.s} className="absolute inset-0 px-1" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.35 }}>
+                                    {history.length && bars.data?.symbol === sym.s ? <ForecastChart history={history} forecast={forecast} /> : bars.error ? <Unavailable className="flex h-full items-center justify-center" /> : <div className="h-full animate-pulse bg-[#ecebe6]/[0.03]" />}
+                                </motion.div>
+                            </AnimatePresence>
+                        </div>
+                        <div className="flex flex-wrap gap-x-6 gap-y-1 border-t border-[#ecebe6]/10 px-4 py-3 font-mono text-[11px] text-[#ecebe6]/50">
+                            <span><span className="mr-1.5 inline-block w-4 border-t-2 border-dashed border-[#e8b04a] align-middle" />ARIMA(5,1,0) · next 30 sessions</span>
+                            <span><span className="mr-1.5 inline-block w-4 border-t border-dotted border-[#e8b04a] align-middle" />95% band</span>
+                            {end && <span>Target {fmtPrice(end.value)} · range {fmtPrice(end.lower)}–{fmtPrice(end.upper)}</span>}
+                        </div>
+                    </figure>
+                </Reveal>
+            </Wrap>
+        </section>
+    )
+}
+
+// ------------------------------------------------------------
+// Research credibility strip
+// ------------------------------------------------------------
+
+function ResearchStrip() {
+    return (
+        <section className="border-y border-[#ecebe6]/10 bg-[#0d0e11]">
+            <Wrap className="flex flex-col gap-4 py-6 md:flex-row md:items-center md:gap-8">
+                <div className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-[#ecebe6]/45">Peer-reviewed at</div>
+                <Stagger className="flex flex-1 flex-wrap gap-x-8 gap-y-3" gap={0.07}>
+                    {VENUES.map((v) => (
+                        <RevealItem key={v.venue}>
+                            <Link href="/research" className="group block">
+                                <span className="font-display text-lg text-[#ecebe6]/80 transition-colors group-hover:text-[#ecebe6]">{v.venue.replace(' International Workshop', '')}</span>
+                                <span className="block text-xs text-[#ecebe6]/40 transition-colors group-hover:text-[#e8b04a]">{v.place}</span>
+                            </Link>
+                        </RevealItem>
+                    ))}
+                </Stagger>
+                <Link href="/research" className="group inline-flex shrink-0 items-center gap-1 text-sm text-[#ecebe6]/70 hover:text-[#ecebe6]">
+                    Our research <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+            </Wrap>
+        </section>
+    )
+}
+
+// ------------------------------------------------------------
+// Two audiences: investors today (B2C), teams and institutions (B2B)
+// ------------------------------------------------------------
+
+const AUDIENCES = [
+    {
+        id: 'investors',
+        kicker: 'For investors',
+        title: <>Everything in the terminal, <em className="text-[#e8b04a]">free during beta.</em></>,
+        points: ['Charts, indicators and drawing tools', 'The model’s forecast, score and anomalies on any symbol', 'Five-year backtests and headline sentiment', 'A dashboard and watchlist that sync to your account'],
+        cta: { href: '/signup?next=/dashboard', label: 'Create a free account' },
+        alt: { href: '/app', label: 'or just open the terminal' },
+    },
+    {
+        id: 'teams',
+        kicker: 'For teams & institutions',
+        title: <>Bring the model to <em className="text-[#e8b04a]">your desk.</em></>,
+        points: ['Research partnerships and joint studies', 'Model and backtest runs on your own universe of assets', 'Dashboards built around your team’s watchlists', 'Early access to data and API work as we build it'],
+        cta: { href: '/contact?topic=business', label: 'Talk to the team' },
+        alt: { href: '/research', label: 'see our research' },
+    },
+]
+
+function Audiences() {
+    return (
+        <section className="py-16">
+            <Wrap>
+                <SectionHead kicker="Who it’s for" title={<>One platform, <em>two ways in.</em></>}>
+                    Individual investors use UpTrade free today. Teams and institutions work with us directly.
+                </SectionHead>
+                <div className="grid gap-4 md:grid-cols-2">
+                    {AUDIENCES.map((a, k) => (
+                        <Reveal key={a.id} delay={k * 0.1}>
+                            <div id={a.id} className="group relative h-full scroll-mt-32 overflow-hidden border border-[#ecebe6]/12 bg-[#0e0f12] p-8 transition-all duration-500 hover:-translate-y-1 hover:border-[#e8b04a]/45 hover:shadow-[0_30px_60px_-30px_rgba(232,176,74,0.25)]">
+                                <span aria-hidden className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full border border-[#e8b04a]/0 transition-all duration-700 group-hover:-right-16 group-hover:-top-16 group-hover:border-[#e8b04a]/25" />
+                                <div className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#e8b04a]">{a.kicker}</div>
+                                <h3 className="mt-4 font-display text-4xl leading-tight">{a.title}</h3>
+                                <ul className="mt-6 space-y-2.5">
+                                    {a.points.map((p) => (
+                                        <li key={p} className="flex gap-3 text-[15px] text-[#ecebe6]/70">
+                                            <span className="mt-2.5 h-px w-4 shrink-0 bg-[#e8b04a] transition-all duration-300 group-hover:w-6" />{p}
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className="mt-8 flex flex-wrap items-center gap-4">
+                                    <Link href={a.cta.href} className="group/btn relative inline-flex items-center gap-1.5 overflow-hidden rounded-md bg-[#ecebe6] px-4 py-2.5 text-sm font-semibold text-[#0a0b0d]">
+                                        <span className="absolute inset-0 -translate-x-full bg-[#e8b04a] transition-transform duration-300 group-hover/btn:translate-x-0" />
+                                        <span className="relative">{a.cta.label}</span>
+                                        <ArrowRight className="relative h-4 w-4" />
+                                    </Link>
+                                    <Link href={a.alt.href} className="text-sm text-[#ecebe6]/55 underline-offset-4 hover:text-[#ecebe6] hover:underline">{a.alt.label}</Link>
+                                </div>
+                            </div>
+                        </Reveal>
+                    ))}
+                </div>
             </Wrap>
         </section>
     )
@@ -144,9 +267,9 @@ function TerminalShowcase() {
                     RSI and MACD panes, Heikin Ashi, trend lines, four-chart layouts, a live watchlist — and the forecast,
                     anomalies and score for whatever you’re looking at.
                 </SectionHead>
-                <div className="overflow-hidden border border-[#ecebe6]/12 bg-[#131722]">
-                    <Image src="/screens/terminal.webp" alt="UpTrade terminal showing NVIDIA daily candles with moving averages, the ARIMA forecast band, anomaly markers and the UpTrade score panel" width={1600} height={960} priority className="h-auto w-full" />
-                </div>
+                <Reveal className="group overflow-hidden border border-[#ecebe6]/12 bg-[#131722] transition-colors duration-500 hover:border-[#e8b04a]/40">
+                    <Image src="/screens/terminal.webp" alt="UpTrade terminal showing NVIDIA daily candles with moving averages, the ARIMA forecast band, anomaly markers and the UpTrade score panel" width={1600} height={960} priority className="h-auto w-full transition-transform duration-700 group-hover:scale-[1.01]" />
+                </Reveal>
                 <ol className="mt-6 grid gap-6 md:grid-cols-3">
                     {CALLOUTS.map((c) => (
                         <li key={c.n} className="flex gap-3">
@@ -454,9 +577,10 @@ function Closing() {
 export function Home() {
     return (
         <div className="bg-[#0a0b0d] text-[#ecebe6]" style={{ color: PAPER }}>
-            <TickerTape />
             <Hero />
+            <ResearchStrip />
             <TerminalShowcase />
+            <Audiences />
             <MarketSummary />
             <Receipts />
             <ModelScan />

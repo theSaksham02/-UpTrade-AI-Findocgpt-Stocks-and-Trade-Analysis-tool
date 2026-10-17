@@ -15,7 +15,7 @@ const nextConfig = {
       ...['/charts', '/terminal', '/engine', '/tradesphere', '/ai-analysis'].map(to('/app')),
       ...['/tradex', '/tradex/:path*'].map(to('/app/tradex')),
       ...['/visualx', '/visualx/:path*'].map(to('/app/visualx')),
-      ...['/features', '/research', '/blog', '/blog/:path*', '/community', '/api-page', '/api-dev', '/performance'].map(to('/')),
+      ...['/features', '/blog', '/blog/:path*', '/community', '/api-page', '/api-dev', '/performance'].map(to('/')),
       ...['/press', '/careers'].map(to('/about')),
       ...['/support'].map(to('/contact')),
       ...['/legal'].map(to('/terms')),

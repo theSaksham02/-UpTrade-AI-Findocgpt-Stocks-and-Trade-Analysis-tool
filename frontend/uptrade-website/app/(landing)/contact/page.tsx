@@ -1,10 +1,11 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 const TOPICS = [
     { id: 'general', label: 'General question' },
+    { id: 'business', label: 'Business, partnerships or research' },
     { id: 'bug', label: 'Something is broken' },
     { id: 'data', label: 'Wrong or missing market data' },
     { id: 'account', label: 'My account or data deletion' },
@@ -16,6 +17,12 @@ export default function ContactPage() {
     const [form, setForm] = useState({ email: '', topic: 'general', message: '', website: '' })
     const [state, setState] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle')
     const [error, setError] = useState('')
+
+    // "Talk to us" links arrive with ?topic=business
+    useEffect(() => {
+        const t = new URLSearchParams(window.location.search).get('topic')
+        if (t && TOPICS.some((x) => x.id === t)) setForm((f) => ({ ...f, topic: t }))
+    }, [])
 
     async function submit(e: React.FormEvent) {
         e.preventDefault()

@@ -8,6 +8,7 @@ const ROUTES: { path: string; priority: number; changeFrequency: 'daily' | 'week
   { path: '/app', priority: 0.9, changeFrequency: 'weekly' },
   { path: '/dashboard', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/pricing', priority: 0.6, changeFrequency: 'monthly' },
+  { path: '/research', priority: 0.7, changeFrequency: 'monthly' },
   { path: '/about', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/docs', priority: 0.6, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.4, changeFrequency: 'yearly' },

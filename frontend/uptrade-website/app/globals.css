@@ -1069,3 +1069,11 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
+/* UpTrade: live ticker strip in the site header */
+@keyframes ut-tape {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  [class*="animate-[ut-tape"] { animation: none !important; }
+}
