@@ -16,7 +16,7 @@ export function Watchlist({ symbols, quotes, selected, onSelect, onRemove, onAdd
         <div className="flex min-h-0 flex-1 flex-col">
             <div className="flex h-9 shrink-0 items-center justify-between px-3" style={{ borderBottom: `1px solid ${C.border}` }}>
                 <span className="text-[13px] font-semibold" style={{ color: C.text }}>Watchlist</span>
-                <button onClick={onAdd} className="rounded p-1 hover:bg-[#2a2e39]" aria-label="Add symbol" title="Add symbol" style={{ color: C.muted }}>
+                <button onClick={onAdd} className="rounded p-1 hover:bg-[#24252a]" aria-label="Add symbol" title="Add symbol" style={{ color: C.muted }}>
                     <Plus size={16} />
                 </button>
             </div>
@@ -31,8 +31,8 @@ export function Watchlist({ symbols, quotes, selected, onSelect, onRemove, onAdd
                         <div
                             key={s}
                             onClick={() => onSelect(s)}
-                            className="group relative grid cursor-pointer grid-cols-[1fr_auto_auto] items-center gap-x-3 px-3 py-1.5 text-[13px] hover:bg-[#2a2e39]"
-                            style={{ background: s === selected ? 'rgba(41,98,255,0.12)' : undefined }}
+                            className="group relative grid cursor-pointer grid-cols-[1fr_auto_auto] items-center gap-x-3 px-3 py-1.5 text-[13px] hover:bg-[#24252a]"
+                            style={{ background: s === selected ? 'rgba(232,176,74,0.12)' : undefined }}
                         >
                             <span className="truncate font-medium" style={{ color: C.text }} title={q?.name}>{displaySymbol(s)}</span>
                             <span className="text-right font-mono tabular-nums" style={{ color: C.text }}>{q ? fmtPrice(q.price) : '…'}</span>

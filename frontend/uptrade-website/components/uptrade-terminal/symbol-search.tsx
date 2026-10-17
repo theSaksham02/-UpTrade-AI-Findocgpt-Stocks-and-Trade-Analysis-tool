@@ -122,7 +122,7 @@ export default function SymbolSearch({ open, onClose, onPick, seed = '', title =
                             onMouseEnter={() => setIdx(i)}
                             onClick={() => pick(r.symbol)}
                             className="flex w-full items-center gap-3 px-4 py-2 text-left text-[13px]"
-                            style={{ background: i === idx ? '#2a2e39' : 'transparent', color: C.text }}
+                            style={{ background: i === idx ? '#24252a' : 'transparent', color: C.text }}
                         >
                             <span className="w-24 shrink-0 font-semibold">{r.symbol}</span>
                             <span className="flex-1 truncate" style={{ color: C.muted }}>{r.name}</span>

@@ -94,17 +94,18 @@ export function displaySymbol(s: string) {
     return s.replace(/-USD$/, 'USD').replace(/^\^/, '')
 }
 
+// UpTrade palette: warm ink and paper with an amber accent (shared with the marketing site)
 export const C = {
-    bg: '#131722',
-    panel: '#1e222d',
-    border: '#2a2e39',
-    border2: '#363a45',
-    text: '#d1d4dc',
-    muted: '#787b86',
-    up: '#089981',
-    down: '#f23645',
-    accent: '#2962ff',
-    amber: '#ff9800',
-    purple: '#ab47bc',
-    yellow: '#f7c948',
+    bg: '#0e0f12',
+    panel: '#16171b',
+    border: '#24252a',
+    border2: '#33343a',
+    text: '#ecebe6',
+    muted: '#8b8a84',
+    up: '#3fb97f',
+    down: '#e5534b',
+    accent: '#e8b04a',
+    amber: '#d9733b',
+    purple: '#c792ea',
+    yellow: '#7aa2ff',
 }

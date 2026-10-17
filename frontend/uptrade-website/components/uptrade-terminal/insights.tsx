@@ -162,7 +162,7 @@ export function NewsPanel({ symbol }: { symbol: string }) {
             </Section>
             <div>
                 {data.items.map((n, i) => (
-                    <a key={i} href={n.link} target="_blank" rel="noopener noreferrer" className="block px-3 py-2 hover:bg-[#2a2e39]" style={{ borderBottom: `1px solid ${C.border}` }}>
+                    <a key={i} href={n.link} target="_blank" rel="noopener noreferrer" className="block px-3 py-2 hover:bg-[#24252a]" style={{ borderBottom: `1px solid ${C.border}` }}>
                         <div className="flex items-start gap-2">
                             <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: n.label === 'positive' ? C.up : n.label === 'negative' ? C.down : C.muted }} />
                             <span className="text-[12px] leading-5" style={{ color: C.text }}>{n.title}</span>
@@ -194,7 +194,7 @@ function EquityChart({ result }: { result: BacktestResult }) {
         const chart = createChart(ref.current, {
             autoSize: true,
             layout: { background: { type: ColorType.Solid, color: C.bg }, textColor: C.muted, fontSize: 10, attributionLogo: false },
-            grid: { vertLines: { visible: false }, horzLines: { color: 'rgba(42,46,57,0.6)' } },
+            grid: { vertLines: { visible: false }, horzLines: { color: 'rgba(36,37,42,0.6)' } },
             rightPriceScale: { borderVisible: false },
             timeScale: { borderVisible: false },
             handleScroll: false,

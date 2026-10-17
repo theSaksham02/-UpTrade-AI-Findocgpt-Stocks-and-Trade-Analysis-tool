@@ -62,7 +62,7 @@ function Dropdown({ label, children, width = 220 }: { label: React.ReactNode; ch
                     setPos({ left: Math.min(r.left, window.innerWidth - width - 8), top: r.bottom + 4 })
                 }}
                 aria-expanded={!!pos}
-                className="flex h-8 shrink-0 items-center gap-1 rounded px-2 text-[13px] hover:bg-[#2a2e39]"
+                className="flex h-8 shrink-0 items-center gap-1 rounded px-2 text-[13px] hover:bg-[#24252a]"
                 style={{ color: C.text }}
             >
                 {label}<ChevronDown size={12} color={C.muted} />
@@ -90,7 +90,7 @@ function AccountMenu({ session, syncState }: { session: ReturnType<typeof useSes
     if (!user) {
         const next = typeof window === 'undefined' ? '/app' : window.location.pathname + window.location.search
         return (
-            <Link href={`/login?next=${encodeURIComponent(next)}`} className="ml-1 flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#2a2e39]" title="Sign in to sync your watchlist">
+            <Link href={`/login?next=${encodeURIComponent(next)}`} className="ml-1 flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#24252a]" title="Sign in to sync your watchlist">
                 <LogIn size={15} /><span className="hidden sm:inline">Sign in</span>
             </Link>
         )
@@ -113,7 +113,7 @@ function AccountMenu({ session, syncState }: { session: ReturnType<typeof useSes
                         {user.email && user.email !== name && <div className="truncate text-[12px]" style={{ color: C.muted }}>{user.email}</div>}
                         <div className="mt-1 text-[11px]" style={{ color: syncState === 'error' ? C.amber : C.muted }}>{SYNC_LABEL[syncState]}</div>
                     </div>
-                    <button onClick={async () => { close(); await signOut() }} className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-[#2a2e39]">
+                    <button onClick={async () => { close(); await signOut() }} className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-[#24252a]">
                         <LogOut size={15} />Sign out
                     </button>
                 </>
@@ -131,8 +131,8 @@ function ToolButton({ active, onClick, title, children }: { active?: boolean; on
             title={title}
             aria-label={title}
             aria-pressed={active}
-            className="flex h-9 w-9 items-center justify-center rounded hover:bg-[#2a2e39]"
-            style={{ color: active ? C.accent : C.text, background: active ? 'rgba(41,98,255,0.15)' : undefined }}
+            className="flex h-9 w-9 items-center justify-center rounded hover:bg-[#24252a]"
+            style={{ color: active ? C.accent : C.text, background: active ? 'rgba(232,176,74,0.15)' : undefined }}
         >
             {children}
         </button>
@@ -221,20 +221,20 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
     const gridClass = layout === 1 ? 'grid-cols-1 grid-rows-1' : layout === 2 ? 'grid-cols-1 grid-rows-2 md:grid-cols-2 md:grid-rows-1' : 'grid-cols-1 grid-rows-4 md:grid-cols-2 md:grid-rows-2'
 
     return (
-        <div className="fixed inset-0 z-40 flex flex-col overflow-hidden text-[13px]" style={{ background: '#0c0e15', color: C.text }}>
+        <div className="fixed inset-0 z-40 flex flex-col overflow-hidden text-[13px]" style={{ background: '#0a0b0d', color: C.text }}>
             {/* ===== Top toolbar ===== */}
             <header className="flex h-11 shrink-0 items-center gap-1 overflow-x-auto px-2" style={{ background: C.bg, borderBottom: `1px solid ${C.border}` }}>
-                <Link href="/" className="mr-1 flex shrink-0 items-baseline gap-1 rounded px-1.5 py-1 hover:bg-[#2a2e39]" title="UpTrade home">
+                <Link href="/" className="mr-1 flex shrink-0 items-baseline gap-1 rounded px-1.5 py-1 hover:bg-[#24252a]" title="UpTrade home">
                     <span className="font-display text-[19px] leading-none text-[#ecebe6]">UpTrade</span>
                     <span className="h-1 w-1 bg-[#e8b04a]" />
                 </Link>
-                <button onClick={() => setSearch('chart')} className="flex h-8 shrink-0 items-center gap-2 rounded px-2 font-semibold hover:bg-[#2a2e39]" title="Symbol search (⌘K or start typing)">
+                <button onClick={() => setSearch('chart')} className="flex h-8 shrink-0 items-center gap-2 rounded px-2 font-semibold hover:bg-[#24252a]" title="Symbol search (⌘K or start typing)">
                     <Search size={15} color={C.muted} />{displaySymbol(activeSymbol)}
                 </button>
                 <Sep />
                 <div className="flex shrink-0 items-center">
                     {INTERVALS.map((tf) => (
-                        <button key={tf} onClick={() => setIntervalTf(tf)} className="h-8 rounded px-2 hover:bg-[#2a2e39]" style={{ color: tf === interval ? C.accent : C.text, fontWeight: tf === interval ? 600 : 400 }}>
+                        <button key={tf} onClick={() => setIntervalTf(tf)} className="h-8 rounded px-2 hover:bg-[#24252a]" style={{ color: tf === interval ? C.accent : C.text, fontWeight: tf === interval ? 600 : 400 }}>
                             {tf}
                         </button>
                     ))}
@@ -242,30 +242,30 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
                 <Sep />
                 <Dropdown label={<ChartTypeIcon size={17} />} width={180}>
                     {(close) => CHART_TYPES.map((t) => (
-                        <button key={t.id} onClick={() => { setChartType(t.id); close() }} className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-[#2a2e39]" style={{ color: t.id === chartType ? C.accent : C.text }}>
+                        <button key={t.id} onClick={() => { setChartType(t.id); close() }} className="flex w-full items-center gap-2 px-3 py-1.5 text-left hover:bg-[#24252a]" style={{ color: t.id === chartType ? C.accent : C.text }}>
                             <t.Icon size={15} />{t.label}
                         </button>
                     ))}
                 </Dropdown>
                 <Dropdown label={<span className="flex items-center gap-1.5"><Activity size={15} />Indicators</span>} width={240}>
                     {() => (Object.keys(INDICATOR_META) as IndicatorKey[]).map((k) => (
-                        <label key={k} className="flex cursor-pointer items-center gap-2 px-3 py-1.5 hover:bg-[#2a2e39]">
-                            <input type="checkbox" checked={indicators.includes(k)} onChange={() => toggleIndicator(k)} className="accent-[#2962ff]" />
+                        <label key={k} className="flex cursor-pointer items-center gap-2 px-3 py-1.5 hover:bg-[#24252a]">
+                            <input type="checkbox" checked={indicators.includes(k)} onChange={() => toggleIndicator(k)} className="accent-[#e8b04a]" />
                             <span className="inline-block h-0.5 w-3" style={{ background: INDICATOR_META[k].color }} />
                             {INDICATOR_META[k].label}
                         </label>
                     ))}
                 </Dropdown>
-                <button onClick={() => setShowForecast((v) => !v)} className="flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#2a2e39]" style={{ color: showForecast ? C.purple : C.text }} title="UpTrade ARIMA forecast (1D)">
+                <button onClick={() => setShowForecast((v) => !v)} className="flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#24252a]" style={{ color: showForecast ? C.purple : C.text }} title="UpTrade ARIMA forecast (1D)">
                     <Sparkles size={15} /><span className="hidden lg:inline">Forecast</span>
                 </button>
-                <button onClick={() => setShowAnomalies((v) => !v)} className="flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#2a2e39]" style={{ color: showAnomalies ? C.amber : C.text }} title="Anomaly markers (1D)">
+                <button onClick={() => setShowAnomalies((v) => !v)} className="flex h-8 shrink-0 items-center gap-1.5 rounded px-2 hover:bg-[#24252a]" style={{ color: showAnomalies ? C.amber : C.text }} title="Anomaly markers (1D)">
                     <Brain size={15} /><span className="hidden lg:inline">Anomalies</span>
                 </button>
                 <Sep />
                 <div className="hidden shrink-0 items-center md:flex">
                     {([1, 2, 4] as Layout[]).map((l) => (
-                        <button key={l} onClick={() => { setLayout(l); if (active >= l) setActive(0) }} title={`${l} chart${l > 1 ? 's' : ''}`} className="flex h-8 w-8 items-center justify-center rounded hover:bg-[#2a2e39]" style={{ color: l === layout ? C.accent : C.text }}>
+                        <button key={l} onClick={() => { setLayout(l); if (active >= l) setActive(0) }} title={`${l} chart${l > 1 ? 's' : ''}`} className="flex h-8 w-8 items-center justify-center rounded hover:bg-[#24252a]" style={{ color: l === layout ? C.accent : C.text }}>
                             <span className={`grid gap-px ${l === 1 ? '' : l === 2 ? 'grid-cols-2' : 'grid-cols-2 grid-rows-2'}`}>
                                 {Array.from({ length: l }).map((_, i) => <span key={i} className={`block border border-current ${l === 1 ? 'h-3.5 w-3.5' : l === 2 ? 'h-3.5 w-1.5' : 'h-1.5 w-1.5'}`} />)}
                             </span>
@@ -275,7 +275,7 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
                 <div className="flex-1" />
                 <span className="hidden shrink-0 font-mono text-[12px] lg:inline" style={{ color: C.muted }}>{clock}</span>
                 <AccountMenu session={session} syncState={syncState} />
-                <button onClick={() => setPanelOpen((o) => !o)} className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded hover:bg-[#2a2e39]" title="Toggle right panel" style={{ color: panelOpen ? C.accent : C.text }}>
+                <button onClick={() => setPanelOpen((o) => !o)} className="ml-1 flex h-8 w-8 shrink-0 items-center justify-center rounded hover:bg-[#24252a]" title="Toggle right panel" style={{ color: panelOpen ? C.accent : C.text }}>
                     <PanelRight size={17} />
                 </button>
             </header>
@@ -323,7 +323,7 @@ export default function UpTradeTerminal({ defaultPanel = 'ai' }: { defaultPanel?
                     >
                         <div className="flex h-10 shrink-0 items-center justify-between px-3 md:hidden" style={{ borderBottom: `1px solid ${C.border}` }}>
                             <span className="text-[13px] font-semibold">{displaySymbol(activeSymbol)} · panel</span>
-                            <button onClick={() => setSheetOpen(false)} aria-label="Close panel" className="rounded p-1.5 hover:bg-[#2a2e39]"><X size={16} /></button>
+                            <button onClick={() => setSheetOpen(false)} aria-label="Close panel" className="rounded p-1.5 hover:bg-[#24252a]"><X size={16} /></button>
                         </div>
                         <div className="flex h-[56%] min-h-0 flex-col">
                             <Watchlist

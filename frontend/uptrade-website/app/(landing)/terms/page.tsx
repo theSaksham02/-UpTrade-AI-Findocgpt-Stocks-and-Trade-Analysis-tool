@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { CONTACT, ENTITY, LegalList, LegalSection, LegalTitle, Placeholder } from '@/components/legal/legal-section';
+import { CONTACT, ENTITY, LegalList, LegalSection, LegalTitle } from '@/components/legal/legal-section';
 // Footer handled by layout
 
 export const metadata: Metadata = {
@@ -17,7 +17,7 @@ export default function TermsPage() {
                     <LegalTitle>Terms of Service</LegalTitle>
                     <div className="text-[#a3a29c] leading-relaxed space-y-6">
                         <p>
-                            UpTrade is operated by {ENTITY} (&ldquo;we&rdquo;, &ldquo;us&rdquo;). These terms apply when you use the
+                            UpTrade is run by {ENTITY} (&ldquo;we&rdquo;, &ldquo;us&rdquo;). These terms apply when you use the
                             UpTrade website, terminal and API routes (the &ldquo;Service&rdquo;). By using the Service you agree to them.
                             If you don&rsquo;t agree, please don&rsquo;t use it.
                         </p>
@@ -43,10 +43,10 @@ export default function TermsPage() {
                             <LegalList>
                                 <li>You must be at least 18 years old to create an account.</li>
                                 <li>Give a valid email address and keep your password to yourself. You are responsible for activity on your account.</li>
-                                <li>Tell us at {CONTACT} if you think someone else has accessed your account.</li>
+                                <li>Tell us through {CONTACT} if you think someone else has accessed your account.</li>
                                 <li>
                                     You can stop using the Service at any time. To delete your account and the watchlist stored with
-                                    it, email {CONTACT} from the address on the account.
+                                    it, send a request through {CONTACT} from the email on the account.
                                 </li>
                             </LegalList>
                             <p>The terminal works without an account; an account only syncs your watchlist across devices.</p>
@@ -101,7 +101,7 @@ export default function TermsPage() {
 
                         <LegalSection title="9. Limitation of liability">
                             <p>
-                                To the fullest extent the law allows, {ENTITY} is not liable for any trading or investment losses,
+                                To the fullest extent the law allows, we (the UpTrade team) are not liable for any trading or investment losses,
                                 lost profits, or indirect, incidental or consequential damages arising from your use of the Service or
                                 its data. Because the Service is free, our total liability for any claim is limited to USD 50. Nothing
                                 in these terms limits liability that cannot be limited by law.
@@ -118,9 +118,8 @@ export default function TermsPage() {
 
                         <LegalSection title="11. Governing law">
                             <p>
-                                These terms are governed by the laws of <Placeholder>[GOVERNING LAW JURISDICTION]</Placeholder>, and
-                                disputes will be heard in its courts, unless the law where you live gives you the right to bring a
-                                claim locally.
+                                Nothing in these terms limits rights you have under the consumer laws of the country where you live.
+                                If there&rsquo;s a disagreement, please contact us first and we&rsquo;ll try to resolve it directly.
                             </p>
                         </LegalSection>
 
