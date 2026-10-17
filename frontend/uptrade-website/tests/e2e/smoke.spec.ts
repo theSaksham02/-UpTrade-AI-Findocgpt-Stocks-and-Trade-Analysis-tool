@@ -60,6 +60,25 @@ test('dashboard lists the watchlist with scores', async ({ page }) => {
     expect(errors).toEqual([])
 })
 
+test('research lists the peer-reviewed venues', async ({ page }) => {
+    const errors = trackErrors(page)
+    await page.goto('/research')
+    await expect(page.getByRole('heading', { level: 1 })).toContainText('Peer-reviewed first.')
+    for (const v of ['Higher Education Finance Research Conference', 'P2P Financial Systems International Workshop (P2PFISY 2026)', 'IRMC 2026', '2026 RegTech Forum']) {
+        await expect(page.getByRole('heading', { name: v })).toBeVisible()
+    }
+    expect(errors).toEqual([])
+})
+
+test('header menus and the business contact path work', async ({ page }) => {
+    await page.goto('/')
+    await page.getByRole('button', { name: 'Solutions' }).hover()
+    await expect(page.getByRole('link', { name: /For teams & institutions/ })).toBeVisible()
+    await page.getByRole('link', { name: 'Talk to us', exact: true }).click()
+    await expect(page).toHaveURL(/\/contact\?topic=business/)
+    await expect(page.getByLabel('Topic')).toHaveValue('business')
+})
+
 test('sign-up page renders the form', async ({ page }) => {
     await page.goto('/signup')
     await expect(page.getByRole('heading', { name: 'Create your account' })).toBeVisible()
