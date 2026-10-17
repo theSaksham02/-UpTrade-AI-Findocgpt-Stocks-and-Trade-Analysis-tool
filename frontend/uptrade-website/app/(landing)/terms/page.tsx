@@ -1,6 +1,5 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { LandingHeader } from '@/components/landing/Header';
 import { CONTACT, ENTITY, LegalList, LegalSection, LegalTitle, Placeholder } from '@/components/legal/legal-section';
 // Footer handled by layout
 
@@ -12,7 +11,6 @@ export const metadata: Metadata = {
 export default function TermsPage() {
     return (
         <div className="bg-transparent min-h-screen">
-            <LandingHeader />
 
             <div className="py-32 px-6">
                 <div className="max-w-3xl mx-auto">
